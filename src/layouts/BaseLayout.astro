@@ -55,6 +55,17 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE.url).href;
 
     <meta name="theme-color" content="#fdf6ec" />
 
+    {/* Marca que o JS está vivo. O reveal on scroll só esconde os elementos
+        quando essa classe existe — sem JS, nada some da página. O listener
+        fica no document, que sobrevive às View Transitions. */}
+    <script is:inline>
+      (() => {
+        const marcar = () => document.documentElement.classList.add('js');
+        marcar();
+        document.addEventListener('astro:after-swap', marcar);
+      })();
+    </script>
+
     <Font cssVariable="--ff-display" preload />
     <Font cssVariable="--ff-body" preload />
 

@@ -4,8 +4,15 @@ import Instagram from './icones/Instagram.astro';
 import { SITE, CONTATO } from '../config/site';
 
 const caminho = Astro.url.pathname;
-const naHome = caminho === '/';
-const emEventos = caminho.startsWith('/eventos');
+
+/** Um item é o atual quando a URL começa com o caminho dele — menos a home,
+ *  que só é a atual quando a URL é exatamente "/". */
+const atual = (alvo: string) => (alvo === '/' ? caminho === '/' : caminho.startsWith(alvo));
+
+const itens = [
+  { rotulo: 'Início', href: '/' },
+  { rotulo: 'Eventos', href: '/eventos/' },
+];
 ---
 
 <header
@@ -19,10 +26,13 @@ const emEventos = caminho.startsWith('/eventos');
   >
     <a
       href="/"
+      data-marca
       class="group flex shrink items-center gap-2.5 rounded-lg"
-      aria-current={naHome ? 'page' : undefined}
+      aria-current={atual('/') ? 'page' : undefined}
     >
-      <Ovelha class="w-9 shrink-0 transition-transform duration-300 ease-saida group-hover:-rotate-6 md:w-11" />
+      <Ovelha
+        class="w-9 shrink-0 transition-transform duration-300 ease-saida group-hover:-rotate-6 md:w-11"
+      />
       <span class="min-w-0">
         <span
           class="block font-display text-base leading-tight font-700 text-texto sm:text-lg md:text-xl"
@@ -33,22 +43,19 @@ const emEventos = caminho.startsWith('/eventos');
     </a>
 
     <nav aria-label="Principal" class="flex shrink-0 items-center gap-1 sm:gap-2">
-      <a
-        href="/"
-        aria-current={naHome ? 'page' : undefined}
-        class:list={[
-          'rounded-full px-2.5 py-2 font-display font-600 transition sm:px-4',
-          naHome ? 'bg-ceu-100 text-ceu-800' : 'text-tinta-700 hover:bg-creme-200',
-        ]}>Início</a
-      >
-      <a
-        href="/eventos"
-        aria-current={emEventos ? 'page' : undefined}
-        class:list={[
-          'rounded-full px-2.5 py-2 font-display font-600 transition sm:px-4',
-          emEventos ? 'bg-ceu-100 text-ceu-800' : 'text-tinta-700 hover:bg-creme-200',
-        ]}>Eventos</a
-      >
+      {
+        itens.map((item) => (
+          <a
+            href={item.href}
+            data-nav={item.href}
+            data-ativo={atual(item.href) ? '' : undefined}
+            aria-current={atual(item.href) ? 'page' : undefined}
+            class="rounded-full px-2.5 py-2 font-display font-600 transition sm:px-4"
+          >
+            {item.rotulo}
+          </a>
+        ))
+      }
       {
         CONTATO.instagramUrl && (
           <a
@@ -65,3 +72,51 @@ const emEventos = caminho.startsWith('/eventos');
     </nav>
   </div>
 </header>
+
+<style>
+  /* O estado ativo vive em [data-ativo] e não em classes utilitárias, porque
+     o cabeçalho é persistido entre navegações: o script abaixo precisa
+     conseguir corrigi-lo trocando um atributo só. */
+  [data-nav] {
+    color: var(--color-tinta-700);
+  }
+
+  [data-nav]:hover {
+    background-color: var(--color-creme-200);
+  }
+
+  [data-nav][data-ativo] {
+    background-color: var(--color-ceu-100);
+    color: var(--color-ceu-800);
+  }
+
+  [data-nav][data-ativo]:hover {
+    background-color: var(--color-ceu-200);
+  }
+</style>
+
+<script>
+  /* transition:persist mantém este cabeçalho vivo entre as páginas, o que
+     evita ele piscar — mas também congela o item marcado como atual no
+     estado da página anterior. Aqui ele é reajustado a cada navegação. */
+  function sincronizarNavegacao() {
+    const caminho = window.location.pathname;
+
+    for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-nav]')) {
+      const alvo = link.dataset.nav ?? '/';
+      const ativo = alvo === '/' ? caminho === '/' : caminho.startsWith(alvo);
+
+      link.toggleAttribute('data-ativo', ativo);
+      if (ativo) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
+    }
+
+    const marca = document.querySelector<HTMLAnchorElement>('[data-marca]');
+    if (marca) {
+      if (caminho === '/') marca.setAttribute('aria-current', 'page');
+      else marca.removeAttribute('aria-current');
+    }
+  }
+
+  document.addEventListener('astro:page-load', sincronizarNavegacao);
+</script>

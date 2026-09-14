@@ -22,7 +22,7 @@ export async function eventosRecentes(quantidade: number): Promise<Evento[]> {
 }
 
 /** URL da página de um evento. */
-export const urlEvento = (evento: Evento) => `/eventos/${evento.id}`;
+export const urlEvento = (evento: Evento) => `/eventos/${evento.id}/`;
 
 /** Nome da view transition que faz a capa do card virar o hero da página. */
 export const nomeTransicaoCapa = (evento: Evento) => `capa-${evento.id}`;

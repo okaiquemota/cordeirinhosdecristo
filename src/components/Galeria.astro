@@ -1,0 +1,384 @@
+---
+import { Image, getImage } from 'astro:assets';
+
+interface Foto {
+  src: ImageMetadata;
+  alt: string;
+}
+
+interface Props {
+  fotos: Foto[];
+}
+
+const { fotos } = Astro.props;
+
+/* Versões grandes para o lightbox, geradas no build. Nunca passamos do
+   tamanho do arquivo original — ampliar só engorda o download. */
+const grandes = await Promise.all(
+  fotos.map(async (foto) => {
+    const largura = Math.min(1800, foto.src.width);
+    const imagem = await getImage({
+      src: foto.src,
+      width: largura,
+      format: 'webp',
+      quality: 82,
+    });
+    return {
+      src: imagem.src,
+      largura: imagem.attributes.width ?? largura,
+      altura: imagem.attributes.height,
+      alt: foto.alt,
+    };
+  }),
+);
+---
+
+<div data-galeria>
+  <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4">
+    {
+      fotos.map((foto, i) => (
+        <li data-revelar>
+          <button
+            type="button"
+            data-abrir={i}
+            class="group block aspect-square w-full cursor-zoom-in overflow-hidden rounded-2xl bg-creme-200 transition duration-300 ease-saida hover:-translate-y-0.5 hover:shadow-cartao"
+          >
+            <Image
+              src={foto.src}
+              alt={foto.alt}
+              widths={[240, 360, 480, 720]}
+              sizes="(min-width: 48rem) 23rem, 46vw"
+              format="webp"
+              loading={i < 3 ? 'eager' : 'lazy'}
+              decoding="async"
+              class="size-full object-cover transition-transform duration-500 ease-saida group-hover:scale-[1.04]"
+            />
+            <span class="sr-only">
+              Abrir foto {i + 1} de {fotos.length} em tamanho grande
+            </span>
+          </button>
+        </li>
+      ))
+    }
+  </ul>
+
+  <dialog
+    data-lightbox
+    aria-label="Galeria de fotos"
+    class="max-h-none max-w-none border-0 bg-transparent p-0 backdrop:bg-ceu-900/94 backdrop:backdrop-blur-md"
+  >
+    <div class="flex h-dvh w-dvw flex-col">
+      <div class="flex items-center justify-between gap-4 px-4 py-3 sm:px-6">
+        <p data-contador class="font-display font-600 text-creme-100" aria-hidden="true"></p>
+        <button
+          type="button"
+          data-fechar
+          class="rounded-full p-2.5 text-creme-100 transition hover:bg-creme-100/15"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            stroke-linecap="round"
+            aria-hidden="true"
+            class="size-6"
+          >
+            <path d="m6 6 12 12M18 6 6 18"></path>
+          </svg>
+          <span class="sr-only">Fechar galeria</span>
+        </button>
+      </div>
+
+      <div data-palco class="relative flex min-h-0 flex-1 touch-pan-y items-center justify-center px-2 pb-2 sm:px-4">
+        <img
+          data-foto
+          alt=""
+          class="max-h-full max-w-full rounded-xl object-contain"
+          decoding="async"
+        />
+
+        <button
+          type="button"
+          data-anterior
+          class="absolute top-1/2 left-1 -translate-y-1/2 rounded-full bg-ceu-900/60 p-3 text-creme-100 transition hover:bg-ceu-900/90 sm:left-4"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            class="size-6"
+          >
+            <path d="M15 5 8 12l7 7"></path>
+          </svg>
+          <span class="sr-only">Foto anterior</span>
+        </button>
+
+        <button
+          type="button"
+          data-proxima
+          class="absolute top-1/2 right-1 -translate-y-1/2 rounded-full bg-ceu-900/60 p-3 text-creme-100 transition hover:bg-ceu-900/90 sm:right-4"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            class="size-6"
+          >
+            <path d="m9 5 7 7-7 7"></path>
+          </svg>
+          <span class="sr-only">Próxima foto</span>
+        </button>
+      </div>
+
+      <p data-legenda class="sr-only" aria-live="polite"></p>
+    </div>
+  </dialog>
+
+  <script is:inline type="application/json" data-fotos set:html={JSON.stringify(grandes)}></script>
+</div>
+
+<style>
+  /* O backdrop nativo não herda transição, então a entrada dele é uma
+     animação própria. Some junto com o movimento reduzido. */
+  dialog[data-lightbox][open]::backdrop {
+    animation: escurecer 0.25s ease both;
+  }
+
+  @keyframes escurecer {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    dialog[data-lightbox][open]::backdrop {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  type FotoGrande = { src: string; largura: number; altura: number; alt: string };
+
+  const movimentoReduzido = () =>
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const SUAVE = [0.22, 1, 0.36, 1] as const;
+
+  function montar(raiz: HTMLElement) {
+    if (raiz.dataset.montado) return;
+    raiz.dataset.montado = 'sim';
+
+    const json = raiz.querySelector('[data-fotos]')?.textContent ?? '[]';
+    const fotos: FotoGrande[] = JSON.parse(json);
+    if (fotos.length === 0) return;
+
+    revelar(raiz);
+    lightbox(raiz, fotos);
+  }
+
+  /* ── reveal on scroll, com stagger ───────────────────────────────────── */
+  function revelar(raiz: HTMLElement) {
+    const itens = Array.from(raiz.querySelectorAll<HTMLElement>('[data-revelar]'));
+    if (itens.length === 0 || movimentoReduzido()) return;
+
+    // Se o Motion não carregar, soltamos tudo por CSS em vez de deixar a
+    // galeria invisível.
+    const soltar = () => raiz.setAttribute('data-revelar-pronto', '');
+    const rede = window.setTimeout(soltar, 2500);
+
+    const observador = new IntersectionObserver(
+      async (entradas) => {
+        if (!entradas.some((e) => e.isIntersecting)) return;
+        observador.disconnect();
+        window.clearTimeout(rede);
+
+        try {
+          const { animate, stagger } = await import('motion');
+          animate(
+            itens,
+            { opacity: [0, 1], y: [14, 0] },
+            { duration: 0.55, delay: stagger(0.06), ease: SUAVE },
+          );
+        } catch {
+          soltar();
+        }
+      },
+      { rootMargin: '0px 0px -10% 0px' },
+    );
+
+    observador.observe(raiz);
+  }
+
+  /* ── lightbox ────────────────────────────────────────────────────────── */
+  function lightbox(raiz: HTMLElement, fotos: FotoGrande[]) {
+    const dialogo = raiz.querySelector<HTMLDialogElement>('dialog[data-lightbox]');
+    const foto = raiz.querySelector<HTMLImageElement>('[data-foto]');
+    const palco = raiz.querySelector<HTMLElement>('[data-palco]');
+    const contador = raiz.querySelector<HTMLElement>('[data-contador]');
+    const legenda = raiz.querySelector<HTMLElement>('[data-legenda]');
+    const gatilhos = Array.from(raiz.querySelectorAll<HTMLButtonElement>('[data-abrir]'));
+    if (!dialogo || !foto || !palco || !contador || !legenda) return;
+
+    let atual = 0;
+    let scrollTravado = '';
+
+    const aplicar = (i: number) => {
+      const f = fotos[i];
+      if (!f) return;
+      atual = i;
+      foto.src = f.src;
+      foto.alt = f.alt;
+      if (f.largura) foto.width = f.largura;
+      if (f.altura) foto.height = f.altura;
+      contador.textContent = `${i + 1} / ${fotos.length}`;
+      legenda.textContent = `Foto ${i + 1} de ${fotos.length}. ${f.alt}`;
+      vizinhas(i);
+    };
+
+    /* Baixa a anterior e a próxima em segundo plano, para a navegação não
+       piscar em branco. */
+    const vizinhas = (i: number) => {
+      for (const j of [i - 1, i + 1]) {
+        const f = fotos[j];
+        if (f) new Image().src = f.src;
+      }
+    };
+
+    async function abrir(i: number) {
+      const miniatura = gatilhos[i]?.querySelector('img');
+      const origem = miniatura?.getBoundingClientRect();
+
+      aplicar(i);
+      scrollTravado = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      dialogo!.showModal();
+
+      if (movimentoReduzido() || !origem) return;
+
+      // Zoom a partir da miniatura: mede onde a imagem grande parou e
+      // anima dela de volta até a posição da miniatura.
+      try {
+        await foto!.decode().catch(() => undefined);
+        const destino = foto!.getBoundingClientRect();
+        if (destino.width === 0) return;
+
+        const dx = origem.left + origem.width / 2 - (destino.left + destino.width / 2);
+        const dy = origem.top + origem.height / 2 - (destino.top + destino.height / 2);
+        const escala = Math.max(0.05, origem.width / destino.width);
+
+        const { animate } = await import('motion');
+        animate(
+          foto!,
+          { x: [dx, 0], y: [dy, 0], scale: [escala, 1], opacity: [0.3, 1] },
+          { duration: 0.4, ease: SUAVE },
+        );
+      } catch {
+        /* sem animação é melhor que sem lightbox */
+      }
+    }
+
+    async function fechar() {
+      document.body.style.overflow = scrollTravado;
+
+      if (movimentoReduzido()) {
+        dialogo!.close();
+        return;
+      }
+      try {
+        const { animate } = await import('motion');
+        await animate(foto!, { opacity: [1, 0], scale: [1, 0.94] }, { duration: 0.18 }).finished;
+      } catch {
+        /* fecha mesmo assim */
+      }
+      dialogo!.close();
+    }
+
+    async function irPara(i: number, direcao: number) {
+      const proximo = (i + fotos.length) % fotos.length;
+      aplicar(proximo);
+
+      if (movimentoReduzido()) return;
+      try {
+        const { animate } = await import('motion');
+        animate(
+          foto!,
+          { opacity: [0, 1], x: [direcao * 36, 0] },
+          { duration: 0.28, ease: SUAVE },
+        );
+      } catch {
+        /* segue sem animar */
+      }
+    }
+
+    const proxima = () => irPara(atual + 1, 1);
+    const anterior = () => irPara(atual - 1, -1);
+
+    gatilhos.forEach((botao, i) => botao.addEventListener('click', () => abrir(i)));
+    raiz.querySelector('[data-fechar]')?.addEventListener('click', fechar);
+    raiz.querySelector('[data-proxima]')?.addEventListener('click', proxima);
+    raiz.querySelector('[data-anterior]')?.addEventListener('click', anterior);
+
+    // clique no vazio ao redor da foto fecha
+    palco.addEventListener('click', (e) => {
+      if (e.target === palco) fechar();
+    });
+
+    // Esc é nativo do <dialog>; aqui ficam as setas
+    dialogo.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        proxima();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        anterior();
+      }
+    });
+
+    // devolve o scroll se o Esc fechar sem passar por fechar()
+    dialogo.addEventListener('close', () => {
+      document.body.style.overflow = scrollTravado;
+    });
+
+    /* ── swipe ───────────────────────────────────────────────────────── */
+    let inicioX = 0;
+    let inicioY = 0;
+    let arrastando = false;
+
+    palco.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse') return;
+      arrastando = true;
+      inicioX = e.clientX;
+      inicioY = e.clientY;
+    });
+
+    palco.addEventListener('pointerup', (e) => {
+      if (!arrastando) return;
+      arrastando = false;
+      const dx = e.clientX - inicioX;
+      const dy = e.clientY - inicioY;
+      // só conta como swipe se for claramente horizontal
+      if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+      if (dx < 0) proxima();
+      else anterior();
+    });
+
+    palco.addEventListener('pointercancel', () => {
+      arrastando = false;
+    });
+  }
+
+  const iniciar = () =>
+    document.querySelectorAll<HTMLElement>('[data-galeria]').forEach(montar);
+
+  document.addEventListener('astro:page-load', iniciar);
+</script>

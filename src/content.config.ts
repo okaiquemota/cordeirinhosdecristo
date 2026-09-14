@@ -1,4 +1,5 @@
-import { defineCollection, z, type SchemaContext } from 'astro:content';
+import { defineCollection, type SchemaContext } from 'astro:content';
+import { z } from 'zod';
 import { glob } from 'astro/loaders';
 
 /**
@@ -27,6 +28,12 @@ const eventos = defineCollection({
       /** Data do evento (AAAA-MM-DD). Ordena a listagem, mais recente primeiro. */
       data: z.coerce.date(),
 
+      /**
+       * Último dia, para evento que dura mais de um dia. Deixe de fora em
+       * evento de um dia só. A listagem continua ordenando pela data inicial.
+       */
+      dataFim: z.coerce.date().optional(),
+
       /** Uma ou duas frases. Aparece no card e na descrição da página. */
       resumo: z.string(),
 
@@ -41,6 +48,10 @@ const eventos = defineCollection({
 
       /** true esconde o evento do site (mas mantém o arquivo aqui). */
       draft: z.boolean().default(false),
+    })
+    .refine((e) => !e.dataFim || e.dataFim > e.data, {
+      path: ['dataFim'],
+      message: 'dataFim precisa ser depois de data.',
     }),
 });
 

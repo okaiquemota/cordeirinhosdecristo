@@ -8,6 +8,12 @@ import { SITE } from './src/config/site.ts';
 export default defineConfig({
   site: SITE.url,
 
+  // O build gera diretório por página (/eventos/x/index.html). Com a barra
+  // final obrigatória, link, canonical e sitemap apontam todos para a mesma
+  // URL — sem isso a hospedagem devolve um 301 a cada clique, o que ainda
+  // por cima atrapalha a View Transition.
+  trailingSlash: 'always',
+
   integrations: [
     sitemap({
       filter: (page) => !page.includes('/styleguide'),

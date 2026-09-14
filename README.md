@@ -50,9 +50,52 @@ Baloo 2 (títulos) e Inter (corpo) estão versionadas em `src/assets/fontes/`,
 só o subconjunto latino. O build não fala com Google Fonts nem com CDN
 nenhum. Veja `src/assets/fontes/LEIA-ME.md` para atualizar.
 
+## Animações
+
+| O quê | Como |
+| --- | --- |
+| Nuvens em deriva, ovelha balançando | CSS puro, tokens em `global.css` |
+| Reveal com stagger na galeria | Motion, carregado só quando a galeria entra em tela |
+| Lightbox (zoom, teclado, swipe) | `<dialog>` nativo + Motion, carregado no primeiro clique |
+| Troca de página com morph da capa | View Transitions do Astro (`<ClientRouter />`) |
+
+O Motion não entra no carregamento inicial de página nenhuma. Na home ele
+nunca é baixado; na página do evento só quando a galeria aparece ou quando
+alguém abre uma foto.
+
+O lightbox usa `<dialog>`: o Esc, o travamento de foco e a devolução do
+foco para a miniatura clicada são do navegador, não código nosso. As setas
+do teclado, o swipe e o zoom são nossos.
+
+O cabeçalho é persistido entre navegações (`transition:persist`) para não
+piscar, e por isso um script reajusta qual item está marcado como atual a
+cada troca de página — senão ele ficaria congelado no estado da página
+anterior, inclusive no `aria-current`.
+
 ## Acessibilidade
 
 - Todo texto passa em WCAG AA sobre o fundo creme (conferido no build).
 - Movimento respeita `prefers-reduced-motion`: animação decorativa desliga,
   transição vira fade curto.
 - Ilustrações são `aria-hidden` — elas não carregam informação.
+- Sem scroll horizontal a partir de 320px de largura (WCAG 1.4.10).
+- Sem JavaScript, o conteúdo aparece inteiro: o reveal só esconde elemento
+  quando detecta que o JS está vivo.
+
+## Desempenho medido
+
+Lighthouse rodando contra o `npm run preview`, home e página de evento:
+
+| | Home | Evento |
+| --- | --- | --- |
+| Performance | 100 | 100 |
+| Acessibilidade | 100 | 100 |
+| Boas práticas | 100 | 100 |
+| SEO | 100 | 100 |
+| CLS | 0 | 0 |
+| Total Blocking Time | 0 ms | 0 ms |
+| Peso da página | 115 KB | 118 KB |
+
+São números de localhost, então a rede real vai render menos. O que
+importa deles é o CLS zerado (proporção travada em todo container de
+imagem) e o TBT zerado (quase nada de JS no carregamento).

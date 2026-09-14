@@ -210,6 +210,40 @@
 }
 
 /* =========================================================================
+   REVEAL ON SCROLL
+   O estado escondido só existe quando há JS e movimento liberado. Sem JS,
+   com JS quebrado ou com movimento reduzido, o conteúdo já nasce visível.
+   ========================================================================= */
+
+@media (prefers-reduced-motion: no-preference) {
+  html.js [data-revelar] {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  /* rede de segurança: se o Motion não carregar, o script solta tudo */
+  html.js [data-revelar-pronto] [data-revelar] {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.5s var(--ease-saida),
+      transform 0.5s var(--ease-saida);
+  }
+}
+
+/* =========================================================================
+   VIEW TRANSITIONS
+   ========================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* =========================================================================
    UTILITÁRIOS
    ========================================================================= */
 
