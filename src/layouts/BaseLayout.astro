@@ -1,0 +1,65 @@
+---
+import { Font } from 'astro:assets';
+import { ClientRouter } from 'astro:transitions';
+import { SITE } from '../config/site';
+import '../styles/global.css';
+
+interface Props {
+  /** Título da página, sem o nome do site (ele é anexado automaticamente). */
+  titulo: string;
+  /** Descrição para buscadores e para o card do WhatsApp. */
+  descricao?: string;
+  /** URL absoluta da imagem de compartilhamento. */
+  ogImagem?: string;
+  /** Deixe true em páginas que não devem ir para o sitemap/índice. */
+  naoIndexar?: boolean;
+}
+
+const {
+  titulo,
+  descricao = SITE.descricao,
+  ogImagem,
+  naoIndexar = false,
+} = Astro.props;
+
+const tituloCompleto = titulo === SITE.nome ? SITE.nome : `${titulo} · ${SITE.nome}`;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE.url).href;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={canonical} />
+
+    <title>{tituloCompleto}</title>
+    <meta name="description" content={descricao} />
+    {naoIndexar && <meta name="robots" content="noindex, nofollow" />}
+
+    {/* Open Graph — é isso que monta o card quando alguém manda no WhatsApp. */}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content={SITE.nome} />
+    <meta property="og:title" content={tituloCompleto} />
+    <meta property="og:description" content={descricao} />
+    <meta property="og:url" content={canonical} />
+    {ogImagem && <meta property="og:image" content={ogImagem} />}
+    {ogImagem && <meta property="og:image:width" content="1200" />}
+    {ogImagem && <meta property="og:image:height" content="630" />}
+    <meta name="twitter:card" content={ogImagem ? 'summary_large_image' : 'summary'} />
+
+    <meta name="theme-color" content="#fdf6ec" />
+
+    <Font cssVariable="--ff-display" preload />
+    <Font cssVariable="--ff-body" preload />
+
+    <ClientRouter />
+  </head>
+
+  <body>
+    <a class="pular-link" href="#conteudo">Pular para o conteúdo</a>
+    <slot />
+  </body>
+</html>

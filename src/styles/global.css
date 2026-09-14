@@ -1,0 +1,322 @@
+@import 'tailwindcss';
+
+/* =========================================================================
+   SISTEMA DE DESIGN — Cordeirinhos de Cristo
+   -------------------------------------------------------------------------
+   Paleta pastel quente. Todas as combinações de texto usadas no site foram
+   conferidas contra o fundo creme e passam em WCAG AA (4.5:1) ou melhor.
+   Regra prática: para TEXTO use os tons 600+ das escalas. Os tons 100–400
+   são para preenchimento e decoração.
+   ========================================================================= */
+
+@theme {
+  /* ── Tipografia ────────────────────────────────────────────────────────
+     As variáveis --ff-* vêm da API de fontes do Astro (astro.config.mjs).
+     Elas já incluem as métricas de fallback que evitam layout shift.        */
+  --font-sans: var(--ff-body, system-ui, sans-serif);
+  --font-display: var(--ff-display, ui-rounded, system-ui, sans-serif);
+
+  /* Escala fluida: cresce com a viewport, sem media query e sem travar o
+     zoom do usuário (o clamp usa rem nos extremos).                         */
+  --text-hero: clamp(2.25rem, 1.45rem + 4vw, 4rem);
+  --text-hero--line-height: 1.05;
+  --text-hero--letter-spacing: -0.02em;
+  --text-titulo: clamp(1.75rem, 1.25rem + 2.2vw, 2.75rem);
+  --text-titulo--line-height: 1.15;
+  --text-titulo--letter-spacing: -0.015em;
+  --text-subtitulo: clamp(1.25rem, 1.05rem + 0.9vw, 1.625rem);
+  --text-subtitulo--line-height: 1.25;
+  --text-corpo-lg: 1.125rem;
+  --text-corpo-lg--line-height: 1.7;
+
+  /* ── Cor · creme (fundos quentes) ─────────────────────────────────────── */
+  --color-creme-50: #fffdf9;
+  --color-creme-100: #fdf6ec;
+  --color-creme-200: #f6eedf;
+  --color-creme-300: #eadcc5;
+  --color-creme-400: #dcc9a9;
+
+  /* ── Cor · céu (primária) ─────────────────────────────────────────────── */
+  --color-ceu-100: #ddedf8;
+  --color-ceu-200: #bfdcef;
+  --color-ceu-300: #97c6e3;
+  --color-ceu-400: #6babd2;
+  --color-ceu-500: #4a8fba;
+  --color-ceu-600: #33718f; /* 5.02:1 no creme — ok para texto */
+  --color-ceu-700: #255a75; /* 6.99:1 — link padrão */
+  --color-ceu-800: #1b4257; /* 9.97:1 — fundo escuro do rodapé */
+  --color-ceu-900: #12303f;
+
+  /* ── Cor · ouro (acento) ──────────────────────────────────────────────── */
+  --color-ouro-100: #fbf0d2;
+  --color-ouro-200: #f5e0a8;
+  --color-ouro-300: #eecd74;
+  --color-ouro-400: #dfaf36; /* decorativo / fundo de botão */
+  --color-ouro-500: #b8860b; /* 3.03:1 — só texto grande */
+  --color-ouro-600: #8f6708; /* 4.76:1 — texto normal ok */
+  --color-ouro-700: #6e4f06;
+
+  /* ── Cor · tinta (texto) ──────────────────────────────────────────────── */
+  --color-tinta-300: #a1937f;
+  --color-tinta-500: #6e6255; /* 5.53:1 — texto de apoio */
+  --color-tinta-600: #5c5146;
+  --color-tinta-700: #4a4139;
+  --color-tinta-900: #2e2823; /* 13.5:1 — texto principal */
+
+  /* ── Papéis semânticos ────────────────────────────────────────────────── */
+  --color-fundo: var(--color-creme-100);
+  --color-superficie: #ffffff;
+  --color-superficie-suave: var(--color-creme-50);
+  --color-borda: var(--color-creme-300);
+  --color-borda-forte: var(--color-ceu-600); /* bordas funcionais: 3:1+ */
+  --color-texto: var(--color-tinta-900);
+  --color-texto-suave: var(--color-tinta-500);
+  --color-primaria: var(--color-ceu-700);
+  --color-primaria-forte: var(--color-ceu-800);
+  --color-acento: var(--color-ouro-600);
+
+  /* ── Raio ─────────────────────────────────────────────────────────────── */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.75rem;
+  --radius-3xl: 2.25rem;
+
+  /* ── Sombra · tingida de marrom quente, nunca preto puro ──────────────── */
+  --shadow-suave: 0 1px 2px rgb(46 40 35 / 0.04), 0 2px 8px rgb(46 40 35 / 0.05);
+  --shadow-cartao: 0 2px 4px rgb(46 40 35 / 0.04), 0 8px 24px rgb(46 40 35 / 0.07);
+  --shadow-alta: 0 4px 8px rgb(46 40 35 / 0.05), 0 18px 44px rgb(46 40 35 / 0.11);
+
+  /* ── Movimento ────────────────────────────────────────────────────────── */
+  --ease-saida: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-suave: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --animate-deriva: deriva 62s linear infinite;
+  --animate-deriva-lenta: deriva 96s linear infinite;
+  --animate-balanco: balanco 6s var(--ease-suave) infinite;
+  --animate-flutua: flutua 9s var(--ease-suave) infinite;
+
+  @keyframes deriva {
+    from {
+      transform: translate3d(-12%, 0, 0);
+    }
+    to {
+      transform: translate3d(112%, 0, 0);
+    }
+  }
+  @keyframes balanco {
+    0%,
+    100% {
+      transform: rotate(-2.5deg);
+    }
+    50% {
+      transform: rotate(2.5deg);
+    }
+  }
+  @keyframes flutua {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+}
+
+/* =========================================================================
+   BASE
+   ========================================================================= */
+
+@layer base {
+  :root {
+    color-scheme: light;
+    scroll-padding-top: 5.5rem; /* âncoras não param embaixo do cabeçalho */
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-fundo);
+    color: var(--color-texto);
+    font-family: var(--font-sans);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-wrap: balance;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  /* Foco visível e com contraste — nunca removido, só melhorado. */
+  :focus-visible {
+    outline: 3px solid var(--color-ceu-700);
+    outline-offset: 3px;
+    border-radius: 0.35rem;
+  }
+
+  ::selection {
+    background-color: var(--color-ouro-200);
+    color: var(--color-tinta-900);
+  }
+
+  /* Alvos de toque confortáveis no celular. */
+  a,
+  button {
+    touch-action: manipulation;
+  }
+}
+
+/* =========================================================================
+   MOVIMENTO REDUZIDO
+   Desliga deslocamento e animação em laço; mantém fades curtos.
+   ========================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.12s !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Elementos puramente decorativos param de vez. */
+  [data-decorativo] {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* =========================================================================
+   UTILITÁRIOS
+   ========================================================================= */
+
+/** Largura de leitura padrão do site, com respiro lateral no celular. */
+@utility container-site {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 72rem;
+  padding-inline: 1.25rem;
+
+  @media (width >= 40rem) {
+    padding-inline: 2rem;
+  }
+}
+
+/** Ritmo vertical entre seções da home. */
+@utility secao {
+  padding-block: 3.5rem;
+
+  @media (width >= 48rem) {
+    padding-block: 5.5rem;
+  }
+}
+
+/** Link "pular para o conteúdo": fora da tela até receber foco. */
+@utility pular-link {
+  position: absolute;
+  left: 1rem;
+  top: 0.75rem;
+  z-index: 100;
+  translate: 0 -200%;
+  border-radius: var(--radius-md);
+  background-color: var(--color-superficie);
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  color: var(--color-primaria-forte);
+  box-shadow: var(--shadow-alta);
+  transition: translate 0.18s var(--ease-saida);
+
+  &:focus-visible {
+    translate: 0 0;
+  }
+}
+
+/** Corpo de texto vindo de Markdown. */
+@utility prosa {
+  font-size: var(--text-corpo-lg);
+  line-height: 1.75;
+  color: var(--color-tinta-700);
+
+  & > * + * {
+    margin-block-start: 1.25em;
+  }
+
+  & h2 {
+    margin-block-start: 2em;
+    font-size: var(--text-subtitulo);
+    line-height: 1.25;
+    color: var(--color-texto);
+  }
+
+  & h3 {
+    margin-block-start: 1.75em;
+    font-size: 1.25rem;
+    color: var(--color-texto);
+  }
+
+  & a {
+    color: var(--color-primaria);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1.5px;
+
+    &:hover {
+      color: var(--color-primaria-forte);
+    }
+  }
+
+  & strong {
+    font-weight: 600;
+    color: var(--color-texto);
+  }
+
+  & ul,
+  & ol {
+    padding-inline-start: 1.5rem;
+  }
+
+  & ul {
+    list-style: disc;
+  }
+
+  & ol {
+    list-style: decimal;
+  }
+
+  & li + li {
+    margin-block-start: 0.5em;
+  }
+
+  & blockquote {
+    border-inline-start: 3px solid var(--color-ouro-300);
+    padding-inline-start: 1.25rem;
+    font-style: italic;
+    color: var(--color-tinta-600);
+  }
+
+  & img {
+    border-radius: var(--radius-xl);
+  }
+}

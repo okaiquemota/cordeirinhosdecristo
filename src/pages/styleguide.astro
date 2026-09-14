@@ -1,0 +1,296 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Ovelha from '../components/ilustracoes/Ovelha.astro';
+import Nuvem from '../components/ilustracoes/Nuvem.astro';
+import { contraste, nivel } from '../lib/contraste';
+
+const FUNDO = '#fdf6ec';
+
+const escalas = [
+  {
+    nome: 'creme',
+    papel: 'Fundos quentes. O site inteiro respira em cima disso.',
+    tons: [
+      ['50', '#fffdf9'],
+      ['100', '#fdf6ec'],
+      ['200', '#f6eedf'],
+      ['300', '#eadcc5'],
+      ['400', '#dcc9a9'],
+    ],
+  },
+  {
+    nome: 'céu',
+    papel: 'Primária. Links, botões, rodapé.',
+    tons: [
+      ['100', '#ddedf8'],
+      ['200', '#bfdcef'],
+      ['300', '#97c6e3'],
+      ['400', '#6babd2'],
+      ['500', '#4a8fba'],
+      ['600', '#33718f'],
+      ['700', '#255a75'],
+      ['800', '#1b4257'],
+      ['900', '#12303f'],
+    ],
+  },
+  {
+    nome: 'ouro',
+    papel: 'Acento. Destaques pontuais — nunca área grande.',
+    tons: [
+      ['100', '#fbf0d2'],
+      ['200', '#f5e0a8'],
+      ['300', '#eecd74'],
+      ['400', '#dfaf36'],
+      ['500', '#b8860b'],
+      ['600', '#8f6708'],
+      ['700', '#6e4f06'],
+    ],
+  },
+  {
+    nome: 'tinta',
+    papel: 'Texto. Marrom quente, não cinza frio.',
+    tons: [
+      ['300', '#a1937f'],
+      ['500', '#6e6255'],
+      ['600', '#5c5146'],
+      ['700', '#4a4139'],
+      ['900', '#2e2823'],
+    ],
+  },
+] as const;
+
+const papeis = [
+  ['fundo', '#fdf6ec', 'creme-100'],
+  ['superfície', '#ffffff', 'branco'],
+  ['borda', '#eadcc5', 'creme-300'],
+  ['borda-forte', '#33718f', 'céu-600'],
+  ['texto', '#2e2823', 'tinta-900'],
+  ['texto-suave', '#6e6255', 'tinta-500'],
+  ['primária', '#255a75', 'céu-700'],
+  ['acento', '#8f6708', 'ouro-600'],
+] as const;
+
+/** Como o tom pode ser usado sobre o fundo creme, em vez de aprovado/reprovado
+ *  — tons claros são de preenchimento por definição, não é falha deles. */
+function uso(razao: number) {
+  const n = nivel(razao);
+  if (n === 'reprovado') {
+    return { texto: 'fundo e decoração', estilo: 'bg-creme-200 text-tinta-600' };
+  }
+  if (n === 'AA grande') {
+    return { texto: `texto grande · ${razao.toFixed(1)}:1`, estilo: 'bg-ouro-100 text-ouro-700' };
+  }
+  return { texto: `texto · ${razao.toFixed(1)}:1 ${n}`, estilo: 'bg-ceu-100 text-ceu-800' };
+}
+---
+
+<BaseLayout
+  titulo="Sistema de design"
+  descricao="Tokens de cor, tipografia, espaçamento e movimento do site."
+  naoIndexar
+>
+  <main id="conteudo" class="container-site py-12 md:py-20">
+    <header class="max-w-2xl">
+      <p class="font-display text-sm font-600 tracking-widest text-acento uppercase">
+        Cordeirinhos de Cristo
+      </p>
+      <h1 class="mt-2 text-titulo text-texto">Sistema de design</h1>
+      <p class="mt-4 text-corpo-lg text-tinta-700">
+        A base visual do site. Os números de contraste abaixo são calculados no build contra o fundo
+        creme — não são estimativa. Tom que não aparece com razão de contraste é tom de
+        preenchimento: serve de fundo, nunca de texto.
+      </p>
+    </header>
+
+    {/* ── COR ────────────────────────────────────────────────────────── */}
+    <section class="mt-16" aria-labelledby="cor">
+      <h2 id="cor" class="text-subtitulo text-texto">Cor</h2>
+
+      <div class="mt-6 space-y-10">
+        {
+          escalas.map((escala) => (
+            <div>
+              <h3 class="font-display text-lg text-texto capitalize">{escala.nome}</h3>
+              <p class="text-sm text-texto-suave">{escala.papel}</p>
+              <ul class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+                {escala.tons.map(([nome, hex]) => {
+                  const razao = contraste(hex, FUNDO);
+                  const u = uso(razao);
+                  return (
+                    <li class="overflow-hidden rounded-xl border border-borda bg-superficie shadow-suave">
+                      <div class="h-16" style={`background:${hex}`} />
+                      <div class="p-3">
+                        <p class="font-display text-sm text-texto">
+                          {escala.nome}-{nome}
+                        </p>
+                        <p class="font-mono text-xs text-texto-suave uppercase">{hex}</p>
+                        <p
+                          class:list={[
+                            'mt-2 inline-block rounded-full px-2 py-0.5 text-xs font-600',
+                            u.estilo,
+                          ]}
+                        >
+                          {u.texto}
+                        </p>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+
+      <h3 class="mt-12 font-display text-lg text-texto">Papéis semânticos</h3>
+      <p class="text-sm text-texto-suave">
+        É por esses nomes que os componentes pedem cor. Trocar a paleta = trocar estes oito valores.
+      </p>
+      <ul class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          papeis.map(([papel, hex, origem]) => (
+            <li class="flex items-center gap-3 rounded-xl border border-borda bg-superficie p-3">
+              <span
+                class="size-10 shrink-0 rounded-lg border border-borda"
+                style={`background:${hex}`}
+              />
+              <span class="min-w-0">
+                <span class="block font-display text-sm text-texto">{papel}</span>
+                <span class="block text-xs text-texto-suave">{origem}</span>
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    {/* ── TIPOGRAFIA ─────────────────────────────────────────────────── */}
+    <section class="mt-16" aria-labelledby="tipografia">
+      <h2 id="tipografia" class="text-subtitulo text-texto">Tipografia</h2>
+      <p class="mt-1 text-sm text-texto-suave">
+        <strong class="font-600 text-texto">Baloo 2</strong> nos títulos — arredondada, calorosa, com
+        peso suficiente para não virar fonte de festa infantil.
+        <strong class="font-600 text-texto"> Inter</strong> no corpo — neutra e legível em tela pequena.
+        As duas são baixadas no build e servidas do nosso domínio.
+      </p>
+
+      <div class="mt-6 space-y-6 rounded-2xl border border-borda bg-superficie p-6 shadow-suave">
+        <div>
+          <p class="font-mono text-xs text-texto-suave">text-hero · Baloo 2 700</p>
+          <p class="font-display text-hero font-700 text-texto">Cordeirinhos de Cristo</p>
+        </div>
+        <div>
+          <p class="font-mono text-xs text-texto-suave">text-titulo · Baloo 2 700</p>
+          <p class="font-display text-titulo font-700 text-texto">Festa da Família</p>
+        </div>
+        <div>
+          <p class="font-mono text-xs text-texto-suave">text-subtitulo · Baloo 2 600</p>
+          <p class="font-display text-subtitulo font-600 text-texto">Horários dos encontros</p>
+        </div>
+        <div>
+          <p class="font-mono text-xs text-texto-suave">text-corpo-lg · Inter 400</p>
+          <p class="max-w-prose text-corpo-lg text-tinta-700">
+            Recebemos as crianças todos os domingos com histórias bíblicas, música, brincadeira e
+            muito carinho — cada uma no seu ritmo, cada uma do seu jeito.
+          </p>
+        </div>
+        <div>
+          <p class="font-mono text-xs text-texto-suave">base · Inter 400</p>
+          <p class="max-w-prose text-tinta-700">
+            Texto de apoio, legendas e informação secundária. Acentuação conferida: ação, coração,
+            três, vovô, criançada.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {/* ── FORMA ──────────────────────────────────────────────────────── */}
+    <section class="mt-16" aria-labelledby="forma">
+      <h2 id="forma" class="text-subtitulo text-texto">Raio e sombra</h2>
+      <p class="mt-1 text-sm text-texto-suave">
+        Cantos generosos e sombras tingidas de marrom quente — sombra preta em fundo creme fica suja.
+      </p>
+      <div class="mt-6 grid gap-4 sm:grid-cols-3">
+        <div class="rounded-xl bg-superficie p-6 shadow-suave">
+          <p class="font-display text-texto">suave</p>
+          <p class="text-sm text-texto-suave">chips, campos</p>
+        </div>
+        <div class="rounded-2xl bg-superficie p-6 shadow-cartao">
+          <p class="font-display text-texto">cartão</p>
+          <p class="text-sm text-texto-suave">cards de evento</p>
+        </div>
+        <div class="rounded-3xl bg-superficie p-6 shadow-alta">
+          <p class="font-display text-texto">alta</p>
+          <p class="text-sm text-texto-suave">lightbox, menu</p>
+        </div>
+      </div>
+    </section>
+
+    {/* ── COMPONENTES ────────────────────────────────────────────────── */}
+    <section class="mt-16" aria-labelledby="componentes">
+      <h2 id="componentes" class="text-subtitulo text-texto">Peças base</h2>
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        <a
+          href="#componentes"
+          class="rounded-full bg-primaria px-6 py-3 font-display font-600 text-creme-50 shadow-suave transition hover:bg-primaria-forte"
+          >Botão primário</a
+        >
+        <a
+          href="#componentes"
+          class="rounded-full bg-ouro-300 px-6 py-3 font-display font-600 text-tinta-900 shadow-suave transition hover:bg-ouro-400"
+          >Ver todas as fotos</a
+        >
+        <a
+          href="#componentes"
+          class="rounded-full border-2 border-borda-forte px-6 py-3 font-display font-600 text-primaria transition hover:bg-ceu-100"
+          >Secundário</a
+        >
+        <span
+          class="rounded-full bg-ceu-100 px-3 py-1 font-display text-sm font-600 text-ceu-800"
+          >12 de outubro</span
+        >
+        <span
+          class="rounded-full bg-ouro-100 px-3 py-1 font-display text-sm font-600 text-ouro-700"
+          >Novo</span
+        >
+      </div>
+      <p class="mt-4 text-sm text-texto-suave">
+        Navegue com <kbd class="rounded border border-borda bg-superficie px-1.5 py-0.5 font-mono text-xs">Tab</kbd>
+        para ver o anel de foco.
+      </p>
+    </section>
+
+    {/* ── ILUSTRAÇÃO E MOVIMENTO ─────────────────────────────────────── */}
+    <section class="mt-16 mb-8" aria-labelledby="movimento">
+      <h2 id="movimento" class="text-subtitulo text-texto">Ilustração e movimento</h2>
+      <p class="mt-1 text-sm text-texto-suave">
+        Elementos de apoio, sempre <code class="font-mono text-xs">aria-hidden</code>. Tudo aqui para
+        sob <code class="font-mono text-xs">prefers-reduced-motion</code>.
+      </p>
+
+      <div
+        class="relative mt-6 overflow-hidden rounded-3xl border border-borda bg-linear-to-b from-ceu-100 to-creme-100 p-8"
+      >
+        <Nuvem class="absolute top-6 left-0 w-44 text-creme-50 animate-deriva" opacidade={0.95} />
+        <Nuvem
+          class="absolute top-24 left-0 w-28 text-creme-50 animate-deriva-lenta"
+          opacidade={0.75}
+        />
+        <div class="relative flex min-h-52 flex-wrap items-end justify-center gap-10 pt-16">
+          <figure class="text-center">
+            <Ovelha class="w-40" animada />
+            <figcaption class="mt-2 text-xs text-texto-suave">com balanço</figcaption>
+          </figure>
+          <figure class="text-center">
+            <Ovelha class="w-40" />
+            <figcaption class="mt-2 text-xs text-texto-suave">parada</figcaption>
+          </figure>
+        </div>
+      </div>
+      <p class="mt-3 text-sm text-texto-suave">
+        As nuvens derivam em 62s e 96s, em velocidades diferentes para dar profundidade. A ovelha
+        balança 2,5° para cada lado em 6s.
+      </p>
+    </section>
+  </main>
+</BaseLayout>
