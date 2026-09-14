@@ -18,6 +18,7 @@ npm run preview  # serve o dist/
 | --- | --- |
 | Nome da igreja, horários, Instagram, endereço | `src/config/site.ts` |
 | Versículo da faixa azul | `src/config/site.ts` (`VERSICULO`) |
+| Títulos e chamadas das seções | `src/config/site.ts` (`TEXTOS`) |
 | "Como funciona um domingo" | `src/config/site.ts` (`COMO_FUNCIONA`) |
 | "Para os pais" | `src/config/site.ts` (`PARA_OS_PAIS`) |
 | Eventos (um `.md` por evento) | `src/content/eventos/` |
@@ -54,6 +55,18 @@ preenchimento e decoração. O styleguide mostra isso tom a tom.
 Baloo 2 (títulos) e Inter (corpo) estão versionadas em `src/assets/fontes/`,
 só o subconjunto latino. O build não fala com Google Fonts nem com CDN
 nenhum. Veja `src/assets/fontes/LEIA-ME.md` para atualizar.
+
+## Sobre o texto do site
+
+Toda a prosa vive em `src/config/site.ts`. Nenhum componente tem frase
+institucional chumbada, então dá para reescrever o site inteiro sem abrir
+um `.astro`.
+
+O que está lá foi redigido como rascunho e **não foi conferido com a
+igreja**. Duas seções — "Como funciona um domingo" e "Para os pais" —
+estão com a lista vazia de propósito: elas descreviam cadastro, entrega e
+retirada de criança, que é o tipo de informação que não pode ser chute.
+O formato está comentado no arquivo; preencha e as seções voltam sozinhas.
 
 ## A marca no site
 

@@ -52,6 +52,29 @@ export const VERSICULO = {
   referencia: 'Mateus 19:14',
 };
 
+/**
+ * Títulos e chamadas das seções da home.
+ *
+ * Está tudo aqui para você reescrever o site inteiro sem abrir componente
+ * nenhum. O que eu redigi é rascunho — troque à vontade pelo jeito que a
+ * igreja fala.
+ */
+export const TEXTOS = {
+  ultimosEventos: {
+    titulo: 'Últimos eventos',
+    descricao: 'PREENCHER: uma linha sobre o que são estes registros.',
+  },
+  contato: {
+    titulo: 'Venha nos visitar',
+    /* Rascunho meu. A frase anterior afirmava que as crianças são recebidas
+       em qualquer domingo — eu não tinha como saber disso. */
+    descricao: 'PREENCHER: quando e como uma família pode visitar pela primeira vez.',
+    ondeFica: 'Onde fica',
+    noInstagram: 'No Instagram',
+    instagramTexto: 'PREENCHER: o que vocês publicam por lá.',
+  },
+};
+
 export type Passo = { titulo: string; texto: string };
 
 /**
@@ -65,30 +88,22 @@ export const COMO_FUNCIONA: {
 } = {
   titulo: 'Como funciona um domingo',
   descricao: 'Para quem vem pela primeira vez saber o que esperar.',
-  passos: [
-    {
-      titulo: 'A chegada',
-      texto:
-        'As crianças são recebidas na entrada do departamento e ganham o ' +
-        'crachá do dia. PREENCHER: onde fica a sala e a partir de que horário.',
-    },
-    {
-      titulo: 'A história',
-      texto:
-        'Cada encontro tem uma história bíblica contada no tamanho da idade ' +
-        'deles, com música e muita participação.',
-    },
-    {
-      titulo: 'A atividade',
-      texto:
-        'Depois da história vem a parte de fazer: desenho, dobradura, ' +
-        'brincadeira. Cada criança leva para casa o que fez.',
-    },
-    {
-      titulo: 'A volta',
-      texto: 'PREENCHER: como e onde os pais buscam a criança no fim do encontro.',
-    },
-  ],
+
+  /*
+   * VAZIO DE PROPÓSITO — a seção não aparece na home enquanto estiver assim.
+   *
+   * Eu tinha escrito estes quatro passos, mas eles afirmavam procedimento da
+   * igreja que ninguém confirmou. Preencha com o que de fato acontece e a
+   * seção volta sozinha. O formato é este:
+   *
+   *   passos: [
+   *     { titulo: 'A chegada',   texto: 'Onde a criança é recebida e a partir de que horário.' },
+   *     { titulo: 'A história',  texto: 'Como é a parte da palavra.' },
+   *     { titulo: 'A atividade', texto: 'O que elas fazem depois.' },
+   *     { titulo: 'A volta',     texto: 'Como e onde os pais buscam a criança.' },
+   *   ]
+   */
+  passos: [],
 };
 
 export type Duvida = { pergunta: string; resposta: string };
@@ -101,28 +116,18 @@ export const PARA_OS_PAIS: {
 } = {
   titulo: 'Para os pais',
   descricao: 'O que as famílias costumam perguntar antes da primeira visita.',
-  duvidas: [
-    {
-      pergunta: 'Que idades vocês recebem?',
-      resposta: 'PREENCHER: faixa etária atendida e como as turmas são divididas.',
-    },
-    {
-      pergunta: 'Preciso avisar antes de levar meu filho?',
-      resposta:
-        'Não precisa. É só chegar — a equipe recebe a criança e faz o cadastro ' +
-        'na hora.',
-    },
-    {
-      pergunta: 'Como é a entrega e a retirada?',
-      resposta: 'PREENCHER: o procedimento de entrega e quem pode retirar a criança.',
-    },
-    {
-      pergunta: 'Meu filho tem restrição alimentar ou de saúde.',
-      resposta:
-        'Avise a equipe na chegada. Qualquer cuidado especial fica anotado e ' +
-        'acompanha a criança durante todo o encontro.',
-    },
-  ],
+
+  /*
+   * VAZIO DE PROPÓSITO — mesma razão da seção acima. As respostas que eu
+   * tinha escrito descreviam cadastro, entrega e retirada de criança, que é
+   * justamente o tipo de informação que não pode ser chute. O formato é este:
+   *
+   *   duvidas: [
+   *     { pergunta: 'Que idades vocês recebem?', resposta: '...' },
+   *     { pergunta: 'Como é a entrega e a retirada?', resposta: '...' },
+   *   ]
+   */
+  duvidas: [],
 };
 
 export type Horario = {

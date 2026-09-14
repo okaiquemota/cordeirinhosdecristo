@@ -3,6 +3,7 @@ import CardEvento from '../CardEvento.astro';
 import Botao from '../Botao.astro';
 import Seta from '../icones/Seta.astro';
 import { eventosRecentes, listarEventos } from '../../lib/eventos';
+import { TEXTOS } from '../../config/site';
 
 const eventos = await eventosRecentes(3);
 const total = (await listarEventos()).length;
@@ -12,8 +13,8 @@ const total = (await listarEventos()).length;
   <div class="container-site">
     <div class="flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h2 id="ultimos-eventos" class="text-titulo text-texto">Últimos eventos</h2>
-        <p class="mt-2 text-corpo-lg text-tinta-700">O que a criançada andou aprontando.</p>
+        <h2 id="ultimos-eventos" class="text-titulo text-texto">{TEXTOS.ultimosEventos.titulo}</h2>
+        <p class="mt-2 text-corpo-lg text-tinta-700">{TEXTOS.ultimosEventos.descricao}</p>
       </div>
       {
         total > 3 && (
