@@ -100,3 +100,27 @@ Lighthouse rodando contra o `npm run preview`, home e página de evento:
 São números de localhost, então a rede real vai render menos. O que
 importa deles é o CLS zerado (proporção travada em todo container de
 imagem) e o TBT zerado (quase nada de JS no carregamento).
+
+## Deploy
+
+Hospedagem na Vercel, a partir deste repositório. O `vercel.json` guarda
+três coisas:
+
+- **`trailingSlash: true`** — tem que bater com o `trailingSlash: 'always'`
+  do `astro.config.mjs`. Se os dois discordarem, cada link vira um
+  redirecionamento.
+- **Cache eterno em `/_astro/`** — todo arquivo ali tem hash no nome, então
+  conteúdo novo significa URL nova. Pode ser guardado para sempre sem risco
+  de alguém ver versão velha. O HTML fica de fora, porque o nome dele não
+  muda.
+- **Três cabeçalhos de segurança** — `nosniff`, `Referrer-Policy` e
+  `X-Frame-Options`.
+
+O build é `npm run build`, que roda `astro check` antes. Erro de tipo ou de
+frontmatter derruba o deploy em vez de publicar página quebrada.
+
+### Apontar o domínio
+
+Depois do primeiro deploy, no painel da Vercel: Settings → Domains →
+adicionar `cordeirinhosdecristo.com.br`. A Vercel mostra o registro de DNS
+para configurar no registrador.
