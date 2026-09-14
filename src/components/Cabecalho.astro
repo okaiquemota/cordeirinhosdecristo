@@ -1,0 +1,67 @@
+---
+import Ovelha from './ilustracoes/Ovelha.astro';
+import Instagram from './icones/Instagram.astro';
+import { SITE, CONTATO } from '../config/site';
+
+const caminho = Astro.url.pathname;
+const naHome = caminho === '/';
+const emEventos = caminho.startsWith('/eventos');
+---
+
+<header
+  transition:persist
+  class="sticky top-0 z-50 border-b border-creme-300/70 bg-creme-100/85 backdrop-blur-md"
+>
+  {/* flex-wrap em vez de esconder: em telas de 320px a navegação desce para
+      a segunda linha, sem scroll horizontal e sem sumir com nada (WCAG 1.4.10) */}
+  <div
+    class="container-site flex min-h-16 flex-wrap items-center justify-between gap-x-3 gap-y-1 py-2 md:min-h-20"
+  >
+    <a
+      href="/"
+      class="group flex shrink items-center gap-2.5 rounded-lg"
+      aria-current={naHome ? 'page' : undefined}
+    >
+      <Ovelha class="w-9 shrink-0 transition-transform duration-300 ease-saida group-hover:-rotate-6 md:w-11" />
+      <span class="min-w-0">
+        <span
+          class="block font-display text-base leading-tight font-700 text-texto sm:text-lg md:text-xl"
+          >{SITE.nome}</span
+        >
+        <span class="hidden text-xs text-texto-suave sm:block">{SITE.igreja}</span>
+      </span>
+    </a>
+
+    <nav aria-label="Principal" class="flex shrink-0 items-center gap-1 sm:gap-2">
+      <a
+        href="/"
+        aria-current={naHome ? 'page' : undefined}
+        class:list={[
+          'rounded-full px-2.5 py-2 font-display font-600 transition sm:px-4',
+          naHome ? 'bg-ceu-100 text-ceu-800' : 'text-tinta-700 hover:bg-creme-200',
+        ]}>Início</a
+      >
+      <a
+        href="/eventos"
+        aria-current={emEventos ? 'page' : undefined}
+        class:list={[
+          'rounded-full px-2.5 py-2 font-display font-600 transition sm:px-4',
+          emEventos ? 'bg-ceu-100 text-ceu-800' : 'text-tinta-700 hover:bg-creme-200',
+        ]}>Eventos</a
+      >
+      {
+        CONTATO.instagramUrl && (
+          <a
+            href={CONTATO.instagramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="rounded-full p-2 text-tinta-700 transition hover:bg-creme-200 hover:text-primaria"
+          >
+            <Instagram class="size-5 sm:size-6" />
+            <span class="sr-only">Instagram do departamento (abre em nova aba)</span>
+          </a>
+        )
+      }
+    </nav>
+  </div>
+</header>

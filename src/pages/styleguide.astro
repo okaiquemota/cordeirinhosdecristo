@@ -1,5 +1,9 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import PaginaLayout from '../layouts/PaginaLayout.astro';
+import Botao from '../components/Botao.astro';
+import CardEvento from '../components/CardEvento.astro';
+import Seta from '../components/icones/Seta.astro';
+import { eventosRecentes } from '../lib/eventos';
 import Ovelha from '../components/ilustracoes/Ovelha.astro';
 import Nuvem from '../components/ilustracoes/Nuvem.astro';
 import { contraste, nivel } from '../lib/contraste';
@@ -70,6 +74,8 @@ const papeis = [
   ['acento', '#8f6708', 'ouro-600'],
 ] as const;
 
+const eventos = await eventosRecentes(3);
+
 /** Como o tom pode ser usado sobre o fundo creme, em vez de aprovado/reprovado
  *  — tons claros são de preenchimento por definição, não é falha deles. */
 function uso(razao: number) {
@@ -84,12 +90,12 @@ function uso(razao: number) {
 }
 ---
 
-<BaseLayout
+<PaginaLayout
   titulo="Sistema de design"
   descricao="Tokens de cor, tipografia, espaçamento e movimento do site."
   naoIndexar
 >
-  <main id="conteudo" class="container-site py-12 md:py-20">
+  <div class="container-site py-12 md:py-20">
     <header class="max-w-2xl">
       <p class="font-display text-sm font-600 tracking-widest text-acento uppercase">
         Cordeirinhos de Cristo
@@ -230,21 +236,12 @@ function uso(razao: number) {
     <section class="mt-16" aria-labelledby="componentes">
       <h2 id="componentes" class="text-subtitulo text-texto">Peças base</h2>
       <div class="mt-6 flex flex-wrap items-center gap-3">
-        <a
-          href="#componentes"
-          class="rounded-full bg-primaria px-6 py-3 font-display font-600 text-creme-50 shadow-suave transition hover:bg-primaria-forte"
-          >Botão primário</a
-        >
-        <a
-          href="#componentes"
-          class="rounded-full bg-ouro-300 px-6 py-3 font-display font-600 text-tinta-900 shadow-suave transition hover:bg-ouro-400"
-          >Ver todas as fotos</a
-        >
-        <a
-          href="#componentes"
-          class="rounded-full border-2 border-borda-forte px-6 py-3 font-display font-600 text-primaria transition hover:bg-ceu-100"
-          >Secundário</a
-        >
+        <Botao href="#componentes">Botão primário</Botao>
+        <Botao href="#componentes" tipo="ouro" tamanho="lg">
+          Ver todas as fotos
+          <Seta class="size-4" />
+        </Botao>
+        <Botao href="#componentes" tipo="secundaria">Secundário</Botao>
         <span
           class="rounded-full bg-ceu-100 px-3 py-1 font-display text-sm font-600 text-ceu-800"
           >12 de outubro</span
@@ -258,6 +255,32 @@ function uso(razao: number) {
         Navegue com <kbd class="rounded border border-borda bg-superficie px-1.5 py-0.5 font-mono text-xs">Tab</kbd>
         para ver o anel de foco.
       </p>
+    </section>
+
+    {/* ── CARTÃO DE EVENTO ───────────────────────────────────────────── */}
+    <section class="mt-16" aria-labelledby="cartao">
+      <h2 id="cartao" class="text-subtitulo text-texto">Cartão de evento</h2>
+      <p class="mt-1 text-sm text-texto-suave">
+        A capa tem proporção travada em 3:2, então o cartão não muda de altura quando a imagem
+        carrega. O link cobre o cartão inteiro, mas quem usa leitor de tela ouve só o título — não
+        um "leia mais" solto.
+      </p>
+      <ul class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          eventos.map((evento, i) => (
+            <li class="flex">
+              <CardEvento evento={evento} prioridade={i === 0} />
+            </li>
+          ))
+        }
+      </ul>
+      {
+        eventos.length === 0 && (
+          <p class="mt-4 rounded-xl bg-creme-200 p-4 text-sm text-tinta-700">
+            Nenhum evento em src/content/eventos ainda.
+          </p>
+        )
+      }
     </section>
 
     {/* ── ILUSTRAÇÃO E MOVIMENTO ─────────────────────────────────────── */}
@@ -292,5 +315,5 @@ function uso(razao: number) {
         balança 2,5° para cada lado em 6s.
       </p>
     </section>
-  </main>
-</BaseLayout>
+  </div>
+</PaginaLayout>

@@ -1,0 +1,100 @@
+---
+import Ovelha from './ilustracoes/Ovelha.astro';
+import BordaNuvem from './ilustracoes/BordaNuvem.astro';
+import Instagram from './icones/Instagram.astro';
+import Local from './icones/Local.astro';
+import { SITE, CONTATO, enderecoCompleto } from '../config/site';
+
+const { endereco } = CONTATO;
+const ano = new Date().getFullYear();
+const temEndereco = Boolean(endereco.logradouro || endereco.cidade);
+---
+
+<footer class="mt-24 bg-ceu-800 text-creme-100">
+  {/* a nuvem é desenhada na cor do fundo da página e transborda para baixo,
+      então o azul do rodapé parece começar logo abaixo dela */}
+  <BordaNuvem class="text-fundo" />
+
+  <div class="container-site relative pt-6 pb-14 md:pb-16">
+    <div class="grid gap-10 md:grid-cols-[1.2fr_1fr]">
+      <div>
+        <div class="flex items-center gap-3">
+          <Ovelha class="w-14" />
+          <p class="font-display text-xl font-700 text-creme-50">{SITE.nome}</p>
+        </div>
+        <p class="mt-3 max-w-sm text-ceu-100">{SITE.igreja}</p>
+      </div>
+
+      <div class="space-y-5">
+        {
+          temEndereco && (
+            <div class="flex gap-3">
+              <Local class="mt-0.5 size-5 shrink-0 text-ceu-200" />
+              <address class="text-ceu-100 not-italic">
+                {endereco.logradouro && <span class="block">{endereco.logradouro}</span>}
+                {endereco.bairro && <span class="block">{endereco.bairro}</span>}
+                <span class="block">
+                  {[endereco.cidade, endereco.uf].filter(Boolean).join(' — ')}
+                  {endereco.cep && ` · ${endereco.cep}`}
+                </span>
+                {endereco.mapaUrl && (
+                  <a
+                    href={endereco.mapaUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="mt-1 inline-block font-600 text-ceu-200 underline underline-offset-4 transition hover:text-creme-50"
+                  >
+                    Ver no mapa
+                  </a>
+                )}
+              </address>
+            </div>
+          )
+        }
+
+        {
+          CONTATO.instagram && (
+            <a
+              href={CONTATO.instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-3 rounded-lg font-600 text-ceu-100 transition hover:text-creme-50"
+            >
+              <Instagram class="size-5 text-ceu-200" />
+              {CONTATO.instagram}
+            </a>
+          )
+        }
+
+        {
+          CONTATO.whatsapp && (
+            <a
+              href={`https://wa.me/${CONTATO.whatsapp}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="block font-600 text-ceu-100 transition hover:text-creme-50"
+            >
+              {CONTATO.telefone || 'WhatsApp'}
+            </a>
+          )
+        }
+
+        {
+          CONTATO.email && (
+            <a
+              href={`mailto:${CONTATO.email}`}
+              class="block font-600 text-ceu-100 transition hover:text-creme-50"
+            >
+              {CONTATO.email}
+            </a>
+          )
+        }
+      </div>
+    </div>
+
+    <p class="mt-12 border-t border-ceu-700 pt-6 text-sm text-ceu-200">
+      © {ano} {SITE.nome} · {SITE.igreja}
+      {temEndereco && <span class="sr-only">, {enderecoCompleto}</span>}
+    </p>
+  </div>
+</footer>

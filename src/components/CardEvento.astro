@@ -1,0 +1,61 @@
+---
+import { Image } from 'astro:assets';
+import Seta from './icones/Seta.astro';
+import { dataLonga, dataISO } from '../lib/datas';
+import { urlEvento, nomeTransicaoCapa, type Evento } from '../lib/eventos';
+
+interface Props {
+  evento: Evento;
+  /** true no primeiro card visível: carrega a capa sem lazy. */
+  prioridade?: boolean;
+}
+
+const { evento, prioridade = false } = Astro.props;
+const { titulo, data, resumo, capa } = evento.data;
+---
+
+<article
+  class="group relative flex flex-col overflow-hidden rounded-2xl border border-borda bg-superficie shadow-suave transition duration-300 ease-saida hover:-translate-y-1 hover:shadow-cartao focus-within:-translate-y-1 focus-within:shadow-cartao"
+>
+  {/* proporção fixa: a altura do card não muda quando a imagem carrega */}
+  <div class="aspect-[3/2] overflow-hidden bg-creme-200">
+    <Image
+      src={capa.src}
+      alt={capa.alt}
+      widths={[320, 480, 640, 960]}
+      sizes="(min-width: 1024px) 22rem, (min-width: 640px) 45vw, 92vw"
+      format="webp"
+      loading={prioridade ? 'eager' : 'lazy'}
+      fetchpriority={prioridade ? 'high' : 'auto'}
+      decoding="async"
+      transition:name={nomeTransicaoCapa(evento)}
+      class="size-full object-cover transition-transform duration-500 ease-saida group-hover:scale-[1.03]"
+    />
+  </div>
+
+  <div class="flex flex-1 flex-col p-5">
+    <time
+      datetime={dataISO(data)}
+      class="self-start rounded-full bg-ceu-100 px-3 py-1 font-display text-sm font-600 text-ceu-800"
+    >
+      {dataLonga(data)}
+    </time>
+
+    <h3 class="mt-3 font-display text-xl leading-snug font-700 text-texto">
+      {/* o link cobre o card inteiro, mas só o título é lido como o link */}
+      <a href={urlEvento(evento)} class="after:absolute after:inset-0 after:content-['']">
+        {titulo}
+      </a>
+    </h3>
+
+    <p class="mt-2 line-clamp-3 text-tinta-700">{resumo}</p>
+
+    <span
+      class="mt-4 inline-flex items-center gap-1.5 font-display font-600 text-primaria transition-transform duration-300 ease-saida group-hover:translate-x-1"
+      aria-hidden="true"
+    >
+      Ver fotos
+      <Seta class="size-4" />
+    </span>
+  </div>
+</article>

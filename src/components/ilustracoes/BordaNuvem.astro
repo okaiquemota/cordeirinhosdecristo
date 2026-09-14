@@ -1,0 +1,40 @@
+---
+/**
+ * Borda de nuvens para a virada de uma seção clara para uma escura.
+ *
+ * É um aglomerado de círculos preenchidos com a cor de cima, apoiados numa
+ * faixa sólida. O resultado é uma silhueta de nuvem no limite entre as duas
+ * seções. Fica em currentColor, então quem usa define a cor pela classe.
+ */
+interface Props {
+  class?: string;
+}
+const { class: classe = 'text-creme-100' } = Astro.props;
+
+/* [x, raio] — raios variados para não virar um festão regular.
+   Os círculos ficam na linha de baixo da faixa e transbordam para baixo,
+   então a cor clara desce sobre a seção escura em forma de nuvem. */
+const bolhas: Array<[number, number]> = [
+  [-16, 30], [24, 44], [74, 26],
+  [132, 22], [168, 38], [212, 28],
+  [268, 20], [300, 34], [342, 46], [396, 24],
+  [452, 30], [492, 20], [528, 40], [578, 26],
+  [630, 36], [678, 22], [714, 30],
+  [768, 44], [822, 26], [860, 18],
+  [906, 32], [948, 42], [1000, 24],
+  [1052, 20], [1086, 36], [1132, 28], [1180, 40], [1216, 24],
+];
+---
+
+<svg
+  viewBox="0 0 1200 84"
+  preserveAspectRatio="xMidYMin meet"
+  aria-hidden="true"
+  focusable="false"
+  class:list={['block h-auto w-full', classe]}
+>
+  <g fill="currentColor">
+    <rect x="0" y="0" width="1200" height="30"></rect>
+    {bolhas.map(([x, r]) => <circle cx={x} cy={29} r={r}></circle>)}
+  </g>
+</svg>

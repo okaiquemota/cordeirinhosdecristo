@@ -1,0 +1,56 @@
+---
+/**
+ * Botão / link de ação.
+ *
+ * Vira <a> quando recebe href e <button> quando não recebe. Os alvos de
+ * toque têm no mínimo 44px de altura, que é o confortável no celular.
+ */
+interface Props {
+  href?: string;
+  tipo?: 'primaria' | 'ouro' | 'secundaria';
+  tamanho?: 'md' | 'lg';
+  /** Para links externos: adiciona target e rel. */
+  externo?: boolean;
+  class?: string;
+  [chave: string]: unknown;
+}
+
+const {
+  href,
+  tipo = 'primaria',
+  tamanho = 'md',
+  externo = false,
+  class: classe,
+  ...resto
+} = Astro.props;
+
+const base =
+  'inline-flex items-center justify-center gap-2 rounded-full font-display font-600 ' +
+  'transition duration-200 ease-saida hover:-translate-y-0.5 active:translate-y-0';
+
+const tipos = {
+  primaria: 'bg-primaria text-creme-50 shadow-suave hover:bg-primaria-forte hover:shadow-cartao',
+  ouro: 'bg-ouro-300 text-tinta-900 shadow-suave hover:bg-ouro-400 hover:shadow-cartao',
+  secundaria: 'border-2 border-borda-forte text-primaria hover:bg-ceu-100',
+} as const;
+
+const tamanhos = {
+  md: 'min-h-11 px-5 py-2.5 text-base',
+  lg: 'min-h-13 px-7 py-3.5 text-lg',
+} as const;
+
+const classes = [base, tipos[tipo], tamanhos[tamanho], classe];
+const alvo = externo ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+---
+
+{
+  href ? (
+    <a href={href} class:list={classes} {...alvo} {...resto}>
+      <slot />
+    </a>
+  ) : (
+    <button type="button" class:list={classes} {...resto}>
+      <slot />
+    </button>
+  )
+}

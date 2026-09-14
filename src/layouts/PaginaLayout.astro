@@ -1,0 +1,21 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Cabecalho from '../components/Cabecalho.astro';
+import Rodape from '../components/Rodape.astro';
+
+interface Props {
+  titulo: string;
+  descricao?: string;
+  ogImagem?: string;
+  naoIndexar?: boolean;
+}
+const props = Astro.props;
+---
+
+<BaseLayout {...props}>
+  <Cabecalho />
+  <main id="conteudo">
+    <slot />
+  </main>
+  <Rodape />
+</BaseLayout>

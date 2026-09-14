@@ -19,10 +19,19 @@ npm run preview  # serve o dist/
 | Nome da igreja, horários, Instagram, endereço | `src/config/site.ts` |
 | Eventos (um `.md` por evento) | `src/content/eventos/` |
 | Fotos dos eventos | `src/assets/fotos/` |
+| Cabeçalho, rodapé, cartão de evento | `src/components/` |
 | Cores, fontes, espaçamento, animações | `src/styles/global.css` |
 
 > Os valores ainda pendentes estão marcados com **`PREENCHER`**.
 > Para achar todos: `grep -rn PREENCHER src/`
+
+As fotos em `src/assets/fotos/tudo-se-fez-novo/` são placeholders gerados —
+está escrito "FOTO DE EXEMPLO" em cada uma. Troque pelos arquivos reais
+mantendo os nomes e nada mais precisa mudar, só os `alt` no `.md` do evento.
+
+Campo vazio no `site.ts` some da página: sem telefone, o bloco de telefone
+não aparece; sem `linkDrive` no evento, o botão "Ver todas as fotos" não
+aparece. Nada fica com buraco.
 
 ## Sistema de design
 
