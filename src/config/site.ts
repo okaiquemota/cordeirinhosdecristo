@@ -52,6 +52,79 @@ export const VERSICULO = {
   referencia: 'Mateus 19:14',
 };
 
+export type Passo = { titulo: string; texto: string };
+
+/**
+ * "Como funciona um domingo" — para quem nunca veio saber o que esperar.
+ * Lista vazia esconde a seção inteira.
+ */
+export const COMO_FUNCIONA: {
+  titulo: string;
+  descricao: string;
+  passos: Passo[];
+} = {
+  titulo: 'Como funciona um domingo',
+  descricao: 'Para quem vem pela primeira vez saber o que esperar.',
+  passos: [
+    {
+      titulo: 'A chegada',
+      texto:
+        'As crianças são recebidas na entrada do departamento e ganham o ' +
+        'crachá do dia. PREENCHER: onde fica a sala e a partir de que horário.',
+    },
+    {
+      titulo: 'A história',
+      texto:
+        'Cada encontro tem uma história bíblica contada no tamanho da idade ' +
+        'deles, com música e muita participação.',
+    },
+    {
+      titulo: 'A atividade',
+      texto:
+        'Depois da história vem a parte de fazer: desenho, dobradura, ' +
+        'brincadeira. Cada criança leva para casa o que fez.',
+    },
+    {
+      titulo: 'A volta',
+      texto: 'PREENCHER: como e onde os pais buscam a criança no fim do encontro.',
+    },
+  ],
+};
+
+export type Duvida = { pergunta: string; resposta: string };
+
+/** Dúvidas frequentes dos pais. Lista vazia esconde a seção. */
+export const PARA_OS_PAIS: {
+  titulo: string;
+  descricao: string;
+  duvidas: Duvida[];
+} = {
+  titulo: 'Para os pais',
+  descricao: 'O que as famílias costumam perguntar antes da primeira visita.',
+  duvidas: [
+    {
+      pergunta: 'Que idades vocês recebem?',
+      resposta: 'PREENCHER: faixa etária atendida e como as turmas são divididas.',
+    },
+    {
+      pergunta: 'Preciso avisar antes de levar meu filho?',
+      resposta:
+        'Não precisa. É só chegar — a equipe recebe a criança e faz o cadastro ' +
+        'na hora.',
+    },
+    {
+      pergunta: 'Como é a entrega e a retirada?',
+      resposta: 'PREENCHER: o procedimento de entrega e quem pode retirar a criança.',
+    },
+    {
+      pergunta: 'Meu filho tem restrição alimentar ou de saúde.',
+      resposta:
+        'Avise a equipe na chegada. Qualquer cuidado especial fica anotado e ' +
+        'acompanha a criança durante todo o encontro.',
+    },
+  ],
+};
+
 export type Horario = {
   /** Ex.: 'Domingo' */
   dia: string;

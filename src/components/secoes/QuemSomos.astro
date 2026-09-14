@@ -1,25 +1,37 @@
 ---
+import { Image } from 'astro:assets';
 import Ovelha from '../ilustracoes/Ovelha.astro';
 import { QUEM_SOMOS } from '../../config/site';
+import foto from '../../assets/fotos/hero.jpg';
 ---
 
-<section class="secao" aria-labelledby="quem-somos" data-revelar>
+<section class="secao" aria-labelledby="quem-somos">
   <div class="container-site">
-    {/* sem overflow-hidden: a ovelha transborda de propósito na quina, em
-        vez de aparecer cortada pela borda do cartão */}
-    <div
-      class="relative rounded-3xl border border-borda bg-superficie px-6 py-10 shadow-suave md:px-12 md:py-14"
-    >
-      <div class="max-w-2xl">
+    <div class="grid gap-10 md:grid-cols-2 md:items-center md:gap-14">
+      <div data-revelar>
         <h2 id="quem-somos" class="text-titulo text-texto">{QUEM_SOMOS.titulo}</h2>
         <p class="mt-5 text-corpo-lg text-tinta-700">{QUEM_SOMOS.texto}</p>
       </div>
 
-      {/* ovelha discreta no canto, escondida no celular para não roubar espaço */}
-      <Ovelha
-        class="pointer-events-none absolute -right-6 -bottom-8 hidden w-36 drop-shadow-md lg:block"
-        animada
-      />
+      <div class="relative" data-revelar>
+        {/* proporção travada: nada pula quando a foto carrega */}
+        <div class="aspect-[4/3] overflow-hidden rounded-3xl bg-ceu-100 shadow-cartao">
+          <Image
+            src={foto}
+            alt="Crianças do departamento infantil reunidas em um dos encontros."
+            widths={[420, 640, 900, 1200]}
+            sizes="(min-width: 768px) 30rem, 92vw"
+            format="webp"
+            loading="lazy"
+            decoding="async"
+            class="size-full object-cover"
+          />
+        </div>
+        <Ovelha
+          class="absolute -bottom-7 -left-4 w-24 drop-shadow-md sm:-left-6 sm:w-28"
+          animada
+        />
+      </div>
     </div>
   </div>
 </section>

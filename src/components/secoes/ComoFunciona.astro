@@ -1,0 +1,37 @@
+---
+import { COMO_FUNCIONA } from '../../config/site';
+const { titulo, descricao, passos } = COMO_FUNCIONA;
+---
+
+{
+  passos.length > 0 && (
+    <section class="secao" aria-labelledby="como-funciona">
+      <div class="container-site">
+        <header class="max-w-2xl" data-revelar>
+          <h2 id="como-funciona" class="text-titulo text-texto">
+            {titulo}
+          </h2>
+          <p class="mt-2 text-corpo-lg text-tinta-700">{descricao}</p>
+        </header>
+
+        <ol data-revelar-grupo class="mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {passos.map((passo, i) => (
+            <li
+              data-revelar
+              class="relative rounded-2xl border border-borda bg-superficie p-6 shadow-suave"
+            >
+              <span
+                class="flex size-10 items-center justify-center rounded-full bg-ceu-100 font-display text-lg font-700 text-ceu-800"
+                aria-hidden="true"
+              >
+                {i + 1}
+              </span>
+              <h3 class="mt-4 font-display text-xl font-700 text-texto">{passo.titulo}</h3>
+              <p class="mt-2 text-tinta-700">{passo.texto}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )
+}

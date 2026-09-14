@@ -2,12 +2,16 @@
 import nuvem from '../../assets/marca/nuvem.png';
 
 /**
- * Borda de nuvens para a virada de uma seção clara para uma escura.
+ * Borda de nuvens para a virada entre duas seções.
  *
- * Usa a nuvem oficial como máscara CSS, repetida na horizontal, somada a
- * uma faixa sólida no topo. Assim a silhueta é exatamente a da marca, mas
- * pintada na cor que a seção de cima tem — o que uma imagem branca fixa
- * não permitiria.
+ * Usa a nuvem oficial como máscara CSS, então a silhueta é exatamente a da
+ * marca mas pintada na cor que a seção vizinha tem — uma imagem branca
+ * fixa não permitiria isso.
+ *
+ * A nuvem é repetida em TRÊS camadas de tamanhos diferentes em vez de uma
+ * só. Com uma camada, o resultado é um festão perfeitamente regular, que
+ * lê como renda e não como céu. Com três larguras que não são múltiplas
+ * entre si, o desenho só se repete depois de alguns metros de tela.
  */
 interface Props {
   class?: string;
@@ -27,28 +31,35 @@ const { class: classe = 'text-fundo' } = Astro.props;
     height: 3.25rem;
     background-color: currentColor;
 
-    /* duas camadas: as nuvens repetidas e uma faixa sólida no topo, unidas */
+    --n: var(--nuvem-marca);
     --faixa: linear-gradient(black, black);
-    mask-image: var(--nuvem-marca), var(--faixa);
-    mask-repeat: repeat-x, no-repeat;
-    /* A nuvem é ancorada pela base e desenhada maior que a faixa: a parte
-       larga dela fica no topo, encostando nas vizinhas, e só as bolhas de
-       baixo aparecem — que é o formato de nuvem pendurada. */
+
+    /* três tamanhos primos entre si + a faixa sólida que fecha o topo */
+    mask-image: var(--n), var(--n), var(--n), var(--faixa);
+    mask-repeat: repeat-x, repeat-x, repeat-x, no-repeat;
     mask-size:
-      auto 210%,
-      100% 34%;
+      auto 250%,
+      auto 190%,
+      auto 145%,
+      100% 30%;
     mask-position:
-      center bottom,
+      13% bottom,
+      61% bottom,
+      37% bottom,
       top;
     mask-composite: add;
 
-    -webkit-mask-image: var(--nuvem-marca), var(--faixa);
-    -webkit-mask-repeat: repeat-x, no-repeat;
+    -webkit-mask-image: var(--n), var(--n), var(--n), var(--faixa);
+    -webkit-mask-repeat: repeat-x, repeat-x, repeat-x, no-repeat;
     -webkit-mask-size:
-      auto 210%,
-      100% 34%;
+      auto 250%,
+      auto 190%,
+      auto 145%,
+      100% 30%;
     -webkit-mask-position:
-      center bottom,
+      13% bottom,
+      61% bottom,
+      37% bottom,
       top;
     -webkit-mask-composite: source-over;
   }

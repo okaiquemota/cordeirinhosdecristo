@@ -7,7 +7,7 @@
  */
 interface Props {
   href?: string;
-  tipo?: 'primaria' | 'rosa' | 'secundaria';
+  tipo?: 'primaria' | 'rosa' | 'secundaria' | 'claro';
   tamanho?: 'md' | 'lg';
   /** Para links externos: adiciona target e rel. */
   externo?: boolean;
@@ -32,6 +32,8 @@ const tipos = {
   primaria: 'bg-primaria text-creme-50 shadow-suave hover:bg-primaria-forte hover:shadow-cartao',
   rosa: 'bg-rosa-300 text-tinta-900 shadow-suave hover:bg-rosa-400 hover:shadow-cartao',
   secundaria: 'border-2 border-borda-forte text-primaria hover:bg-ceu-100',
+  /* para usar sobre fundo azul, onde a borda do secundário sumiria */
+  claro: 'bg-creme-50 text-primaria shadow-suave hover:bg-white hover:shadow-cartao',
 } as const;
 
 const tamanhos = {

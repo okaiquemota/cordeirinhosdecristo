@@ -18,6 +18,8 @@ npm run preview  # serve o dist/
 | --- | --- |
 | Nome da igreja, horários, Instagram, endereço | `src/config/site.ts` |
 | Versículo da faixa azul | `src/config/site.ts` (`VERSICULO`) |
+| "Como funciona um domingo" | `src/config/site.ts` (`COMO_FUNCIONA`) |
+| "Para os pais" | `src/config/site.ts` (`PARA_OS_PAIS`) |
 | Eventos (um `.md` por evento) | `src/content/eventos/` |
 | Fotos dos eventos | `src/assets/fotos/` |
 | Cabeçalho, rodapé, cartão de evento | `src/components/` |
