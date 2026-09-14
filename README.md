@@ -21,6 +21,7 @@ npm run preview  # serve o dist/
 | Fotos dos eventos | `src/assets/fotos/` |
 | Cabeçalho, rodapé, cartão de evento | `src/components/` |
 | Texto da página de erro | `src/pages/404.astro` |
+| Logo e rosto da ovelha | `src/assets/marca/` |
 | Cores, fontes, espaçamento, animações | `src/styles/global.css` |
 
 > Os valores ainda pendentes estão marcados com **`PREENCHER`**.
@@ -50,6 +51,22 @@ preenchimento e decoração. O styleguide mostra isso tom a tom.
 Baloo 2 (títulos) e Inter (corpo) estão versionadas em `src/assets/fontes/`,
 só o subconjunto latino. O build não fala com Google Fonts nem com CDN
 nenhum. Veja `src/assets/fontes/LEIA-ME.md` para atualizar.
+
+## A marca no site
+
+| Onde | Qual arquivo |
+| --- | --- |
+| Hero da home (é o `<h1>`) | `logo-colorida.png` |
+| Rodapé | `logo-branca.png` |
+| Cabeçalho, "Quem somos", 404 | `ovelha.png` |
+| Favicon e ícone de celular | gerados de `ovelha.png` |
+
+No hero a logo é a imagem dentro do `<h1>`, com o nome no `alt` — então
+leitor de tela e buscador leem "Cordeirinhos de Cristo" como título da
+página, e não uma imagem sem nome.
+
+Veja `src/assets/marca/LEIA-ME.md` para trocar os arquivos e para entender
+por que os `.svg` entregues não são usados direto.
 
 ## Animações
 

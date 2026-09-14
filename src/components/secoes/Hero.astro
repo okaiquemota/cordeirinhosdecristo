@@ -7,6 +7,7 @@ import Seta from '../icones/Seta.astro';
 import Instagram from '../icones/Instagram.astro';
 import { SITE, CONTATO } from '../../config/site';
 import foto from '../../assets/fotos/hero.jpg';
+import logo from '../../assets/marca/logo-colorida.png';
 ---
 
 <section class="relative overflow-hidden bg-linear-to-b from-ceu-200 via-ceu-100 to-fundo">
@@ -34,7 +35,20 @@ import foto from '../../assets/fotos/hero.jpg';
     class="container-site relative grid gap-10 pt-12 pb-14 md:pt-16 md:pb-20 lg:grid-cols-[1fr_1.15fr] lg:items-center lg:gap-16"
   >
     <div>
-      <h1 class="text-hero text-texto">{SITE.nome}</h1>
+      {/* A logo É o título da página. O alt carrega o nome, então quem usa
+          leitor de tela e o Google leem "Cordeirinhos de Cristo" como h1. */}
+      <h1>
+        <Image
+          src={logo}
+          alt={SITE.nome}
+          widths={[320, 480, 640, 900]}
+          sizes="(min-width: 1024px) 26rem, min(85vw, 26rem)"
+          format="webp"
+          loading="eager"
+          decoding="async"
+          class="h-auto w-full max-w-[26rem]"
+        />
+      </h1>
       <p class="mt-4 max-w-md text-subtitulo text-tinta-700">{SITE.subtitulo}</p>
 
       <div class="mt-8 flex flex-wrap gap-3">

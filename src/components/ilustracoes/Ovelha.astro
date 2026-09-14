@@ -1,4 +1,15 @@
 ---
+import { Image } from 'astro:assets';
+import ovelha from '../../assets/marca/ovelha.png';
+
+/**
+ * O rosto do cordeirinho da marca.
+ *
+ * É o arquivo oficial, não um desenho nosso — por isso vive em
+ * src/assets/marca. Serve de elemento de apoio pelo site e é decorativo
+ * em todo lugar onde aparece: alt vazio e aria-hidden, porque quem usa
+ * leitor de tela não perde nada sem ele.
+ */
 interface Props {
   /** Classes extras (tamanho, posição). */
   class?: string;
@@ -6,72 +17,16 @@ interface Props {
   animada?: boolean;
 }
 const { class: classe = 'w-24', animada = false } = Astro.props;
-
-/* A lã é um aglomerado de círculos. Desenhamos o conjunto duas vezes: uma
-   maior em creme-300 (que vira o contorno da silhueta inteira) e outra por
-   cima no tamanho certo em creme-50. Assim o contorno acompanha só a borda
-   externa, sem riscos internos entre os círculos. */
-const la = [
-  { cx: 66, cy: 58, r: 20 },
-  { cx: 88, cy: 52, r: 21 },
-  { cx: 107, cy: 62, r: 16 },
-  { cx: 78, cy: 74, r: 16 },
-  { cx: 97, cy: 75, r: 14 },
-  { cx: 60, cy: 73, r: 13 },
-  { cx: 119, cy: 60, r: 7 },
-];
 ---
 
-<svg
-  viewBox="0 0 140 112"
-  fill="none"
+<Image
+  src={ovelha}
+  alt=""
   aria-hidden="true"
-  focusable="false"
+  width={360}
+  format="webp"
+  loading="lazy"
+  decoding="async"
   data-decorativo
-  class:list={[classe, animada && 'origin-bottom animate-balanco']}
->
-  {/* patas */}
-  <rect x="66" y="76" width="10" height="30" rx="5" fill="var(--color-tinta-600)"></rect>
-  <rect x="96" y="76" width="10" height="30" rx="5" fill="var(--color-tinta-600)"></rect>
-
-  {/* lã — contorno */}
-  <g fill="var(--color-creme-300)">
-    {la.map((c) => <circle cx={c.cx} cy={c.cy} r={c.r + 2.5}></circle>)}
-  </g>
-  {/* lã — preenchimento */}
-  <g fill="var(--color-creme-50)">
-    {la.map((c) => <circle cx={c.cx} cy={c.cy} r={c.r}></circle>)}
-  </g>
-
-  {/* orelha do outro lado, espiando atrás da cabeça */}
-  <ellipse
-    cx="57"
-    cy="57"
-    rx="8"
-    ry="4.4"
-    transform="rotate(-26 57 57)"
-    fill="var(--color-tinta-600)"></ellipse>
-
-  {/* cabeça */}
-  <ellipse cx="42" cy="64" rx="15" ry="16.5" fill="var(--color-tinta-700)"></ellipse>
-
-  {/* orelha da frente, caída */}
-  <ellipse
-    cx="25"
-    cy="67"
-    rx="8.5"
-    ry="4.8"
-    transform="rotate(22 25 67)"
-    fill="var(--color-tinta-600)"></ellipse>
-
-  {/* topete — encaixado no alto da cabeça, sem contorno: contra o marrom
-      escuro o contorno faria ele parecer uma bola solta */}
-  <ellipse cx="45" cy="54" rx="12.5" ry="9.5" fill="var(--color-creme-50)"></ellipse>
-
-  {/* olhos */}
-  <circle cx="36" cy="65" r="2.8" fill="var(--color-creme-50)"></circle>
-  <circle cx="47" cy="64" r="2.8" fill="var(--color-creme-50)"></circle>
-
-  {/* focinho */}
-  <ellipse cx="41" cy="74" rx="4.2" ry="2.8" fill="var(--color-tinta-300)"></ellipse>
-</svg>
+  class:list={['h-auto', classe, animada && 'origin-bottom animate-balanco']}
+/>

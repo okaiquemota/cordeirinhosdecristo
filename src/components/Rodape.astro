@@ -1,5 +1,6 @@
 ---
-import Ovelha from './ilustracoes/Ovelha.astro';
+import { Image } from 'astro:assets';
+import logoBranca from '../assets/marca/logo-branca.png';
 import BordaNuvem from './ilustracoes/BordaNuvem.astro';
 import Instagram from './icones/Instagram.astro';
 import Local from './icones/Local.astro';
@@ -18,11 +19,16 @@ const temEndereco = Boolean(endereco.logradouro || endereco.cidade);
   <div class="container-site relative pt-6 pb-14 md:pb-16">
     <div class="grid gap-10 md:grid-cols-[1.2fr_1fr]">
       <div>
-        <div class="flex items-center gap-3">
-          <Ovelha class="w-14" />
-          <p class="font-display text-xl font-700 text-creme-50">{SITE.nome}</p>
-        </div>
-        <p class="mt-3 max-w-sm text-ceu-100">{SITE.igreja}</p>
+        <Image
+          src={logoBranca}
+          alt={`${SITE.nome} — ${SITE.igreja}`}
+          widths={[240, 360, 480]}
+          sizes="17rem"
+          format="webp"
+          loading="lazy"
+          decoding="async"
+          class="h-auto w-56 max-w-full sm:w-64"
+        />
       </div>
 
       <div class="space-y-5">
