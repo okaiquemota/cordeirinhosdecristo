@@ -24,30 +24,30 @@ const escalas = [
   },
   {
     nome: 'céu',
-    papel: 'Primária. Links, botões, rodapé.',
+    papel: 'Primária. O tom 500 é o azul da logo; o resto sai dele.',
     tons: [
-      ['100', '#ddedf8'],
-      ['200', '#bfdcef'],
-      ['300', '#97c6e3'],
-      ['400', '#6babd2'],
-      ['500', '#4a8fba'],
-      ['600', '#33718f'],
-      ['700', '#255a75'],
-      ['800', '#1b4257'],
-      ['900', '#12303f'],
+      ['100', '#dbf1fa'],
+      ['200', '#b8e2f5'],
+      ['300', '#8bd1ee'],
+      ['400', '#59bde8'],
+      ['500', '#28aae2'],
+      ['600', '#137dae'],
+      ['700', '#0e618b'],
+      ['800', '#0b4665'],
+      ['900', '#0b2d42'],
     ],
   },
   {
-    nome: 'ouro',
-    papel: 'Acento. Destaques pontuais — nunca área grande.',
+    nome: 'rosa',
+    papel: 'Acento. O tom 300 é o rosa do "DE" da logo.',
     tons: [
-      ['100', '#fbf0d2'],
-      ['200', '#f5e0a8'],
-      ['300', '#eecd74'],
-      ['400', '#dfaf36'],
-      ['500', '#b8860b'],
-      ['600', '#8f6708'],
-      ['700', '#6e4f06'],
+      ['100', '#ffe0e0'],
+      ['200', '#ffc2c2'],
+      ['300', '#ff8a8a'],
+      ['400', '#ef6161'],
+      ['500', '#d9262c'],
+      ['600', '#b11b22'],
+      ['700', '#8a151c'],
     ],
   },
   {
@@ -67,11 +67,11 @@ const papeis = [
   ['fundo', '#fdf6ec', 'creme-100'],
   ['superfície', '#ffffff', 'branco'],
   ['borda', '#eadcc5', 'creme-300'],
-  ['borda-forte', '#33718f', 'céu-600'],
+  ['borda-forte', '#137dae', 'céu-600'],
   ['texto', '#2e2823', 'tinta-900'],
   ['texto-suave', '#6e6255', 'tinta-500'],
-  ['primária', '#255a75', 'céu-700'],
-  ['acento', '#8f6708', 'ouro-600'],
+  ['primária', '#0e618b', 'céu-700'],
+  ['acento', '#b11b22', 'rosa-600'],
 ] as const;
 
 const eventos = await eventosRecentes(3);
@@ -84,7 +84,7 @@ function uso(razao: number) {
     return { texto: 'fundo e decoração', estilo: 'bg-creme-200 text-tinta-600' };
   }
   if (n === 'AA grande') {
-    return { texto: `texto grande · ${razao.toFixed(1)}:1`, estilo: 'bg-ouro-100 text-ouro-700' };
+    return { texto: `texto grande · ${razao.toFixed(1)}:1`, estilo: 'bg-rosa-100 text-rosa-700' };
   }
   return { texto: `texto · ${razao.toFixed(1)}:1 ${n}`, estilo: 'bg-ceu-100 text-ceu-800' };
 }
@@ -237,7 +237,7 @@ function uso(razao: number) {
       <h2 id="componentes" class="text-subtitulo text-texto">Peças base</h2>
       <div class="mt-6 flex flex-wrap items-center gap-3">
         <Botao href="#componentes">Botão primário</Botao>
-        <Botao href="#componentes" tipo="ouro" tamanho="lg">
+        <Botao href="#componentes" tipo="rosa" tamanho="lg">
           Ver todas as fotos
           <Seta class="size-4" />
         </Botao>
@@ -247,7 +247,7 @@ function uso(razao: number) {
           >12 de outubro</span
         >
         <span
-          class="rounded-full bg-ouro-100 px-3 py-1 font-display text-sm font-600 text-ouro-700"
+          class="rounded-full bg-rosa-100 px-3 py-1 font-display text-sm font-600 text-rosa-700"
           >Novo</span
         >
       </div>

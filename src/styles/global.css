@@ -36,25 +36,30 @@
   --color-creme-300: #eadcc5;
   --color-creme-400: #dcc9a9;
 
-  /* ── Cor · céu (primária) ─────────────────────────────────────────────── */
-  --color-ceu-100: #ddedf8;
-  --color-ceu-200: #bfdcef;
-  --color-ceu-300: #97c6e3;
-  --color-ceu-400: #6babd2;
-  --color-ceu-500: #4a8fba;
-  --color-ceu-600: #33718f; /* 5.02:1 no creme — ok para texto */
-  --color-ceu-700: #255a75; /* 6.99:1 — link padrão */
-  --color-ceu-800: #1b4257; /* 9.97:1 — fundo escuro do rodapé */
-  --color-ceu-900: #12303f;
+  /* ── Cor · céu (primária) ───────────────────────────────────────────────
+     Ancorada no azul da logo: ceu-500 É a cor oficial. Os tons acima e
+     abaixo saem da mesma matiz, escurecendo até passar em AA no creme.     */
+  --color-ceu-100: #dbf1fa;
+  --color-ceu-200: #b8e2f5;
+  --color-ceu-300: #8bd1ee;
+  --color-ceu-400: #59bde8;
+  --color-ceu-500: #28aae2; /* azul da marca — preenchimento, nunca texto */
+  --color-ceu-600: #137dae; /* 4.28:1 — bordas funcionais */
+  --color-ceu-700: #0e618b; /* 6.31:1 — link padrão */
+  --color-ceu-800: #0b4665; /* 9.42:1 — fundo escuro do rodapé */
+  --color-ceu-900: #0b2d42;
 
-  /* ── Cor · ouro (acento) ──────────────────────────────────────────────── */
-  --color-ouro-100: #fbf0d2;
-  --color-ouro-200: #f5e0a8;
-  --color-ouro-300: #eecd74;
-  --color-ouro-400: #dfaf36; /* decorativo / fundo de botão */
-  --color-ouro-500: #b8860b; /* 3.03:1 — só texto grande */
-  --color-ouro-600: #8f6708; /* 4.76:1 — texto normal ok */
-  --color-ouro-700: #6e4f06;
+  /* ── Cor · rosa (acento) ───────────────────────────────────────────────
+     O rosa do "DE" da logo é o rosa-300. Ele é vivo demais para virar
+     texto sobre creme (2.1:1), então serve de preenchimento; para texto
+     existem os tons 600 e 700.                                            */
+  --color-rosa-100: #ffe0e0;
+  --color-rosa-200: #ffc2c2; /* rosa de texto sobre o azul escuro */
+  --color-rosa-300: #ff8a8a; /* rosa da marca — preenchimento de botão */
+  --color-rosa-400: #ef6161;
+  --color-rosa-500: #d9262c;
+  --color-rosa-600: #b11b22; /* 6.42:1 — texto normal ok */
+  --color-rosa-700: #8a151c;
 
   /* ── Cor · tinta (texto) ──────────────────────────────────────────────── */
   --color-tinta-300: #a1937f;
@@ -73,7 +78,7 @@
   --color-texto-suave: var(--color-tinta-500);
   --color-primaria: var(--color-ceu-700);
   --color-primaria-forte: var(--color-ceu-800);
-  --color-acento: var(--color-ouro-600);
+  --color-acento: var(--color-rosa-600);
 
   /* ── Raio ─────────────────────────────────────────────────────────────── */
   --radius-sm: 0.5rem;
@@ -172,7 +177,7 @@
   }
 
   ::selection {
-    background-color: var(--color-ouro-200);
+    background-color: var(--color-rosa-200);
     color: var(--color-tinta-900);
   }
 
@@ -345,7 +350,7 @@
   }
 
   & blockquote {
-    border-inline-start: 3px solid var(--color-ouro-300);
+    border-inline-start: 3px solid var(--color-rosa-300);
     padding-inline-start: 1.25rem;
     font-style: italic;
     color: var(--color-tinta-600);
