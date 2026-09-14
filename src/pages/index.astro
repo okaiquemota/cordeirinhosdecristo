@@ -1,0 +1,22 @@
+---
+import PaginaLayout from '../layouts/PaginaLayout.astro';
+import Hero from '../components/secoes/Hero.astro';
+import QuemSomos from '../components/secoes/QuemSomos.astro';
+import Horarios from '../components/secoes/Horarios.astro';
+import UltimosEventos from '../components/secoes/UltimosEventos.astro';
+import Contato from '../components/secoes/Contato.astro';
+import { SITE } from '../config/site';
+import { urlOg } from '../lib/og';
+import foto from '../assets/fotos/hero.jpg';
+
+const ogImagem = await urlOg(foto, Astro.site);
+---
+
+<PaginaLayout titulo={SITE.nome} descricao={SITE.descricao} ogImagem={ogImagem}>
+  <Hero />
+  <QuemSomos />
+  {/* Só aparece quando houver horário em src/config/site.ts. */}
+  <Horarios />
+  <UltimosEventos />
+  <Contato />
+</PaginaLayout>

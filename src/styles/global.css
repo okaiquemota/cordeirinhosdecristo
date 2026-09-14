@@ -93,6 +93,7 @@
   --ease-suave: cubic-bezier(0.4, 0, 0.2, 1);
 
   --animate-deriva: deriva 62s linear infinite;
+  --animate-deriva-media: deriva 78s linear infinite;
   --animate-deriva-lenta: deriva 96s linear infinite;
   --animate-balanco: balanco 6s var(--ease-suave) infinite;
   --animate-flutua: flutua 9s var(--ease-suave) infinite;
@@ -226,10 +227,10 @@
 
 /** Ritmo vertical entre seções da home. */
 @utility secao {
-  padding-block: 3.5rem;
+  padding-block: 3rem;
 
   @media (width >= 48rem) {
-    padding-block: 5.5rem;
+    padding-block: 4.5rem;
   }
 }
 

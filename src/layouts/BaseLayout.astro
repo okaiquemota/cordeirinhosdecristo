@@ -13,6 +13,8 @@ interface Props {
   ogImagem?: string;
   /** Deixe true em páginas que não devem ir para o sitemap/índice. */
   naoIndexar?: boolean;
+  /** 'article' nas páginas de evento, 'website' no resto. */
+  tipoOg?: 'website' | 'article';
 }
 
 const {
@@ -20,6 +22,7 @@ const {
   descricao = SITE.descricao,
   ogImagem,
   naoIndexar = false,
+  tipoOg = 'website',
 } = Astro.props;
 
 const tituloCompleto = titulo === SITE.nome ? SITE.nome : `${titulo} · ${SITE.nome}`;
@@ -39,7 +42,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE.url).href;
     {naoIndexar && <meta name="robots" content="noindex, nofollow" />}
 
     {/* Open Graph — é isso que monta o card quando alguém manda no WhatsApp. */}
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={tipoOg} />
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:site_name" content={SITE.nome} />
     <meta property="og:title" content={tituloCompleto} />

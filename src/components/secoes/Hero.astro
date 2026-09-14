@@ -1,0 +1,78 @@
+---
+import { Image } from 'astro:assets';
+import Nuvem from '../ilustracoes/Nuvem.astro';
+import Ovelha from '../ilustracoes/Ovelha.astro';
+import Botao from '../Botao.astro';
+import Seta from '../icones/Seta.astro';
+import Instagram from '../icones/Instagram.astro';
+import { SITE, CONTATO } from '../../config/site';
+import foto from '../../assets/fotos/hero.jpg';
+---
+
+<section class="relative overflow-hidden bg-linear-to-b from-ceu-200 via-ceu-100 to-fundo">
+  {/* Nuvens em deriva. Os atrasos negativos espalham elas pela tela já no
+      primeiro quadro — sem isso as três saem juntas da borda esquerda. */}
+  <div class="pointer-events-none absolute inset-x-0 top-0 h-72" aria-hidden="true">
+    <Nuvem
+      class="absolute top-4 left-0 w-52 text-creme-50 animate-deriva md:w-72"
+      opacidade={0.85}
+      atraso={-14}
+    />
+    <Nuvem
+      class="absolute top-28 left-0 w-32 text-creme-50 animate-deriva-lenta md:w-44"
+      opacidade={0.6}
+      atraso={-58}
+    />
+    <Nuvem
+      class="absolute top-16 left-0 w-24 text-creme-50 animate-deriva-media md:w-32"
+      opacidade={0.45}
+      atraso={-35}
+    />
+  </div>
+
+  <div
+    class="container-site relative grid gap-10 pt-12 pb-14 md:pt-16 md:pb-20 lg:grid-cols-[1fr_1.15fr] lg:items-center lg:gap-16"
+  >
+    <div>
+      <h1 class="text-hero text-texto">{SITE.nome}</h1>
+      <p class="mt-4 max-w-md text-subtitulo text-tinta-700">{SITE.subtitulo}</p>
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        <Botao href="/eventos" tamanho="lg">
+          Ver os eventos
+          <Seta class="size-4" />
+        </Botao>
+        {
+          CONTATO.instagramUrl && (
+            <Botao href={CONTATO.instagramUrl} tipo="secundaria" tamanho="lg" externo>
+              <Instagram class="size-5" />
+              {CONTATO.instagram}
+            </Botao>
+          )
+        }
+      </div>
+    </div>
+
+    <div class="relative">
+      {/* proporção travada: nada pula quando a foto carrega */}
+      <div class="aspect-[4/3] overflow-hidden rounded-3xl bg-ceu-200 shadow-alta">
+        <Image
+          src={foto}
+          alt="Crianças do departamento infantil reunidas em um dos encontros."
+          widths={[480, 720, 1040, 1440]}
+          sizes="(min-width: 1024px) 34rem, 92vw"
+          format="webp"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+          class="size-full object-cover"
+        />
+      </div>
+
+      <Ovelha
+        class="absolute -bottom-5 -left-2 w-24 drop-shadow-md sm:-left-5 sm:w-28 lg:-left-8 lg:w-32"
+        animada
+      />
+    </div>
+  </div>
+</section>

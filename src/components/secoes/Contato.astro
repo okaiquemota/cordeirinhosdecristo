@@ -1,0 +1,76 @@
+---
+import Instagram from '../icones/Instagram.astro';
+import Local from '../icones/Local.astro';
+import Botao from '../Botao.astro';
+import { CONTATO, SITE } from '../../config/site';
+
+const { endereco } = CONTATO;
+const temEndereco = Boolean(endereco.logradouro || endereco.cidade);
+---
+
+<section class="secao" aria-labelledby="contato">
+  <div class="container-site">
+    <div class="rounded-3xl bg-ceu-100 px-6 py-10 md:px-12 md:py-14">
+      <h2 id="contato" class="text-titulo text-texto">Venha nos visitar</h2>
+      <p class="mt-2 max-w-xl text-corpo-lg text-tinta-700">
+        As crianças são bem-vindas em qualquer domingo. Se quiser conversar antes, é só chamar a
+        gente no Instagram.
+      </p>
+
+      <div class="mt-9 grid gap-9 sm:grid-cols-2">
+        {
+          temEndereco && (
+            <div>
+              <h3 class="flex items-center gap-2 font-display text-lg font-700 text-texto">
+                <Local class="size-5 text-ceu-700" />
+                Onde fica
+              </h3>
+              <address class="mt-3 text-corpo-lg text-tinta-700 not-italic">
+                {endereco.logradouro && <span class="block">{endereco.logradouro}</span>}
+                {endereco.bairro && <span class="block">{endereco.bairro}</span>}
+                <span class="block">
+                  {[endereco.cidade, endereco.uf].filter(Boolean).join(' — ')}
+                  {endereco.cep && ` · ${endereco.cep}`}
+                </span>
+                <span class="mt-1 block text-base text-texto-suave">{SITE.igreja}</span>
+              </address>
+              {endereco.mapaUrl && (
+                <Botao href={endereco.mapaUrl} tipo="secundaria" externo class="mt-5">
+                  Ver no mapa
+                </Botao>
+              )}
+            </div>
+          )
+        }
+
+        {
+          CONTATO.instagram && (
+            <div>
+              <h3 class="flex items-center gap-2 font-display text-lg font-700 text-texto">
+                <Instagram class="size-5 text-ceu-700" />
+                No Instagram
+              </h3>
+              <p class="mt-3 text-corpo-lg text-tinta-700">
+                É lá que postamos os avisos e as fotos mais recentes.
+              </p>
+              <Botao href={CONTATO.instagramUrl} externo class="mt-5">
+                {CONTATO.instagram}
+              </Botao>
+            </div>
+          )
+        }
+
+        {
+          CONTATO.whatsapp && (
+            <div>
+              <h3 class="font-display text-lg font-700 text-texto">Falar com a gente</h3>
+              <Botao href={`https://wa.me/${CONTATO.whatsapp}`} externo class="mt-3">
+                {CONTATO.telefone || 'WhatsApp'}
+              </Botao>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,45 @@
+---
+import CardEvento from '../CardEvento.astro';
+import Botao from '../Botao.astro';
+import Seta from '../icones/Seta.astro';
+import { eventosRecentes, listarEventos } from '../../lib/eventos';
+
+const eventos = await eventosRecentes(3);
+const total = (await listarEventos()).length;
+---
+
+<section class="secao" aria-labelledby="ultimos-eventos">
+  <div class="container-site">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <h2 id="ultimos-eventos" class="text-titulo text-texto">Últimos eventos</h2>
+        <p class="mt-2 text-corpo-lg text-tinta-700">O que a criançada andou aprontando.</p>
+      </div>
+      {
+        total > 3 && (
+          <Botao href="/eventos" tipo="secundaria">
+            Ver todos
+            <Seta class="size-4" />
+          </Botao>
+        )
+      }
+    </div>
+
+    {
+      eventos.length > 0 ? (
+        <ul class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {eventos.map((evento, i) => (
+            <li class="flex">
+              <CardEvento evento={evento} prioridade={i === 0} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="mt-8 rounded-2xl border border-borda bg-superficie p-6 text-tinta-700">
+          Ainda não há eventos publicados. Assim que o primeiro arquivo entrar em
+          <code class="font-mono text-sm">src/content/eventos/</code>, ele aparece aqui.
+        </p>
+      )
+    }
+  </div>
+</section>

@@ -99,13 +99,17 @@ export const CONTATO: Contato = {
   email: '',
 
   endereco: {
-    // PREENCHER: confirmar se é Rua ou Avenida Guerino Fonzar.
-    logradouro: 'Guerino Fonzar, 172',
-    bairro: '', // PREENCHER
+    logradouro: 'Rua Guerino Fonzar, 172',
+    bairro: 'Jardim Alexandre Balbo',
     cidade: 'Ribeirão Preto',
     uf: 'SP',
-    cep: '', // PREENCHER
-    mapaUrl: '', // PREENCHER: link do Google Maps
+    cep: '14066-310',
+    // Busca pelo endereço no Google Maps. Se quiser que caia no pino exato
+    // da igreja, abra o local no Maps, use "Compartilhar" e cole o link aqui.
+    mapaUrl:
+      'https://www.google.com/maps/search/?api=1&query=' +
+      'R.%20Guerino%20Fonzar%2C%20172%20-%20Jardim%20Alexandre%20Balbo%2C' +
+      '%20Ribeir%C3%A3o%20Preto%20-%20SP%2C%2014066-310',
   },
 };
 

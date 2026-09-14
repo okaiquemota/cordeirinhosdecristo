@@ -3,8 +3,21 @@ interface Props {
   class?: string;
   /** Opacidade do preenchimento — nuvens de fundo pedem valores baixos. */
   opacidade?: number;
+  /**
+   * Atraso da animação, em segundos. Use valores negativos para começar a
+   * deriva já no meio do caminho: sem isso todas as nuvens saem do mesmo
+   * ponto ao carregar a página e andam em bloco.
+   */
+  atraso?: number;
 }
-const { class: classe = 'w-40', opacidade = 1 } = Astro.props;
+const { class: classe = 'w-40', opacidade = 1, atraso } = Astro.props;
+
+const estilo = [
+  `opacity:${opacidade}`,
+  atraso !== undefined ? `animation-delay:${atraso}s` : '',
+]
+  .filter(Boolean)
+  .join(';');
 ---
 
 <svg
@@ -14,7 +27,7 @@ const { class: classe = 'w-40', opacidade = 1 } = Astro.props;
   focusable="false"
   data-decorativo
   class:list={[classe]}
-  style={`opacity:${opacidade}`}
+  style={estilo}
 >
   <path
     d="M44 78C24.1 78 8 63.9 8 46.5S24.1 15 44 15c3.6 0 7 .5 10.3 1.4C61.4 6.4 73.6 0 87.4 0c19.6 0 36 12.9 40.2 30.1 2.6-.7 5.3-1.1 8.2-1.1 16.7 0 30.2 12.6 30.2 28.1 0 .9 0 1.8-.1 2.6 9.6 2.2 16.7 10.2 16.7 19.6 0 .3 0 .5-.1.8H44z"

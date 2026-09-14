@@ -1,0 +1,23 @@
+---
+import { HORARIOS } from '../../config/site';
+---
+
+{
+  HORARIOS.length > 0 && (
+    <section class="secao bg-ceu-100" aria-labelledby="horarios">
+      <div class="container-site">
+        <h2 id="horarios" class="text-titulo text-texto">Nossos encontros</h2>
+
+        <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {HORARIOS.map((h) => (
+            <li class="rounded-2xl border border-borda bg-superficie p-6 shadow-suave">
+              <p class="font-display text-xl font-700 text-texto">{h.dia}</p>
+              <p class="mt-1 font-display text-2xl font-700 text-primaria">{h.hora}</p>
+              {h.descricao && <p class="mt-2 text-tinta-700">{h.descricao}</p>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
