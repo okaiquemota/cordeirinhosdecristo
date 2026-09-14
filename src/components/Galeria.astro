@@ -41,7 +41,7 @@ const grandes = await Promise.all(
           <button
             type="button"
             data-abrir={i}
-            class="group block aspect-square w-full cursor-zoom-in overflow-hidden rounded-2xl bg-creme-200 transition duration-300 ease-saida hover:-translate-y-0.5 hover:shadow-cartao"
+            class="group block aspect-square w-full cursor-zoom-in overflow-hidden rounded-2xl bg-creme-200 transition duration-300 ease-saida hover:-translate-y-0.5 hover:shadow-cartao active:scale-[0.97] active:duration-100"
           >
             <Image
               src={foto.src}
@@ -172,8 +172,6 @@ const grandes = await Promise.all(
   const movimentoReduzido = () =>
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const SUAVE = [0.22, 1, 0.36, 1] as const;
-
   function montar(raiz: HTMLElement) {
     if (raiz.dataset.montado) return;
     raiz.dataset.montado = 'sim';
@@ -185,7 +183,17 @@ const grandes = await Promise.all(
     lightbox(raiz, fotos);
   }
 
-  /* ── lightbox ────────────────────────────────────────────────────────── */
+  /* ── lightbox ────────────────────────────────────────────────────────
+     Regras que este bloco segue, na ordem de importância:
+       1. retorno contínuo DURANTE o gesto, não só no fim — a foto anda
+          colada no dedo;
+       2. a animação herda a velocidade de soltura, para não haver costura
+          entre arrastar e animar;
+       3. o destino sai da projeção do movimento, não da distância crua:
+          um peteleco curto e rápido vira página, um arrasto longo e lento
+          não vira;
+       4. molas em vez de duração fixa, porque mola parte do valor atual e
+          pode ser agarrada no meio do caminho.                            */
   function lightbox(raiz: HTMLElement, fotos: FotoGrande[]) {
     const dialogo = raiz.querySelector<HTMLDialogElement>('dialog[data-lightbox]');
     const foto = raiz.querySelector<HTMLImageElement>('[data-foto]');
@@ -197,11 +205,18 @@ const grandes = await Promise.all(
 
     let atual = 0;
     let scrollTravado = '';
+    /* Cada navegação pega um número. Se outra começar antes desta acabar,
+       a antiga desiste na hora de trocar a imagem — o índice já andou, então
+       teclar rápido acumula em vez de perder comando. */
+    let token = 0;
 
+    const mola = (duracao: number, salto: number, velocidade = 0) =>
+      ({ type: 'spring', bounce: salto, duration: duracao, velocity: velocidade }) as const;
+
+    /** Só troca o que está na tela. Quem move o índice é quem chama. */
     const aplicar = (i: number) => {
       const f = fotos[i];
       if (!f) return;
-      atual = i;
       foto.src = f.src;
       foto.alt = f.alt;
       if (f.largura) foto.width = f.largura;
@@ -215,7 +230,7 @@ const grandes = await Promise.all(
        piscar em branco. */
     const vizinhas = (i: number) => {
       for (const j of [i - 1, i + 1]) {
-        const f = fotos[j];
+        const f = fotos[(j + fotos.length) % fotos.length];
         if (f) new Image().src = f.src;
       }
     };
@@ -224,15 +239,18 @@ const grandes = await Promise.all(
       const miniatura = gatilhos[i]?.querySelector('img');
       const origem = miniatura?.getBoundingClientRect();
 
+      atual = i;
       aplicar(i);
+      foto!.style.transform = '';
+      foto!.style.opacity = '';
       scrollTravado = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
       dialogo!.showModal();
 
       if (movimentoReduzido() || !origem) return;
 
-      // Zoom a partir da miniatura: mede onde a imagem grande parou e
-      // anima dela de volta até a posição da miniatura.
+      /* Zoom a partir da miniatura: mede onde a imagem grande parou e anima
+         dela de volta até a posição de onde o usuário clicou. */
       try {
         await foto!.decode().catch(() => undefined);
         const destino = foto!.getBoundingClientRect();
@@ -245,8 +263,8 @@ const grandes = await Promise.all(
         const { animate } = await import('motion');
         animate(
           foto!,
-          { x: [dx, 0], y: [dy, 0], scale: [escala, 1], opacity: [0.3, 1] },
-          { duration: 0.4, ease: SUAVE },
+          { x: [dx, 0], y: [dy, 0], scale: [escala, 1], opacity: [0.35, 1] },
+          mola(0.42, 0),
         );
       } catch {
         /* sem animação é melhor que sem lightbox */
@@ -262,41 +280,62 @@ const grandes = await Promise.all(
       }
       try {
         const { animate } = await import('motion');
-        await animate(foto!, { opacity: [1, 0], scale: [1, 0.94] }, { duration: 0.18 }).finished;
+        await animate(foto!, { opacity: 0, scale: 0.94 }, mola(0.22, 0)).finished;
       } catch {
         /* fecha mesmo assim */
       }
       dialogo!.close();
     }
 
-    async function irPara(i: number, direcao: number) {
-      const proximo = (i + fotos.length) % fotos.length;
-      aplicar(proximo);
+    /** direcao: 1 avança, -1 volta. velocidade em px/s, para a entrega. */
+    async function irPara(direcao: number, velocidade = 0) {
+      // o índice anda já, antes de qualquer animação: assim dois toques
+      // rápidos avançam duas fotos em vez de brigarem pela mesma
+      atual = (atual + direcao + fotos.length) % fotos.length;
+      const destino = atual;
+      const meu = ++token;
 
-      if (movimentoReduzido()) return;
+      if (movimentoReduzido()) {
+        aplicar(destino);
+        foto!.style.transform = '';
+        foto!.style.opacity = '';
+        return;
+      }
+
       try {
         const { animate } = await import('motion');
-        animate(
+        const largura = palco!.clientWidth || 600;
+
+        // sai para o lado do movimento, herdando a velocidade do dedo
+        await animate(
           foto!,
-          { opacity: [0, 1], x: [direcao * 36, 0] },
-          { duration: 0.28, ease: SUAVE },
-        );
+          { x: -direcao * largura * 0.55, opacity: 0 },
+          mola(0.26, 0, velocidade),
+        ).finished;
+
+        if (meu !== token) return; // outra navegação assumiu o comando
+
+        aplicar(destino);
+
+        // e a próxima entra do lado oposto, com um resto de inércia
+        foto!.style.transform = `translateX(${direcao * largura * 0.45}px)`;
+        animate(foto!, { x: 0, opacity: [0, 1] }, mola(0.4, 0.12));
       } catch {
-        /* segue sem animar */
+        aplicar(destino);
       }
     }
 
-    const proxima = () => irPara(atual + 1, 1);
-    const anterior = () => irPara(atual - 1, -1);
+    const proxima = (v = 0) => irPara(1, v);
+    const anterior = (v = 0) => irPara(-1, v);
 
     gatilhos.forEach((botao, i) => botao.addEventListener('click', () => abrir(i)));
     raiz.querySelector('[data-fechar]')?.addEventListener('click', fechar);
-    raiz.querySelector('[data-proxima]')?.addEventListener('click', proxima);
-    raiz.querySelector('[data-anterior]')?.addEventListener('click', anterior);
+    raiz.querySelector('[data-proxima]')?.addEventListener('click', () => proxima());
+    raiz.querySelector('[data-anterior]')?.addEventListener('click', () => anterior());
 
     // clique no vazio ao redor da foto fecha
     palco.addEventListener('click', (e) => {
-      if (e.target === palco) fechar();
+      if (e.target === palco && !houveArrasto) fechar();
     });
 
     // Esc é nativo do <dialog>; aqui ficam as setas
@@ -315,31 +354,106 @@ const grandes = await Promise.all(
       document.body.style.overflow = scrollTravado;
     });
 
-    /* ── swipe ───────────────────────────────────────────────────────── */
+    /* ── arrasto ──────────────────────────────────────────────────────
+       Projeção de inércia, igual à da rolagem: onde o movimento PARARIA
+       se continuasse desacelerando. É o que faz um peteleco curto e
+       rápido valer mais que um arrasto longo e preguiçoso.              */
+    const projetar = (velocidade: number, desaceleracao = 0.998) =>
+      ((velocidade / 1000) * desaceleracao) / (1 - desaceleracao);
+
+    const LIMIAR_DIRECAO = 10; // px antes de decidir se o gesto é horizontal
+
+    let arrastando = false;
+    let houveArrasto = false;
+    let direcaoDecidida = false;
+    let horizontal = false;
     let inicioX = 0;
     let inicioY = 0;
-    let arrastando = false;
+    let historico: Array<{ x: number; t: number }> = [];
+
+    const velocidadeAtual = () => {
+      if (historico.length < 2) return 0;
+      const fim = historico[historico.length - 1]!;
+      let ini = historico[0]!;
+      for (let i = historico.length - 2; i >= 0; i--) {
+        ini = historico[i]!;
+        if (fim.t - ini.t >= 30) break;
+      }
+      const dt = fim.t - ini.t;
+      return dt > 0 ? ((fim.x - ini.x) / dt) * 1000 : 0;
+    };
 
     palco.addEventListener('pointerdown', (e) => {
-      if (e.pointerType === 'mouse') return;
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
       arrastando = true;
+      houveArrasto = false;
+      direcaoDecidida = false;
+      horizontal = false;
       inicioX = e.clientX;
       inicioY = e.clientY;
+      historico = [{ x: e.clientX, t: performance.now() }];
     });
 
-    palco.addEventListener('pointerup', (e) => {
+    palco.addEventListener('pointermove', (e) => {
       if (!arrastando) return;
-      arrastando = false;
       const dx = e.clientX - inicioX;
       const dy = e.clientY - inicioY;
-      // só conta como swipe se for claramente horizontal
-      if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
-      if (dx < 0) proxima();
-      else anterior();
+
+      if (!direcaoDecidida) {
+        if (Math.abs(dx) < LIMIAR_DIRECAO && Math.abs(dy) < LIMIAR_DIRECAO) return;
+        direcaoDecidida = true;
+        horizontal = Math.abs(dx) > Math.abs(dy);
+        if (!horizontal) {
+          arrastando = false; // é rolagem vertical, não é nosso
+          return;
+        }
+        palco.setPointerCapture(e.pointerId);
+      }
+
+      houveArrasto = true;
+      historico.push({ x: e.clientX, t: performance.now() });
+      if (historico.length > 6) historico.shift();
+
+      // 1:1 com o dedo, e a foto vai clareando conforme se afasta
+      foto.style.transform = `translateX(${dx}px)`;
+      foto.style.opacity = String(1 - Math.min(Math.abs(dx) / 700, 0.45));
     });
 
-    palco.addEventListener('pointercancel', () => {
+    async function soltar(e: PointerEvent) {
+      if (!arrastando) return;
       arrastando = false;
+      if (!houveArrasto || !horizontal) return;
+      if (palco!.hasPointerCapture?.(e.pointerId)) palco!.releasePointerCapture(e.pointerId);
+
+      const dx = e.clientX - inicioX;
+      const v = velocidadeAtual();
+      const ondePararia = dx + projetar(v);
+      const limiar = (palco!.clientWidth || 600) * 0.3;
+
+      if (ondePararia <= -limiar) return proxima(v);
+      if (ondePararia >= limiar) return anterior(v);
+
+      // não deu: volta para o lugar, também herdando a velocidade
+      if (movimentoReduzido()) {
+        foto!.style.transform = '';
+        foto!.style.opacity = '';
+        return;
+      }
+      try {
+        const { animate } = await import('motion');
+        animate(foto!, { x: 0, opacity: 1 }, mola(0.4, 0.18, v));
+      } catch {
+        foto!.style.transform = '';
+        foto!.style.opacity = '';
+      }
+    }
+
+    palco.addEventListener('pointerup', soltar);
+    palco.addEventListener('pointercancel', (e) => {
+      arrastando = false;
+      if (palco.hasPointerCapture?.(e.pointerId)) palco.releasePointerCapture(e.pointerId);
+      foto.style.transform = '';
+      foto.style.opacity = '';
     });
   }
 

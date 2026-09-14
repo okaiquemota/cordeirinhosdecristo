@@ -24,9 +24,12 @@ const {
   ...resto
 } = Astro.props;
 
+/* O realce nasce no toque (active), não na soltura: esperar o clique
+   terminar para dar retorno faz a interface parecer morta. */
 const base =
   'inline-flex items-center justify-center gap-2 rounded-full font-display font-600 ' +
-  'transition duration-200 ease-saida hover:-translate-y-0.5 active:translate-y-0';
+  'transition duration-200 ease-saida hover:-translate-y-0.5 ' +
+  'active:translate-y-0 active:scale-[0.97] active:duration-100';
 
 const tipos = {
   primaria: 'bg-primaria text-creme-50 shadow-suave hover:bg-primaria-forte hover:shadow-cartao',

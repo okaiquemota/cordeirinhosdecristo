@@ -92,7 +92,7 @@ por que os `.svg` entregues não são usados direto.
 | --- | --- |
 | Nuvens em deriva, ovelha balançando | CSS puro, tokens em `global.css` |
 | Reveal com stagger | Motion, por grupo, em qualquer `[data-revelar]` |
-| Lightbox (zoom, teclado, swipe) | `<dialog>` nativo + Motion, carregado no primeiro clique |
+| Lightbox (zoom, teclado, arrasto) | `<dialog>` nativo + molas do Motion |
 | Troca de página com morph da capa | View Transitions do Astro (`<ClientRouter />`) |
 
 O Motion não entra no carregamento inicial de página nenhuma. Na home ele
@@ -100,8 +100,23 @@ nunca é baixado; na página do evento só quando a galeria aparece ou quando
 alguém abre uma foto.
 
 O lightbox usa `<dialog>`: o Esc, o travamento de foco e a devolução do
-foco para a miniatura clicada são do navegador, não código nosso. As setas
-do teclado, o swipe e o zoom são nossos.
+foco para a miniatura clicada são do navegador, não código nosso.
+
+O arrasto segue três regras que valem para qualquer gesto no site:
+
+1. **Retorno durante o gesto, não no fim.** A foto anda colada no dedo,
+   1:1, o tempo todo.
+2. **A animação herda a velocidade da soltura**, para não haver costura
+   entre arrastar e animar.
+3. **O destino sai da projeção do movimento**, não da distância crua —
+   `posição + (v/1000)·d/(1−d)`, com `d = 0.998`, a mesma curva da
+   desaceleração de rolagem. É o que faz um peteleco de 28px virar página
+   e um arrasto lento de 55px voltar para o lugar.
+
+Tudo usa mola em vez de duração fixa, porque mola parte do valor atual e
+pode ser agarrada no meio do caminho. Navegar é interrompível: o índice
+anda no toque e só a última transição troca a imagem, então teclar rápido
+acumula em vez de perder comando.
 
 O cabeçalho é persistido entre navegações (`transition:persist`) para não
 piscar, e por isso um script reajusta qual item está marcado como atual a

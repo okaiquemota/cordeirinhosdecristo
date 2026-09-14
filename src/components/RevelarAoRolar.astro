@@ -11,8 +11,6 @@
 ---
 
 <script>
-  const SUAVE = [0.22, 1, 0.36, 1] as const;
-
   const movimentoReduzido = () =>
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -45,11 +43,14 @@
           itens.forEach((i) => (i.dataset.revelado = 'sim'));
 
           try {
+            /* Mola criticamente amortecida: assenta sem repique, e parte
+               do valor atual se alguém rolar de volta no meio do caminho.
+               Duração fixa com easing não seria agarrável assim. */
             const { animate, stagger } = await import('motion');
             animate(
               itens,
               { opacity: [0, 1], y: [16, 0] },
-              { duration: 0.55, delay: stagger(0.08), ease: SUAVE },
+              { type: 'spring', bounce: 0, duration: 0.5, delay: stagger(0.08) },
             );
           } catch {
             soltar();
