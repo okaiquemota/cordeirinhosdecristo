@@ -1,21 +1,34 @@
 # Arquivos da marca
 
-Esta pasta guarda os arquivos oficiais da identidade visual.
+## O que o site usa
 
-## O que vai aqui
+| Arquivo | O que é | Tamanho |
+| --- | --- | --- |
+| `logo-colorida.png` | Logo completa, colorida | 1027×492 |
+| `logo-branca.png` | Logo completa, em branco | 1200×584 |
+| `ovelha.png` | Rosto do cordeirinho, sozinho | 560×483 |
 
-| Arquivo | O que é |
-| --- | --- |
-| `ovelha.svg` | O rosto do cordeirinho, sozinho |
-| `logo-colorida.svg` | A logo completa, colorida |
-| `logo-branca.svg` | A logo completa, em branco |
+Os três têm fundo transparente e já vêm sem margem sobrando. Quem monta
+as versões finais é o `astro:assets`, que gera WebP nos tamanhos que cada
+lugar do site precisa.
 
-SVG é o formato preferido: um arquivo só serve o cabeçalho claro, o
-rodapé escuro e o favicon, porque a cor pode vir do CSS. PNG também
-funciona, mas aí são necessárias as duas versões de cor.
+## Os originais
 
-## Como subir pelo navegador, sem git
+`originais/` guarda os arquivos exatamente como foram entregues.
 
-Abra este link, arraste os arquivos e clique em "Commit changes":
+Um detalhe que vale saber: os dois `.svg` entregues **não são vetor**.
+São um invólucro SVG com PNG embutido em base64 e filtros de máscara por
+cima — `CdC-logo-colorida.svg` tem seis PNGs de 1230×1064 dentro, e
+`CdC-ovelha.svg` tem dois de 2050×1772. Por isso:
 
-https://github.com/okaiquemota/cordeirinhosdecristo/upload/main/src/assets/marca
+- usar o `.svg` direto no site significaria baixar 1 MB por página;
+- e a cor não pode vir do CSS, porque não há caminho vetorial para pintar.
+
+Então os PNGs da tabela acima foram compostos a partir deles no navegador,
+com transparência, e é o que o site carrega. Se um dia aparecer a logo em
+vetor de verdade, ela substitui tudo isso com vantagem.
+
+## Para trocar
+
+Suba o arquivo novo com o mesmo nome. Se as proporções mudarem, confira o
+cabeçalho e o rodapé, que são onde a logo aparece em tamanho fixo.
