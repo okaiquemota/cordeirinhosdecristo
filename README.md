@@ -76,7 +76,7 @@ O formato está comentado no arquivo; preencha e as seções voltam sozinhas.
 | Rodapé | `logo-branca.png` |
 | Cabeçalho, "Quem somos", 404 | `ovelha.png` |
 | Nuvens do hero e da faixa azul | `nuvem.png` |
-| Borda de nuvem entre seções | `nuvem.png` como máscara CSS |
+| Borda de nuvem entre seções | SVG de círculos, em `BordaNuvem.astro` |
 | Favicon e ícone de celular | gerados de `ovelha.png` |
 
 No hero a logo é a imagem dentro do `<h1>`, com o nome no `alt` — então

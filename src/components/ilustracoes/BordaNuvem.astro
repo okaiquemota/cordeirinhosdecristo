@@ -1,72 +1,48 @@
 ---
-import nuvem from '../../assets/marca/nuvem.png';
-
 /**
  * Borda de nuvens para a virada entre duas seções.
  *
- * Usa a nuvem oficial como máscara CSS, então a silhueta é exatamente a da
- * marca mas pintada na cor que a seção vizinha tem — uma imagem branca
- * fixa não permitiria isso.
+ * É um aglomerado de círculos preenchidos com a cor da seção de cima,
+ * apoiados numa faixa sólida. Fica em currentColor, então quem usa define
+ * a cor pela classe.
  *
- * A nuvem é repetida em TRÊS camadas de tamanhos diferentes em vez de uma
- * só. Com uma camada, o resultado é um festão perfeitamente regular, que
- * lê como renda e não como céu. Com três larguras que não são múltiplas
- * entre si, o desenho só se repete depois de alguns metros de tela.
+ * Já tentamos usar a nuvem oficial aqui, repetida como máscara CSS. Na
+ * teoria era melhor — a silhueta exata da marca. Na prática ficou pior:
+ * repetir uma forma só dá um desenho regular demais, e mesmo sobrepondo
+ * três tamanhos o resultado continuou duro. Estes círculos de raios
+ * variados leem melhor como céu. A nuvem oficial segue em uso nas nuvens
+ * que derivam pelo hero e pela faixa do versículo, onde ela aparece
+ * inteira e é reconhecível.
  */
 interface Props {
   class?: string;
 }
 const { class: classe = 'text-fundo' } = Astro.props;
+
+/* [x, raio] — raios variados para não virar um festão regular.
+   Os círculos ficam na linha de baixo da faixa e transbordam para baixo,
+   então a cor clara desce sobre a seção escura em forma de nuvem. */
+const bolhas: Array<[number, number]> = [
+  [-16, 30], [24, 44], [74, 26],
+  [132, 22], [168, 38], [212, 28],
+  [268, 20], [300, 34], [342, 46], [396, 24],
+  [452, 30], [492, 20], [528, 40], [578, 26],
+  [630, 36], [678, 22], [714, 30],
+  [768, 44], [822, 26], [860, 18],
+  [906, 32], [948, 42], [1000, 24],
+  [1052, 20], [1086, 36], [1132, 28], [1180, 40], [1216, 24],
+];
 ---
 
-<div
+<svg
+  viewBox="0 0 1200 84"
+  preserveAspectRatio="xMidYMin meet"
   aria-hidden="true"
-  class:list={['borda-nuvem', classe]}
-  style={`--nuvem-marca: url("${nuvem.src}")`}
+  focusable="false"
+  class:list={['block h-auto w-full', classe]}
 >
-</div>
-
-<style>
-  .borda-nuvem {
-    height: 3.25rem;
-    background-color: currentColor;
-
-    --n: var(--nuvem-marca);
-    --faixa: linear-gradient(black, black);
-
-    /* três tamanhos primos entre si + a faixa sólida que fecha o topo */
-    mask-image: var(--n), var(--n), var(--n), var(--faixa);
-    mask-repeat: repeat-x, repeat-x, repeat-x, no-repeat;
-    mask-size:
-      auto 250%,
-      auto 190%,
-      auto 145%,
-      100% 30%;
-    mask-position:
-      13% bottom,
-      61% bottom,
-      37% bottom,
-      top;
-    mask-composite: add;
-
-    -webkit-mask-image: var(--n), var(--n), var(--n), var(--faixa);
-    -webkit-mask-repeat: repeat-x, repeat-x, repeat-x, no-repeat;
-    -webkit-mask-size:
-      auto 250%,
-      auto 190%,
-      auto 145%,
-      100% 30%;
-    -webkit-mask-position:
-      13% bottom,
-      61% bottom,
-      37% bottom,
-      top;
-    -webkit-mask-composite: source-over;
-  }
-
-  @media (width >= 48rem) {
-    .borda-nuvem {
-      height: 4.5rem;
-    }
-  }
-</style>
+  <g fill="currentColor">
+    <rect x="0" y="0" width="1200" height="30"></rect>
+    {bolhas.map(([x, r]) => <circle cx={x} cy={29} r={r}></circle>)}
+  </g>
+</svg>
