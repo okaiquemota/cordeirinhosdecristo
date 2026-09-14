@@ -20,6 +20,7 @@ npm run preview  # serve o dist/
 | Eventos (um `.md` por evento) | `src/content/eventos/` |
 | Fotos dos eventos | `src/assets/fotos/` |
 | Cabeçalho, rodapé, cartão de evento | `src/components/` |
+| Texto da página de erro | `src/pages/404.astro` |
 | Cores, fontes, espaçamento, animações | `src/styles/global.css` |
 
 > Os valores ainda pendentes estão marcados com **`PREENCHER`**.
