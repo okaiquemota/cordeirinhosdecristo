@@ -1,40 +1,61 @@
 ---
+import nuvem from '../../assets/marca/nuvem.png';
+
 /**
  * Borda de nuvens para a virada de uma seção clara para uma escura.
  *
- * É um aglomerado de círculos preenchidos com a cor de cima, apoiados numa
- * faixa sólida. O resultado é uma silhueta de nuvem no limite entre as duas
- * seções. Fica em currentColor, então quem usa define a cor pela classe.
+ * Usa a nuvem oficial como máscara CSS, repetida na horizontal, somada a
+ * uma faixa sólida no topo. Assim a silhueta é exatamente a da marca, mas
+ * pintada na cor que a seção de cima tem — o que uma imagem branca fixa
+ * não permitiria.
  */
 interface Props {
   class?: string;
 }
-const { class: classe = 'text-creme-100' } = Astro.props;
-
-/* [x, raio] — raios variados para não virar um festão regular.
-   Os círculos ficam na linha de baixo da faixa e transbordam para baixo,
-   então a cor clara desce sobre a seção escura em forma de nuvem. */
-const bolhas: Array<[number, number]> = [
-  [-16, 30], [24, 44], [74, 26],
-  [132, 22], [168, 38], [212, 28],
-  [268, 20], [300, 34], [342, 46], [396, 24],
-  [452, 30], [492, 20], [528, 40], [578, 26],
-  [630, 36], [678, 22], [714, 30],
-  [768, 44], [822, 26], [860, 18],
-  [906, 32], [948, 42], [1000, 24],
-  [1052, 20], [1086, 36], [1132, 28], [1180, 40], [1216, 24],
-];
+const { class: classe = 'text-fundo' } = Astro.props;
 ---
 
-<svg
-  viewBox="0 0 1200 84"
-  preserveAspectRatio="xMidYMin meet"
+<div
   aria-hidden="true"
-  focusable="false"
-  class:list={['block h-auto w-full', classe]}
+  class:list={['borda-nuvem', classe]}
+  style={`--nuvem-marca: url("${nuvem.src}")`}
 >
-  <g fill="currentColor">
-    <rect x="0" y="0" width="1200" height="30"></rect>
-    {bolhas.map(([x, r]) => <circle cx={x} cy={29} r={r}></circle>)}
-  </g>
-</svg>
+</div>
+
+<style>
+  .borda-nuvem {
+    height: 3.25rem;
+    background-color: currentColor;
+
+    /* duas camadas: as nuvens repetidas e uma faixa sólida no topo, unidas */
+    --faixa: linear-gradient(black, black);
+    mask-image: var(--nuvem-marca), var(--faixa);
+    mask-repeat: repeat-x, no-repeat;
+    /* A nuvem é ancorada pela base e desenhada maior que a faixa: a parte
+       larga dela fica no topo, encostando nas vizinhas, e só as bolhas de
+       baixo aparecem — que é o formato de nuvem pendurada. */
+    mask-size:
+      auto 210%,
+      100% 34%;
+    mask-position:
+      center bottom,
+      top;
+    mask-composite: add;
+
+    -webkit-mask-image: var(--nuvem-marca), var(--faixa);
+    -webkit-mask-repeat: repeat-x, no-repeat;
+    -webkit-mask-size:
+      auto 210%,
+      100% 34%;
+    -webkit-mask-position:
+      center bottom,
+      top;
+    -webkit-mask-composite: source-over;
+  }
+
+  @media (width >= 48rem) {
+    .borda-nuvem {
+      height: 4.5rem;
+    }
+  }
+</style>

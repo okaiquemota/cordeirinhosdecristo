@@ -34,7 +34,7 @@ const grandes = await Promise.all(
 ---
 
 <div data-galeria>
-  <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4">
+  <ul data-revelar-grupo class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4">
     {
       fotos.map((foto, i) => (
         <li data-revelar>
@@ -182,41 +182,7 @@ const grandes = await Promise.all(
     const fotos: FotoGrande[] = JSON.parse(json);
     if (fotos.length === 0) return;
 
-    revelar(raiz);
     lightbox(raiz, fotos);
-  }
-
-  /* ── reveal on scroll, com stagger ───────────────────────────────────── */
-  function revelar(raiz: HTMLElement) {
-    const itens = Array.from(raiz.querySelectorAll<HTMLElement>('[data-revelar]'));
-    if (itens.length === 0 || movimentoReduzido()) return;
-
-    // Se o Motion não carregar, soltamos tudo por CSS em vez de deixar a
-    // galeria invisível.
-    const soltar = () => raiz.setAttribute('data-revelar-pronto', '');
-    const rede = window.setTimeout(soltar, 2500);
-
-    const observador = new IntersectionObserver(
-      async (entradas) => {
-        if (!entradas.some((e) => e.isIntersecting)) return;
-        observador.disconnect();
-        window.clearTimeout(rede);
-
-        try {
-          const { animate, stagger } = await import('motion');
-          animate(
-            itens,
-            { opacity: [0, 1], y: [14, 0] },
-            { duration: 0.55, delay: stagger(0.06), ease: SUAVE },
-          );
-        } catch {
-          soltar();
-        }
-      },
-      { rootMargin: '0px 0px -10% 0px' },
-    );
-
-    observador.observe(raiz);
   }
 
   /* ── lightbox ────────────────────────────────────────────────────────── */

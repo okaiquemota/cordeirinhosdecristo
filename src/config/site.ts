@@ -41,6 +41,17 @@ export const QUEM_SOMOS = {
     'Deus e por essa comunidade.',
 };
 
+/**
+ * Versículo da faixa azul da home. Troque quando quiser — o layout se
+ * ajusta ao tamanho do texto.
+ */
+export const VERSICULO = {
+  texto:
+    'Deixai vir a mim os pequeninos, e não os embaraceis, porque dos ' +
+    'tais é o reino dos céus.',
+  referencia: 'Mateus 19:14',
+};
+
 export type Horario = {
   /** Ex.: 'Domingo' */
   dia: string;

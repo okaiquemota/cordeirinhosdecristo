@@ -1,0 +1,34 @@
+---
+import Nuvem from '../ilustracoes/Nuvem.astro';
+import BordaNuvem from '../ilustracoes/BordaNuvem.astro';
+import { VERSICULO } from '../../config/site';
+---
+
+{/* A batida azul da página. O fundo é o azul vivo da marca com as nuvens
+    dela, como na aplicação oficial — mas o texto vive num cartão claro,
+    porque branco sobre esse azul dá 2.65:1 e reprovaria em contraste. */}
+<section class="relative bg-linear-to-b from-ceu-500 to-ceu-600" aria-labelledby="versiculo">
+  <BordaNuvem class="text-fundo" />
+
+  <div class="relative overflow-hidden py-12 md:py-16">
+    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+      <Nuvem class="absolute top-2 left-0 w-44 animate-deriva-lenta md:w-56" opacidade={0.3} atraso={-30} />
+      <Nuvem class="absolute bottom-4 left-0 w-28 animate-deriva md:w-36" opacidade={0.22} atraso={-58} />
+      <Nuvem class="absolute top-16 left-0 w-20 animate-deriva-media md:w-24" opacidade={0.18} atraso={-12} />
+    </div>
+
+    <div class="container-site relative">
+      <blockquote
+        data-revelar
+        class="mx-auto max-w-3xl rounded-3xl bg-creme-50 px-7 py-10 text-center shadow-alta md:px-14 md:py-12"
+      >
+        <p id="versiculo" class="font-display text-subtitulo leading-relaxed font-700 text-texto">
+          “{VERSICULO.texto}”
+        </p>
+        <footer class="mt-5 font-display font-600 text-primaria">{VERSICULO.referencia}</footer>
+      </blockquote>
+    </div>
+  </div>
+
+  <BordaNuvem class="text-fundo -scale-y-100" />
+</section>

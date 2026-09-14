@@ -2,6 +2,7 @@
 import BaseLayout from './BaseLayout.astro';
 import Cabecalho from '../components/Cabecalho.astro';
 import Rodape from '../components/Rodape.astro';
+import RevelarAoRolar from '../components/RevelarAoRolar.astro';
 
 interface Props {
   titulo: string;
@@ -19,4 +20,5 @@ const props = Astro.props;
     <slot />
   </main>
   <Rodape />
+  <RevelarAoRolar />
 </BaseLayout>

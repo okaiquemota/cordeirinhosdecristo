@@ -27,10 +27,24 @@ const total = (await listarEventos()).length;
 
     {
       eventos.length > 0 ? (
-        <ul class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <ul
+          data-revelar-grupo
+          class:list={[
+            'mt-8 grid gap-6',
+            eventos.length === 1
+              ? 'grid-cols-1'
+              : eventos.length === 2
+                ? 'sm:grid-cols-2'
+                : 'sm:grid-cols-2 lg:grid-cols-3',
+          ]}
+        >
           {eventos.map((evento, i) => (
             <li class="flex">
-              <CardEvento evento={evento} prioridade={i === 0} />
+              <CardEvento
+                evento={evento}
+                prioridade={i === 0}
+                variante={eventos.length === 1 ? 'destaque' : 'grade'}
+              />
             </li>
           ))}
         </ul>

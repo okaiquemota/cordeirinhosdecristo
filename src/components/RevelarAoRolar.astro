@@ -1,0 +1,66 @@
+---
+/**
+ * Reveal on scroll, para o site inteiro.
+ *
+ * Marque um elemento com `data-revelar` e ele sobe com fade quando entra
+ * na tela. Envolva vários num container com `data-revelar-grupo` e eles
+ * entram em cascata, um atrás do outro.
+ *
+ * Este componente só emite o script — inclua uma vez no layout.
+ */
+---
+
+<script>
+  const SUAVE = [0.22, 1, 0.36, 1] as const;
+
+  const movimentoReduzido = () =>
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function revelarTudo() {
+    if (movimentoReduzido()) return;
+
+    /* Um grupo é um container marcado com data-revelar-grupo; o que estiver
+       solto vira grupo de um item só. Assim a cascata acontece dentro de
+       cada bloco, e não uma cascata gigante pela página inteira. */
+    const grupos = new Map<Element, HTMLElement[]>();
+
+    for (const item of document.querySelectorAll<HTMLElement>('[data-revelar]')) {
+      if (item.dataset.revelado) continue;
+      const grupo = item.closest('[data-revelar-grupo]') ?? item;
+      const lista = grupos.get(grupo) ?? [];
+      lista.push(item);
+      grupos.set(grupo, lista);
+    }
+
+    for (const [alvo, itens] of grupos) {
+      // Rede de segurança: se o Motion não carregar, o CSS solta os itens.
+      const soltar = () => alvo.setAttribute('data-revelar-pronto', '');
+      const rede = window.setTimeout(soltar, 2500);
+
+      const observador = new IntersectionObserver(
+        async (entradas) => {
+          if (!entradas.some((e) => e.isIntersecting)) return;
+          observador.disconnect();
+          window.clearTimeout(rede);
+          itens.forEach((i) => (i.dataset.revelado = 'sim'));
+
+          try {
+            const { animate, stagger } = await import('motion');
+            animate(
+              itens,
+              { opacity: [0, 1], y: [16, 0] },
+              { duration: 0.55, delay: stagger(0.08), ease: SUAVE },
+            );
+          } catch {
+            soltar();
+          }
+        },
+        { rootMargin: '0px 0px -12% 0px' },
+      );
+
+      observador.observe(alvo);
+    }
+  }
+
+  document.addEventListener('astro:page-load', revelarTudo);
+</script>

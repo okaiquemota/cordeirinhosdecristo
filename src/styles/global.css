@@ -226,8 +226,10 @@
     transform: translateY(14px);
   }
 
-  /* rede de segurança: se o Motion não carregar, o script solta tudo */
-  html.js [data-revelar-pronto] [data-revelar] {
+  /* rede de segurança: se o Motion não carregar, o script solta tudo.
+     A marca pode cair no container do grupo ou no próprio item solto. */
+  html.js [data-revelar-pronto] [data-revelar],
+  html.js [data-revelar][data-revelar-pronto] {
     opacity: 1;
     transform: none;
     transition:

@@ -3,6 +3,7 @@ import PaginaLayout from '../layouts/PaginaLayout.astro';
 import Hero from '../components/secoes/Hero.astro';
 import QuemSomos from '../components/secoes/QuemSomos.astro';
 import Horarios from '../components/secoes/Horarios.astro';
+import Versiculo from '../components/secoes/Versiculo.astro';
 import UltimosEventos from '../components/secoes/UltimosEventos.astro';
 import Contato from '../components/secoes/Contato.astro';
 import { SITE } from '../config/site';
@@ -17,6 +18,7 @@ const ogImagem = await urlOg(foto, Astro.site);
   <QuemSomos />
   {/* Só aparece quando houver horário em src/config/site.ts. */}
   <Horarios />
+  <Versiculo />
   <UltimosEventos />
   <Contato />
 </PaginaLayout>

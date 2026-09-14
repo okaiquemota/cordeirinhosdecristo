@@ -17,6 +17,7 @@ npm run preview  # serve o dist/
 | O quê | Arquivo |
 | --- | --- |
 | Nome da igreja, horários, Instagram, endereço | `src/config/site.ts` |
+| Versículo da faixa azul | `src/config/site.ts` (`VERSICULO`) |
 | Eventos (um `.md` por evento) | `src/content/eventos/` |
 | Fotos dos eventos | `src/assets/fotos/` |
 | Cabeçalho, rodapé, cartão de evento | `src/components/` |
@@ -59,6 +60,8 @@ nenhum. Veja `src/assets/fontes/LEIA-ME.md` para atualizar.
 | Hero da home (é o `<h1>`) | `logo-colorida.png` |
 | Rodapé | `logo-branca.png` |
 | Cabeçalho, "Quem somos", 404 | `ovelha.png` |
+| Nuvens do hero e da faixa azul | `nuvem.png` |
+| Borda de nuvem entre seções | `nuvem.png` como máscara CSS |
 | Favicon e ícone de celular | gerados de `ovelha.png` |
 
 No hero a logo é a imagem dentro do `<h1>`, com o nome no `alt` — então
@@ -73,7 +76,7 @@ por que os `.svg` entregues não são usados direto.
 | O quê | Como |
 | --- | --- |
 | Nuvens em deriva, ovelha balançando | CSS puro, tokens em `global.css` |
-| Reveal com stagger na galeria | Motion, carregado só quando a galeria entra em tela |
+| Reveal com stagger | Motion, por grupo, em qualquer `[data-revelar]` |
 | Lightbox (zoom, teclado, swipe) | `<dialog>` nativo + Motion, carregado no primeiro clique |
 | Troca de página com morph da capa | View Transitions do Astro (`<ClientRouter />`) |
 
