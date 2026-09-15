@@ -217,8 +217,8 @@ export const CONTATO: Contato = {
   instagram: '@cdc.ieaderp',
   instagramUrl: 'https://instagram.com/cdc.ieaderp',
 
-  telefone: '',
-  whatsapp: '',
+  telefone: '(16) 98190-3560',
+  whatsapp: '5516981903560',
 
   endereco: {
     logradouro: 'Rua Guerino Fonzar, 172',

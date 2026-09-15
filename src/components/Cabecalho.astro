@@ -30,7 +30,7 @@ const itens = [
     <a
       href="/"
       data-marca
-      class="min-w-0 rounded-lg leading-tight"
+      class="min-w-0 origin-left rounded-lg leading-tight transition-transform duration-200 ease-saida active:scale-[0.97] active:duration-75"
       aria-current={atual('/') ? 'page' : undefined}
     >
       <span
@@ -53,7 +53,7 @@ const itens = [
             {/* o fundo fica no span e não no link: o link guarda os 44px de
                 alvo de toque, o span desenha uma pílula com proporção de
                 pílula — em 14px de texto, 44px de altura viraria um círculo */}
-            <span class="rounded-full px-2.5 py-1.5 font-display text-sm font-600 transition sm:px-4 sm:py-2 sm:text-base">
+            <span class="rounded-full px-2.5 py-1.5 font-display text-sm font-600 transition duration-200 ease-saida active:scale-95 active:duration-75 sm:px-4 sm:py-2 sm:text-base">
               {item.rotulo}
             </span>
           </a>
@@ -65,7 +65,7 @@ const itens = [
             href={CONTATO.instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
-            class="hidden size-11 shrink-0 items-center justify-center rounded-full text-tinta-700 transition hover:bg-creme-200 hover:text-primaria sm:flex"
+            class="hidden size-11 shrink-0 items-center justify-center rounded-full text-tinta-700 transition duration-200 ease-saida hover:bg-creme-200 hover:text-primaria active:scale-90 active:duration-75 sm:flex"
           >
             <Instagram class="size-6" />
             <span class="sr-only">Instagram do departamento (abre em nova aba)</span>
