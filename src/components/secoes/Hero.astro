@@ -17,7 +17,7 @@ import logo from '../../assets/marca/logo-colorida.png';
     A diferença de tamanho, brilho e velocidade entre os planos é o que faz
     o céu parecer fundo e não papel de parede. */}
 <section
-  class="relative isolate flex min-h-[min(80svh,40rem)] flex-col justify-center overflow-hidden bg-linear-to-b from-ceu-500 via-ceu-300 to-ceu-200"
+  class="relative isolate flex min-h-[min(80svh,40rem)] flex-col justify-center overflow-hidden border-b border-fundo bg-clip-padding bg-linear-to-b from-ceu-500 via-ceu-300 to-ceu-200"
 >
   {/* claridade quente vindo do alto, como sol fora do quadro */}
   <div
@@ -114,6 +114,6 @@ import logo from '../../assets/marca/logo-colorida.png';
   {/* fora do fluxo: como flex child, o justify-center a centralizava e
       sobrava azul embaixo dela */}
   <div class="pointer-events-none absolute inset-x-0 bottom-0">
-    <BordaNuvem class="text-fundo -scale-y-100" />
+    <BordaNuvem class="text-fundo" virada />
   </div>
 </section>

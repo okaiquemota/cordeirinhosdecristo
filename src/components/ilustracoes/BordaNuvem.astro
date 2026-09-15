@@ -15,9 +15,20 @@
  * inteira e é reconhecível.
  */
 interface Props {
+  /** Vira a borda de cabeça para baixo: as nuvens crescem para cima. */
+  virada?: boolean;
   class?: string;
 }
-const { class: classe = 'text-fundo' } = Astro.props;
+const { virada = false, class: classe = 'text-fundo' } = Astro.props;
+
+/* A borda sangra 1px para fora da seção, e a seção correspondente leva uma
+   borda de 1px nesta mesma cor com bg-clip-padding.
+   Por quê: a altura deste SVG é largura x 84/1200, quase sempre fracionária.
+   Em zoom diferente de 100% a aresta do box cai no meio de um pixel do
+   monitor, o navegador mistura ali o creme com o fundo da seção e sobra um
+   fio de cor atravessando a página inteira. Empurrando a faixa sólida 1px
+   para fora, a aresta do SVG passa a encostar em creme, não em azul. */
+const sangria = virada ? 1 : -1;
 
 /* [x, raio] — raios variados para não virar um festão regular.
    Os círculos ficam na linha de baixo da faixa e transbordam para baixo,
@@ -39,7 +50,8 @@ const bolhas: Array<[number, number]> = [
   preserveAspectRatio="xMidYMin meet"
   aria-hidden="true"
   focusable="false"
-  class:list={['block h-auto w-full', classe]}
+  class:list={['relative block h-auto w-full', virada && '-scale-y-100', classe]}
+  style={`top: ${sangria}px`}
 >
   <g fill="currentColor">
     <rect x="0" y="0" width="1200" height="30"></rect>

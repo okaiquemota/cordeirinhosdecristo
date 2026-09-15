@@ -7,7 +7,10 @@ import { VERSICULO } from '../../config/site';
 {/* A batida azul da página. O fundo é o azul vivo da marca com as nuvens
     dela, como na aplicação oficial — mas o texto vive num cartão claro,
     porque branco sobre esse azul dá 2.65:1 e reprovaria em contraste. */}
-<section class="relative bg-linear-to-b from-ceu-500 to-ceu-600" aria-labelledby="versiculo">
+<section
+  class="relative border-y border-fundo bg-clip-padding bg-linear-to-b from-ceu-500 to-ceu-600"
+  aria-labelledby="versiculo"
+>
   <BordaNuvem class="text-fundo" />
 
   <div class="relative overflow-hidden py-12 md:py-16">
@@ -30,5 +33,5 @@ import { VERSICULO } from '../../config/site';
     </div>
   </div>
 
-  <BordaNuvem class="text-fundo -scale-y-100" />
+  <BordaNuvem class="text-fundo" virada />
 </section>

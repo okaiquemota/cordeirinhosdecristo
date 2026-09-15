@@ -8,9 +8,15 @@ interface Foto {
 
 interface Props {
   fotos: Foto[];
+  /** "grade" é a galeria do evento; "unica" é uma foto só, no formato dela. */
+  variante?: 'grade' | 'unica';
 }
 
-const { fotos } = Astro.props;
+const { fotos, variante = 'grade' } = Astro.props;
+
+/* Com uma foto só não há para onde navegar: as setas e o contador ficam
+   no HTML (o script conta com eles) mas escondidos. */
+const varias = fotos.length > 1;
 
 /* Versões grandes para o lightbox, geradas no build. Nunca passamos do
    tamanho do arquivo original — ampliar só engorda o download. */
@@ -34,9 +40,36 @@ const grandes = await Promise.all(
 ---
 
 <div data-galeria>
-  <ul data-revelar-grupo class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4">
+  {
+    variante === 'unica' && (
+      <button
+        type="button"
+        data-abrir="0"
+        class="group block w-full cursor-zoom-in overflow-hidden rounded-3xl bg-ceu-100 shadow-cartao transition duration-300 ease-saida hover:shadow-alta active:scale-[0.99] active:duration-100"
+        style={`aspect-ratio: ${fotos[0].src.width} / ${fotos[0].src.height}`}
+      >
+        <Image
+          src={fotos[0].src}
+          alt={fotos[0].alt}
+          widths={[420, 640, 900, 1200]}
+          sizes="(min-width: 768px) 30rem, 92vw"
+          format="webp"
+          loading="lazy"
+          decoding="async"
+          class="size-full object-cover transition-transform duration-500 ease-saida group-hover:scale-[1.03]"
+        />
+        <span class="sr-only">Abrir a foto em tamanho grande</span>
+      </button>
+    )
+  }
+
+  <ul
+    data-revelar-grupo
+    class:list={['grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4', variante === 'unica' && 'hidden']}
+  >
     {
-      fotos.map((foto, i) => (
+      variante === 'grade' &&
+        fotos.map((foto, i) => (
         <li data-revelar>
           <button
             type="button"
@@ -69,7 +102,7 @@ const grandes = await Promise.all(
   >
     <div class="flex h-dvh w-dvw flex-col">
       <div class="flex items-center justify-between gap-4 px-4 py-3 sm:px-6">
-        <p data-contador class="font-display font-600 text-creme-100" aria-hidden="true"></p>
+        <p data-contador class="font-display font-600 text-creme-100" aria-hidden="true" hidden={!varias}></p>
         <button
           type="button"
           data-fechar
@@ -101,6 +134,7 @@ const grandes = await Promise.all(
         <button
           type="button"
           data-anterior
+          hidden={!varias}
           class="absolute top-1/2 left-1 -translate-y-1/2 rounded-full bg-ceu-900/60 p-3 text-creme-100 transition hover:bg-ceu-900/90 sm:left-4"
         >
           <svg
@@ -121,6 +155,7 @@ const grandes = await Promise.all(
         <button
           type="button"
           data-proxima
+          hidden={!varias}
           class="absolute top-1/2 right-1 -translate-y-1/2 rounded-full bg-ceu-900/60 p-3 text-creme-100 transition hover:bg-ceu-900/90 sm:right-4"
         >
           <svg
