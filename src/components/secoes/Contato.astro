@@ -43,18 +43,31 @@ const temEndereco = Boolean(endereco.logradouro || endereco.cidade);
                   <Local class="size-5" />
                 </span>
 
-                <h3 class="mt-4 font-display text-lg font-700 text-texto">
+                {/* "Onde fica" vira rótulo discreto: quem manda na hierarquia
+                    agora é o nome da igreja, e dois negritos do mesmo peso
+                    empilhados brigariam. */}
+                <h3 class="mt-4 font-display text-sm font-600 tracking-wide text-texto-suave uppercase">
                   {TEXTOS.contato.ondeFica}
                 </h3>
 
-                <address class="mt-2 text-corpo-lg text-tinta-700 not-italic">
-                  {endereco.logradouro && <span class="block">{endereco.logradouro}</span>}
-                  {endereco.bairro && <span class="block">{endereco.bairro}</span>}
-                  <span class="block">
+                <address class="mt-2 not-italic">
+                  <span class="block font-display text-xl leading-snug font-700 text-texto">
+                    {SITE.igreja}
+                  </span>
+
+                  {endereco.logradouro && (
+                    <span class="mt-2 block text-lg text-tinta-700">{endereco.logradouro}</span>
+                  )}
+
+                  {/* bairro, cidade e CEP: quem já sabe a rua não precisa
+                      deles no mesmo tamanho */}
+                  {endereco.bairro && (
+                    <span class="block text-base text-texto-suave">{endereco.bairro}</span>
+                  )}
+                  <span class="block text-base text-texto-suave">
                     {[endereco.cidade, endereco.uf].filter(Boolean).join(' - ')}
                     {endereco.cep && ` · ${endereco.cep}`}
                   </span>
-                  <span class="mt-2 block text-base text-texto-suave">{SITE.igreja}</span>
                 </address>
 
                 {endereco.mapaUrl && (
