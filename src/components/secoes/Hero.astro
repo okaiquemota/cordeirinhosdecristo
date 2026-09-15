@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import Nuvem from '../ilustracoes/Nuvem.astro';
+import Ovelha from '../ilustracoes/Ovelha.astro';
 import BordaNuvem from '../ilustracoes/BordaNuvem.astro';
 import Botao from '../Botao.astro';
 import Seta from '../icones/Seta.astro';
@@ -9,50 +10,72 @@ import { SITE, CONTATO } from '../../config/site';
 import logo from '../../assets/marca/logo-colorida.png';
 ---
 
-{/* Céu de verdade, como a aplicação oficial da marca: azul vivo em cima
-    clareando para o horizonte, nuvens grandes passando. O texto é escuro
-    porque branco sobre esse azul dá 2.65:1 e reprovaria — tinta-900 sobre
-    ceu-300 dá 8.62:1. */}
-<section class="relative overflow-hidden bg-linear-to-b from-ceu-400 via-ceu-300 to-ceu-200">
-  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-    <Nuvem class="absolute top-4 left-0 w-48 animate-deriva md:w-72" opacidade={0.9} atraso={-16} />
+{/* Céu com profundidade de verdade, em três planos:
+    fundo  — nuvens pequenas, pálidas e lentas, atrás do conteúdo;
+    meio   — a logo, o subtítulo e os botões;
+    frente — nuvens grandes e brancas passando por cima, só nas faixas de
+             cima e de baixo, para não atravessarem o texto.
+    A diferença de tamanho, brilho e velocidade entre os planos é o que faz
+    o céu parecer fundo e não papel de parede. */}
+<section
+  class="relative isolate flex min-h-[min(86svh,44rem)] flex-col justify-center overflow-hidden bg-linear-to-b from-ceu-500 via-ceu-300 to-ceu-200"
+>
+  {/* claridade quente vindo do alto, como sol fora do quadro */}
+  <div
+    class="pointer-events-none absolute -top-56 -right-24 -z-20 size-[42rem] rounded-full opacity-70 blur-2xl"
+    style="background: radial-gradient(circle, rgb(255 253 249 / 0.7), transparent 62%)"
+    aria-hidden="true"
+  >
+  </div>
+
+  {/* plano de fundo */}
+  <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
     <Nuvem
-      class="absolute top-36 left-0 w-32 animate-deriva-lenta md:top-52 md:w-48"
-      opacidade={0.55}
-      atraso={-62}
-    />
-    <Nuvem
-      class="absolute top-20 left-0 w-24 animate-deriva-media md:w-36"
-      opacidade={0.7}
-      atraso={-34}
-    />
-    <Nuvem
-      class="absolute bottom-20 left-0 hidden w-40 animate-deriva-lenta md:block"
+      class="absolute top-[16%] left-0 w-20 animate-deriva-lenta md:w-28"
       opacidade={0.4}
-      atraso={-8}
+      atraso={-70}
+    />
+    <Nuvem
+      class="absolute top-[52%] left-0 w-16 animate-deriva-lenta md:w-24"
+      opacidade={0.32}
+      atraso={-20}
+    />
+    <Nuvem
+      class="absolute top-[34%] left-0 w-24 animate-deriva-media md:w-32"
+      opacidade={0.38}
+      atraso={-48}
+    />
+    <Nuvem
+      class="absolute top-[70%] left-0 w-28 animate-deriva md:w-40"
+      opacidade={0.3}
+      atraso={-55}
+    />
+    <Nuvem
+      class="absolute top-[8%] left-0 w-14 animate-deriva-media md:w-20"
+      opacidade={0.45}
+      atraso={-33}
     />
   </div>
 
-  <div
-    class="container-site relative flex flex-col items-center pt-10 pb-16 text-center md:pt-14 md:pb-24"
-  >
+  {/* plano do meio */}
+  <div class="container-site relative flex flex-col items-center pt-10 pb-20 text-center md:pt-8 md:pb-24">
     {/* A logo É o título. O alt carrega o nome, então leitor de tela e
         buscador leem "Cordeirinhos de Cristo" como h1. */}
     <h1>
       <Image
         src={logo}
         alt={SITE.nome}
-        widths={[360, 540, 720, 960]}
-        sizes="(min-width: 768px) 34rem, 88vw"
+        widths={[400, 600, 800, 1027]}
+        sizes="(min-width: 768px) 36rem, 88vw"
         format="webp"
         loading="eager"
         fetchpriority="high"
         decoding="async"
-        class="h-auto w-full max-w-[34rem]"
+        class="h-auto w-full max-w-[36rem] drop-shadow-[0_6px_18px_rgb(11_70_101/0.25)]"
       />
     </h1>
 
-    <p class="mt-7 max-w-lg text-subtitulo font-600 text-tinta-900">{SITE.subtitulo}</p>
+    <p class="mt-6 max-w-md text-subtitulo font-600 text-tinta-900">{SITE.subtitulo}</p>
 
     <div class="mt-8 flex flex-wrap justify-center gap-3">
       <Botao href="/eventos/" tamanho="lg">
@@ -70,5 +93,22 @@ import logo from '../../assets/marca/logo-colorida.png';
     </div>
   </div>
 
-  <BordaNuvem class="text-fundo -scale-y-100" />
+  {/* plano da frente: uma só, no alto e cortada pela borda de cima. É o
+      tamanho e o corte que a fazem parecer perto. Havia outra embaixo, mas
+      ela passava por cima do botão do Instagram e o deixava ilegível. */}
+  <div class="pointer-events-none absolute inset-x-0 top-0 h-40 overflow-hidden" aria-hidden="true">
+    <Nuvem class="absolute -top-20 left-0 w-56 animate-deriva md:-top-24 md:w-72" atraso={-14} />
+  </div>
+
+  {/* fora do fluxo: como flex child, o justify-center a centralizava e
+      sobrava azul embaixo dela */}
+  <div class="pointer-events-none absolute inset-x-0 bottom-0">
+    <BordaNuvem class="text-fundo -scale-y-100" />
+  </div>
+
+  {/* a ovelha em pé sobre a linha de nuvens, com as patas já no creme */}
+  <Ovelha
+    class="pointer-events-none absolute bottom-1 left-1/2 w-24 -translate-x-1/2 drop-shadow-md sm:w-28 md:w-32"
+    animada
+  />
 </section>
