@@ -21,8 +21,8 @@ export const SITE = {
   /** Nome da igreja. */
   igreja: 'IEADERP Casa Grande',
 
-  /** Subtítulo do hero. Uma linha, tom acolhedor. */
-  subtitulo: 'O departamento infantil da IEADERP Casa Grande',
+  /** Subtítulo da capa. Uma linha, tom acolhedor. */
+  subtitulo: 'O departamento infantil da IEADERP Casa Grande. Toda criança é bem-vinda aqui.',
 
   /** Descrição usada em <meta description> e no card do WhatsApp. */
   descricao:
@@ -60,6 +60,11 @@ export const VERSICULO = {
  * igreja fala.
  */
 export const TEXTOS = {
+  capa: {
+    /* A frase do tema do ano, logo abaixo da logo. Deixe '' e a linha some
+       da página — é o lugar de trocar quando a festividade mudar. */
+    tema: 'Vivendo o novo que Deus fez.',
+  },
   ultimosEventos: {
     titulo: 'Últimos eventos',
     descricao: 'PREENCHER: uma linha sobre o que são estes registros.',

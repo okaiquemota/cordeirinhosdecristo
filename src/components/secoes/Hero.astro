@@ -5,7 +5,7 @@ import BordaNuvem from '../ilustracoes/BordaNuvem.astro';
 import Botao from '../Botao.astro';
 import Seta from '../icones/Seta.astro';
 import Instagram from '../icones/Instagram.astro';
-import { SITE, CONTATO } from '../../config/site';
+import { SITE, CONTATO, TEXTOS } from '../../config/site';
 import logo from '../../assets/marca/logo-colorida.png';
 ---
 
@@ -17,7 +17,7 @@ import logo from '../../assets/marca/logo-colorida.png';
     A diferença de tamanho, brilho e velocidade entre os planos é o que faz
     o céu parecer fundo e não papel de parede. */}
 <section
-  class="relative isolate flex min-h-[min(86svh,44rem)] flex-col justify-center overflow-hidden bg-linear-to-b from-ceu-500 via-ceu-300 to-ceu-200"
+  class="relative isolate flex min-h-[min(80svh,40rem)] flex-col justify-center overflow-hidden bg-linear-to-b from-ceu-500 via-ceu-300 to-ceu-200"
 >
   {/* claridade quente vindo do alto, como sol fora do quadro */}
   <div
@@ -57,24 +57,34 @@ import logo from '../../assets/marca/logo-colorida.png';
   </div>
 
   {/* plano do meio */}
-  <div class="container-site relative flex flex-col items-center pt-10 pb-20 text-center md:pt-8 md:pb-24">
+  <div class="container-site relative flex flex-col items-center pt-10 pb-16 text-center md:pt-8 md:pb-20">
     {/* A logo É o título. O alt carrega o nome, então leitor de tela e
         buscador leem "Cordeirinhos de Cristo" como h1. */}
     <h1>
       <Image
         src={logo}
         alt={SITE.nome}
-        widths={[400, 600, 800, 1027]}
-        sizes="(min-width: 768px) 36rem, 88vw"
+        widths={[320, 420, 520, 640, 832]}
+        sizes="(min-width: 768px) 26rem, 76vw"
         format="webp"
         loading="eager"
         fetchpriority="high"
         decoding="async"
-        class="h-auto w-full max-w-[36rem] drop-shadow-[0_6px_18px_rgb(11_70_101/0.25)]"
+        class="h-auto w-full max-w-[26rem] drop-shadow-[0_6px_18px_rgb(11_70_101/0.25)]"
       />
     </h1>
 
-    <p class="mt-6 max-w-md text-subtitulo font-600 text-tinta-900">{SITE.subtitulo}</p>
+    {/* a frase do tema é a linha grande; o subtítulo vem embaixo, menor,
+        dizendo de quem é a casa. Emoção primeiro, informação depois. */}
+    {
+      TEXTOS.capa.tema && (
+        <p class="mt-7 max-w-lg font-display text-subtitulo leading-snug font-700 text-tinta-900">
+          {TEXTOS.capa.tema}
+        </p>
+      )
+    }
+
+    <p class="mt-4 max-w-md text-base leading-relaxed text-tinta-700 sm:text-lg">{SITE.subtitulo}</p>
 
     <div class="mt-8 flex flex-wrap justify-center gap-3">
       <Botao href="/eventos/" tamanho="lg">
