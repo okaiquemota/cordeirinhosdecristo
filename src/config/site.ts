@@ -37,7 +37,7 @@ export const QUEM_SOMOS = {
     'Os Cordeirinhos de Cristo são o departamento infantil da IEADERP ' +
       'Casa Grande.',
     'Aqui, as crianças aprendem sobre Deus por meio da Bíblia, da música, ' +
-      'da brincadeira e da comunhão — em um ambiente de carinho, cuidado e ' +
+      'da brincadeira e da comunhão, em um ambiente de carinho, cuidado e ' +
       'alegria.',
   ],
 };
@@ -212,7 +212,7 @@ export const CONTATO: Contato = {
 export const enderecoCompleto = [
   CONTATO.endereco.logradouro,
   CONTATO.endereco.bairro,
-  [CONTATO.endereco.cidade, CONTATO.endereco.uf].filter(Boolean).join(' — '),
+  [CONTATO.endereco.cidade, CONTATO.endereco.uf].filter(Boolean).join(' - '),
 ]
   .filter(Boolean)
   .join(', ');

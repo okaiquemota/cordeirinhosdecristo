@@ -21,7 +21,7 @@ const temEndereco = Boolean(endereco.logradouro || endereco.cidade);
       <div>
         <Image
           src={logoBranca}
-          alt={`${SITE.nome} — ${SITE.igreja}`}
+          alt={`${SITE.nome}, ${SITE.igreja}`}
           widths={[240, 360, 480]}
           sizes="17rem"
           format="webp"
@@ -40,7 +40,7 @@ const temEndereco = Boolean(endereco.logradouro || endereco.cidade);
                 {endereco.logradouro && <span class="block">{endereco.logradouro}</span>}
                 {endereco.bairro && <span class="block">{endereco.bairro}</span>}
                 <span class="block">
-                  {[endereco.cidade, endereco.uf].filter(Boolean).join(' — ')}
+                  {[endereco.cidade, endereco.uf].filter(Boolean).join(' - ')}
                   {endereco.cep && ` · ${endereco.cep}`}
                 </span>
                 {endereco.mapaUrl && (

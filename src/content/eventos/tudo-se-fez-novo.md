@@ -48,8 +48,8 @@ música.
 
 ## A história
 
-A história do dia falou sobre recomeço — sobre como Deus não conserta o
-que estava velho, ele faz novo. As crianças ouviram sentadas no tapete e
+A história do dia falou sobre recomeço, sobre como Deus não conserta o
+que estava velho: ele faz novo. As crianças ouviram sentadas no tapete e
 depois montaram, cada uma do seu jeito, um cartaz do que gostariam de ver
 novo na própria vida.
 
