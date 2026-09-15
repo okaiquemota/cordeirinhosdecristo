@@ -34,7 +34,7 @@ const temEndereco = Boolean(endereco.logradouro || endereco.cidade);
           />
         </div>
 
-        <div class="flex flex-col gap-5">
+        <div>
           {
             temEndereco && (
               <div class="flex flex-col rounded-2xl border border-creme-300/60 bg-superficie p-6 shadow-suave md:p-8">
@@ -81,21 +81,6 @@ const temEndereco = Boolean(endereco.logradouro || endereco.cidade);
             )
           }
 
-          {
-            CONTATO.whatsapp && (
-              <div class="flex flex-col rounded-2xl border border-creme-300/60 bg-superficie p-6 shadow-suave md:p-8">
-                <h3 class="font-display text-lg font-700 text-texto">Falar com a gente</h3>
-                <Botao
-                  href={`https://wa.me/${CONTATO.whatsapp}`}
-                  tipo="secundaria"
-                  externo
-                  class="mt-4 self-start"
-                >
-                  {CONTATO.telefone || 'WhatsApp'}
-                </Botao>
-              </div>
-            )
-          }
         </div>
       </div>
     </div>
