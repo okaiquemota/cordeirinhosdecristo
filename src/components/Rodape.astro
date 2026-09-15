@@ -2,13 +2,14 @@
 import { Image } from 'astro:assets';
 import logoBranca from '../assets/marca/logo-branca.png';
 import BordaNuvem from './ilustracoes/BordaNuvem.astro';
-import Instagram from './icones/Instagram.astro';
-import Local from './icones/Local.astro';
-import { SITE, CONTATO, enderecoCompleto } from '../config/site';
+import { SITE, CONTATO, RODAPE } from '../config/site';
 
 const { endereco } = CONTATO;
 const ano = new Date().getFullYear();
 const temEndereco = Boolean(endereco.logradouro || endereco.cidade);
+
+const tituloColuna = 'font-display text-base font-700 text-creme-50';
+const link = 'text-ceu-100 transition hover:text-creme-50';
 ---
 
 <footer class="mt-4 border-t border-fundo bg-ceu-800 bg-clip-padding text-creme-100">
@@ -16,94 +17,113 @@ const temEndereco = Boolean(endereco.logradouro || endereco.cidade);
       então o azul do rodapé parece começar logo abaixo dela */}
   <BordaNuvem class="text-fundo" />
 
-  <div class="container-site relative pt-12 pb-14 md:pt-16 md:pb-16">
-    <div class="grid gap-10 md:grid-cols-[1.2fr_1fr]">
+  <div class="container-site relative pt-12 pb-10 md:pt-16">
+    <div class="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr] md:gap-8">
       <div>
         <Image
           src={logoBranca}
           alt={`${SITE.nome}, ${SITE.igreja}`}
           widths={[240, 360, 480]}
-          sizes="17rem"
+          sizes="15rem"
           format="webp"
           loading="lazy"
           decoding="async"
-          class="h-auto w-56 max-w-full sm:w-64"
+          class="h-auto w-52 max-w-full sm:w-60"
         />
+        <p class="mt-5 max-w-xs text-ceu-100">{SITE.subtitulo}</p>
       </div>
 
-      <div class="space-y-5">
-        {
-          temEndereco && (
-            <div class="flex gap-3">
-              <Local class="mt-0.5 size-5 shrink-0 text-ceu-200" />
-              <address class="text-ceu-100 not-italic">
-                {endereco.logradouro && <span class="block">{endereco.logradouro}</span>}
-                {endereco.bairro && <span class="block">{endereco.bairro}</span>}
-                <span class="block">
-                  {[endereco.cidade, endereco.uf].filter(Boolean).join(' - ')}
-                  {endereco.cep && ` · ${endereco.cep}`}
-                </span>
-                {endereco.mapaUrl && (
-                  <a
-                    href={endereco.mapaUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="mt-1 inline-block font-600 text-ceu-200 underline underline-offset-4 transition hover:text-creme-50"
-                  >
-                    Ver no mapa
-                  </a>
-                )}
-              </address>
-            </div>
-          )
-        }
+      <nav aria-labelledby="rodape-navegacao">
+        <h2 id="rodape-navegacao" class={tituloColuna}>{RODAPE.navegacao.titulo}</h2>
+        <ul class="mt-4 space-y-3">
+          {
+            RODAPE.navegacao.itens.map((item) => (
+              <li>
+                <a href={item.href} class={link}>
+                  {item.rotulo}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
 
-        {
-          CONTATO.instagram && (
-            <a
-              href={CONTATO.instagramUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex gap-3 rounded-lg font-600 text-ceu-100 transition hover:text-creme-50"
-            >
-              <Instagram class="mt-0.5 size-5 shrink-0 text-ceu-200" />
-              <span>
-                <span class="block">Instagram</span>
-                <span class="block text-sm font-400 text-ceu-200">{CONTATO.instagram}</span>
-              </span>
-            </a>
-          )
-        }
+      <div>
+        <h2 id="rodape-contato" class={tituloColuna}>{RODAPE.contato.titulo}</h2>
+        <ul class="mt-4 space-y-3">
+          {
+            temEndereco && (
+              <li>
+                <address class="text-ceu-100 not-italic">
+                  {endereco.logradouro && <span class="block">{endereco.logradouro}</span>}
+                  {endereco.bairro && <span class="block">{endereco.bairro}</span>}
+                  <span class="block">
+                    {[endereco.cidade, endereco.uf].filter(Boolean).join(' - ')}
+                    {endereco.cep && ` · ${endereco.cep}`}
+                  </span>
+                </address>
+              </li>
+            )
+          }
 
-        {
-          CONTATO.whatsapp && (
-            <a
-              href={`https://wa.me/${CONTATO.whatsapp}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="block font-600 text-ceu-100 transition hover:text-creme-50"
-            >
-              {CONTATO.telefone || 'WhatsApp'}
-            </a>
-          )
-        }
+          {
+            endereco.mapaUrl && (
+              <li>
+                <a href={endereco.mapaUrl} target="_blank" rel="noopener noreferrer" class={link}>
+                  Ver no mapa
+                </a>
+              </li>
+            )
+          }
 
-        {
-          CONTATO.email && (
-            <a
-              href={`mailto:${CONTATO.email}`}
-              class="block font-600 text-ceu-100 transition hover:text-creme-50"
-            >
-              {CONTATO.email}
-            </a>
-          )
-        }
+          {
+            CONTATO.instagram && (
+              <li>
+                <a
+                  href={CONTATO.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class={link}
+                >
+                  Instagram
+                </a>
+              </li>
+            )
+          }
+
+          {
+            CONTATO.whatsapp && (
+              <li>
+                <a
+                  href={`https://wa.me/${CONTATO.whatsapp}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class={link}
+                >
+                  {CONTATO.telefone || 'WhatsApp'}
+                </a>
+              </li>
+            )
+          }
+
+          {
+            CONTATO.email && (
+              <li>
+                <a href={`mailto:${CONTATO.email}`} class={link}>
+                  {CONTATO.email}
+                </a>
+              </li>
+            )
+          }
+        </ul>
       </div>
     </div>
 
-    <p class="mt-12 border-t border-ceu-600 pt-6 text-sm text-ceu-200">
-      © {ano} {SITE.nome} · {SITE.igreja}
-      {temEndereco && <span class="sr-only">, {enderecoCompleto}</span>}
-    </p>
+    <div
+      class="mt-12 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-ceu-600 pt-6 text-sm text-ceu-200"
+    >
+      <p>© {ano} {SITE.nome}</p>
+      <p>{SITE.igreja}</p>
+    </div>
   </div>
 </footer>
