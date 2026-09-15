@@ -123,7 +123,7 @@ const grandes = await Promise.all(
         </button>
       </div>
 
-      <div data-palco class="relative flex min-h-0 flex-1 touch-pan-y items-center justify-center px-2 pb-2 sm:px-4">
+      <div data-palco class="relative flex min-h-0 flex-1 touch-none items-center justify-center px-2 pb-2 sm:px-4">
         <img
           data-foto
           alt=""
@@ -245,6 +245,18 @@ const grandes = await Promise.all(
        teclar rápido acumula em vez de perder comando. */
     let token = 0;
 
+    /* Estado do zoom. Fica aqui em cima porque trocar de foto precisa
+       zerá-lo, e isso acontece bem antes do bloco de gestos. */
+    let escala = 1;
+    let panX = 0;
+    let panY = 0;
+    const ampliada = () => escala > 1.001;
+    const zerarZoom = () => {
+      escala = 1;
+      panX = 0;
+      panY = 0;
+    };
+
     const mola = (duracao: number, salto: number, velocidade = 0) =>
       ({ type: 'spring', bounce: salto, duration: duracao, velocity: velocidade }) as const;
 
@@ -252,6 +264,7 @@ const grandes = await Promise.all(
     const aplicar = (i: number) => {
       const f = fotos[i];
       if (!f) return;
+      zerarZoom();
       foto.src = f.src;
       foto.alt = f.alt;
       if (f.largura) foto.width = f.largura;
@@ -387,24 +400,106 @@ const grandes = await Promise.all(
     // devolve o scroll se o Esc fechar sem passar por fechar()
     dialogo.addEventListener('close', () => {
       document.body.style.overflow = scrollTravado;
+      zerarZoom();
+      foto.style.transition = '';
+      foto.style.cursor = '';
     });
 
-    /* ── arrasto ──────────────────────────────────────────────────────
-       Projeção de inércia, igual à da rolagem: onde o movimento PARARIA
-       se continuasse desacelerando. É o que faz um peteleco curto e
-       rápido valer mais que um arrasto longo e preguiçoso.              */
+    /* ── gestos ───────────────────────────────────────────────────────
+       Três gestos dividem o mesmo palco, e a escala decide qual vale:
+
+         encaixada (escala 1)   um dedo arrasta para trocar de foto
+         ampliada  (escala > 1) um dedo arrasta para passear pela foto
+         dois dedos             pinça, sempre
+
+       Toque duplo alterna entre as duas. No mouse, duplo clique faz o
+       mesmo, e ctrl + roda amplia (é o que o trackpad manda quando se
+       faz pinça nele).
+
+       Na troca de foto vale a projeção de inércia, igual à da rolagem:
+       onde o movimento PARARIA se continuasse desacelerando. É o que faz
+       um peteleco curto e rápido valer mais que um arrasto longo e
+       preguiçoso.                                                        */
     const projetar = (velocidade: number, desaceleracao = 0.998) =>
       ((velocidade / 1000) * desaceleracao) / (1 - desaceleracao);
 
     const LIMIAR_DIRECAO = 10; // px antes de decidir se o gesto é horizontal
+    const ESCALA_MAX = 4;
+    const ESCALA_TOQUE_DUPLO = 2.5;
+    const JANELA_TOQUE_DUPLO = 300; // ms
 
+    /** Escreve escala e deslocamento. Encaixada, limpa o transform. */
+    const desenhar = () => {
+      foto.style.transform =
+        escala === 1 && panX === 0 && panY === 0
+          ? ''
+          : `translate(${panX}px, ${panY}px) scale(${escala})`;
+      foto.style.cursor = ampliada() ? 'grab' : '';
+    };
+
+    /** Impede arrastar a foto ampliada para fora da tela. */
+    const limitarPan = () => {
+      const maxX = Math.max(0, (foto.offsetWidth * escala - palco.clientWidth) / 2);
+      const maxY = Math.max(0, (foto.offsetHeight * escala - palco.clientHeight) / 2);
+      panX = Math.min(maxX, Math.max(-maxX, panX));
+      panY = Math.min(maxY, Math.max(-maxY, panY));
+    };
+
+    /** Centro da foto como se não houvesse transformação, em coordenadas
+        de tela. O retângulo medido já vem transformado, então desconta-se
+        o deslocamento que nós mesmos aplicamos. */
+    const centroBase = () => {
+      const r = foto.getBoundingClientRect();
+      return { x: r.left + r.width / 2 - panX, y: r.top + r.height / 2 - panY };
+    };
+
+    /** Muda a escala deixando parado o ponto (fx, fy) da tela — é isso que
+        faz a pinça ampliar o que está ENTRE os dedos, e não o centro. */
+    const escalarEm = (alvo: number, fx: number, fy: number) => {
+      const anterior = escala;
+      escala = Math.min(ESCALA_MAX, Math.max(1, alvo));
+      if (escala === anterior) return;
+
+      const base = centroBase();
+      const razao = escala / anterior;
+      panX = fx - base.x - (fx - base.x - panX) * razao;
+      panY = fy - base.y - (fy - base.y - panY) * razao;
+      limitarPan();
+      desenhar();
+    };
+
+    /** Volta ao encaixe com uma transição curta. Fora de gesto, então
+        transição CSS dá conta e não briga com as molas da navegação. */
+    const encaixar = () => {
+      zerarZoom();
+      if (movimentoReduzido()) return desenhar();
+      foto.style.transition = 'transform 0.32s var(--ease-saida, ease-out)';
+      desenhar();
+      window.setTimeout(() => {
+        foto.style.transition = '';
+      }, 340);
+    };
+
+    const alternarZoom = (fx: number, fy: number) => {
+      if (ampliada()) encaixar();
+      else escalarEm(ESCALA_TOQUE_DUPLO, fx, fy);
+    };
+
+    const pontos = new Map<number, { x: number; y: number }>();
     let arrastando = false;
     let houveArrasto = false;
     let direcaoDecidida = false;
     let horizontal = false;
+    let passeando = false;
     let inicioX = 0;
     let inicioY = 0;
+    let panInicioX = 0;
+    let panInicioY = 0;
     let historico: Array<{ x: number; t: number }> = [];
+    let pinca: { distancia: number; escala: number } | null = null;
+    let ultimoToque = 0;
+    let ultimoToqueX = 0;
+    let ultimoToqueY = 0;
 
     const velocidadeAtual = () => {
       if (historico.length < 2) return 0;
@@ -418,28 +513,89 @@ const grandes = await Promise.all(
       return dt > 0 ? ((fim.x - ini.x) / dt) * 1000 : 0;
     };
 
+    /** Distância e ponto médio entre os dois primeiros dedos. */
+    const dedos = () => {
+      const [a, b] = [...pontos.values()];
+      if (!a || !b) return null;
+      return { distancia: Math.hypot(b.x - a.x, b.y - a.y), x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+    };
+
     palco.addEventListener('pointerdown', (e) => {
       if (e.pointerType === 'mouse' && e.button !== 0) return;
+      foto.style.transition = '';
+      pontos.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+      if (pontos.size === 2) {
+        // entrou o segundo dedo: vira pinça e o arrasto em curso é abortado
+        const d = dedos();
+        if (d) pinca = { distancia: d.distancia, escala };
+        arrastando = false;
+        passeando = false;
+        foto.style.opacity = '';
+        desenhar();
+        return;
+      }
+      if (pontos.size > 2) return;
+
+      const agora = performance.now();
+
+      // toque duplo (só no dedo; no mouse quem cuida é o dblclick)
+      if (e.pointerType !== 'mouse') {
+        const perto =
+          Math.abs(e.clientX - ultimoToqueX) < 30 && Math.abs(e.clientY - ultimoToqueY) < 30;
+        if (agora - ultimoToque < JANELA_TOQUE_DUPLO && perto) {
+          ultimoToque = 0;
+          alternarZoom(e.clientX, e.clientY);
+          return;
+        }
+        ultimoToque = agora;
+        ultimoToqueX = e.clientX;
+        ultimoToqueY = e.clientY;
+      }
+
       arrastando = true;
       houveArrasto = false;
       direcaoDecidida = false;
       horizontal = false;
+      passeando = ampliada();
       inicioX = e.clientX;
       inicioY = e.clientY;
-      historico = [{ x: e.clientX, t: performance.now() }];
+      panInicioX = panX;
+      panInicioY = panY;
+      historico = [{ x: e.clientX, t: agora }];
+      if (passeando) palco.setPointerCapture(e.pointerId);
     });
 
     palco.addEventListener('pointermove', (e) => {
+      if (!pontos.has(e.pointerId)) return;
+      pontos.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+      if (pinca && pontos.size >= 2) {
+        const d = dedos();
+        if (d && d.distancia > 0) escalarEm((d.distancia / pinca.distancia) * pinca.escala, d.x, d.y);
+        return;
+      }
+
       if (!arrastando) return;
       const dx = e.clientX - inicioX;
       const dy = e.clientY - inicioY;
+
+      // ampliada, o dedo passeia pela foto em vez de trocar de foto
+      if (passeando) {
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) houveArrasto = true;
+        panX = panInicioX + dx;
+        panY = panInicioY + dy;
+        limitarPan();
+        desenhar();
+        return;
+      }
 
       if (!direcaoDecidida) {
         if (Math.abs(dx) < LIMIAR_DIRECAO && Math.abs(dy) < LIMIAR_DIRECAO) return;
         direcaoDecidida = true;
         horizontal = Math.abs(dx) > Math.abs(dy);
         if (!horizontal) {
-          arrastando = false; // é rolagem vertical, não é nosso
+          arrastando = false; // gesto vertical não é nosso
           return;
         }
         palco.setPointerCapture(e.pointerId);
@@ -458,7 +614,6 @@ const grandes = await Promise.all(
       if (!arrastando) return;
       arrastando = false;
       if (!houveArrasto || !horizontal) return;
-      if (palco!.hasPointerCapture?.(e.pointerId)) palco!.releasePointerCapture(e.pointerId);
 
       const dx = e.clientX - inicioX;
       const v = velocidadeAtual();
@@ -483,13 +638,58 @@ const grandes = await Promise.all(
       }
     }
 
-    palco.addEventListener('pointerup', soltar);
-    palco.addEventListener('pointercancel', (e) => {
-      arrastando = false;
+    const largarPonteiro = (e: PointerEvent) => {
+      pontos.delete(e.pointerId);
       if (palco.hasPointerCapture?.(e.pointerId)) palco.releasePointerCapture(e.pointerId);
+    };
+
+    palco.addEventListener('pointerup', (e) => {
+      const saiuDaPinca = pinca !== null;
+      largarPonteiro(e);
+
+      if (saiuDaPinca) {
+        if (pontos.size < 2) {
+          pinca = null;
+          // afrouxou até caber de novo: encaixa em vez de deixar torto
+          if (!ampliada()) encaixar();
+        }
+        return;
+      }
+
+      if (passeando) {
+        arrastando = false;
+        passeando = false;
+        return;
+      }
+
+      void soltar(e);
+    });
+
+    palco.addEventListener('pointercancel', (e) => {
+      largarPonteiro(e);
+      if (pontos.size < 2) pinca = null;
+      arrastando = false;
+      passeando = false;
+      if (ampliada()) return; // um dedo sumir não é motivo para perder o zoom
       foto.style.transform = '';
       foto.style.opacity = '';
     });
+
+    foto.addEventListener('dblclick', (e) => {
+      e.preventDefault();
+      alternarZoom(e.clientX, e.clientY);
+    });
+
+    /* Pinça de trackpad chega como roda com ctrl. */
+    palco.addEventListener(
+      'wheel',
+      (e) => {
+        if (!e.ctrlKey) return;
+        e.preventDefault();
+        escalarEm(escala * Math.exp(-e.deltaY / 240), e.clientX, e.clientY);
+      },
+      { passive: false },
+    );
   }
 
   const iniciar = () =>

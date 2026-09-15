@@ -43,6 +43,18 @@ export const QUEM_SOMOS = {
 };
 
 /**
+ * Bloco da liderança, logo abaixo do "Quem somos". Mesmo formato: um item
+ * da lista é um parágrafo. Lista vazia esconde a seção inteira.
+ */
+export const LIDERANCA = {
+  titulo: 'Quem cuida das crianças',
+  paragrafos: [
+    'PREENCHER: quem lidera o departamento, e há quanto tempo.',
+    'PREENCHER: uma frase sobre a equipe. Quantos são, como se preparam, o que move esse trabalho.',
+  ],
+};
+
+/**
  * Versículo da faixa azul da home. Troque quando quiser — o layout se
  * ajusta ao tamanho do texto.
  */

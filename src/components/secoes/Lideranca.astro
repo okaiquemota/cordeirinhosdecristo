@@ -1,0 +1,44 @@
+---
+import Galeria from '../Galeria.astro';
+import { LIDERANCA } from '../../config/site';
+import foto from '../../assets/fotos/lideranca.jpeg';
+
+/* Sem parágrafo nenhum a seção não aparece — nada de buraco na página. */
+const aparece = LIDERANCA.paragrafos.length > 0;
+---
+
+{
+  aparece && (
+    <section class="secao pt-0" aria-labelledby="lideranca">
+      <div class="container-site">
+        {/* O texto vem antes no HTML para quem lê com leitor de tela ouvir o
+            título primeiro. No desktop a foto pula para a esquerda, e a
+            seção fica espelhada em relação ao "Quem somos" logo acima. */}
+        <div class="grid gap-10 md:grid-cols-2 md:items-center md:gap-14">
+          <div data-revelar>
+            <h2 id="lideranca" class="text-titulo text-texto">
+              {LIDERANCA.titulo}
+            </h2>
+            <div class="mt-5 space-y-4 text-corpo-lg text-tinta-700">
+              {LIDERANCA.paragrafos.map((paragrafo) => (
+                <p>{paragrafo}</p>
+              ))}
+            </div>
+          </div>
+
+          <div data-revelar class="md:order-first">
+            <Galeria
+              variante="unica"
+              fotos={[
+                {
+                  src: foto,
+                  alt: 'A equipe que cuida das crianças dos Cordeirinhos de Cristo.',
+                },
+              ]}
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
