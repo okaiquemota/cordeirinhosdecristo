@@ -6,8 +6,8 @@ data: 2026-09-12
 dataFim: 2026-09-13
 
 resumo: >-
-  Dois dias de festa com as crianças em volta de uma ideia só: em Cristo,
-  tudo se fez novo.
+  Dois dias de celebração com as crianças, aprendendo que, em Cristo, tudo
+  se fez novo.
 
 capa:
   src: ../../assets/fotos/tudo-se-fez-novo/capa.jpg
