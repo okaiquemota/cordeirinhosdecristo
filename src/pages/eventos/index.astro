@@ -3,7 +3,7 @@ import PaginaLayout from '../../layouts/PaginaLayout.astro';
 import CardEvento from '../../components/CardEvento.astro';
 import { listarEventos } from '../../lib/eventos';
 import { urlOg } from '../../lib/og';
-import foto from '../../assets/fotos/hero.jpg';
+import foto from '../../assets/fotos/quem-somos.jpg';
 
 const eventos = await listarEventos();
 const ogImagem = await urlOg(foto, Astro.site);

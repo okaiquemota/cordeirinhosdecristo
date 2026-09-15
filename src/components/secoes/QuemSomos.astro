@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import Ovelha from '../ilustracoes/Ovelha.astro';
 import { QUEM_SOMOS } from '../../config/site';
-import foto from '../../assets/fotos/hero.jpg';
+import foto from '../../assets/fotos/quem-somos.jpg';
 ---
 
 <section class="secao" aria-labelledby="quem-somos">
@@ -16,8 +16,13 @@ import foto from '../../assets/fotos/hero.jpg';
       </div>
 
       <div class="relative" data-revelar>
-        {/* proporção travada: nada pula quando a foto carrega */}
-        <div class="aspect-[4/3] overflow-hidden rounded-3xl bg-ceu-100 shadow-cartao">
+        {/* A proporção vem da própria foto, então trocar o arquivo por um de
+            outro formato não corta ninguém nem quebra o layout. Fica travada
+            no HTML, então nada pula enquanto a imagem carrega. */}
+        <div
+          class="overflow-hidden rounded-3xl bg-ceu-100 shadow-cartao"
+          style={`aspect-ratio: ${foto.width} / ${foto.height}`}
+        >
           <Image
             src={foto}
             alt="Crianças do departamento infantil reunidas em um dos encontros."
