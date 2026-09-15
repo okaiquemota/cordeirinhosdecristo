@@ -6,33 +6,59 @@ import { CONTATO, SITE, TEXTOS } from '../../config/site';
 
 const { endereco } = CONTATO;
 const temEndereco = Boolean(endereco.logradouro || endereco.cidade);
+
+/* As colunas saem de quantos cartões existem de verdade, senão um cartão
+   sozinho fica com meia largura e a seção parece quebrada. */
+const quantos = [temEndereco, Boolean(CONTATO.instagram), Boolean(CONTATO.whatsapp)].filter(
+  Boolean,
+).length;
+const colunas =
+  quantos >= 3 ? 'sm:grid-cols-2 lg:grid-cols-3' : quantos === 2 ? 'sm:grid-cols-2' : 'max-w-md';
+
+const cartao =
+  'flex flex-col rounded-2xl border border-creme-300/60 bg-superficie p-6 shadow-suave md:p-8';
+const selo = 'flex size-11 shrink-0 items-center justify-center rounded-2xl';
 ---
 
 <section class="secao" aria-labelledby="contato">
   <div class="container-site">
-    <div data-revelar class="rounded-3xl bg-ceu-100 px-6 py-10 md:px-12 md:py-14">
-      <h2 id="contato" class="text-titulo text-texto">{TEXTOS.contato.titulo}</h2>
-      <p class="mt-2 max-w-xl text-corpo-lg text-tinta-700">{TEXTOS.contato.descricao}</p>
+    <div data-revelar class="rounded-3xl bg-ceu-100 px-5 py-10 sm:px-8 md:px-12 md:py-14">
+      <div class="mx-auto max-w-xl text-center">
+        <h2 id="contato" class="text-titulo text-texto">{TEXTOS.contato.titulo}</h2>
+        {
+          TEXTOS.contato.descricao && (
+            <p class="mt-3 text-corpo-lg text-tinta-700">{TEXTOS.contato.descricao}</p>
+          )
+        }
+      </div>
 
-      <div class="mt-9 grid gap-9 sm:grid-cols-2">
+      {/* Cartões brancos sobre o azul claro: é o que dá estrutura ao bloco.
+          O botão vai para o fim com mt-auto, então os dois ficam alinhados
+          mesmo com textos de alturas diferentes. */}
+      <div class:list={['mx-auto mt-9 grid gap-5 md:mt-11 md:gap-6', colunas]}>
         {
           temEndereco && (
-            <div>
-              <h3 class="flex items-center gap-2 font-display text-lg font-700 text-texto">
-                <Local class="size-5 text-ceu-700" />
+            <div class={cartao}>
+              <span class={`${selo} bg-ceu-100 text-ceu-700`} aria-hidden="true">
+                <Local class="size-5" />
+              </span>
+
+              <h3 class="mt-4 font-display text-lg font-700 text-texto">
                 {TEXTOS.contato.ondeFica}
               </h3>
-              <address class="mt-3 text-corpo-lg text-tinta-700 not-italic">
+
+              <address class="mt-2 text-corpo-lg text-tinta-700 not-italic">
                 {endereco.logradouro && <span class="block">{endereco.logradouro}</span>}
                 {endereco.bairro && <span class="block">{endereco.bairro}</span>}
                 <span class="block">
                   {[endereco.cidade, endereco.uf].filter(Boolean).join(' - ')}
                   {endereco.cep && ` · ${endereco.cep}`}
                 </span>
-                <span class="mt-1 block text-base text-texto-suave">{SITE.igreja}</span>
+                <span class="mt-2 block text-base text-texto-suave">{SITE.igreja}</span>
               </address>
+
               {endereco.mapaUrl && (
-                <Botao href={endereco.mapaUrl} tipo="secundaria" externo class="mt-5">
+                <Botao href={endereco.mapaUrl} externo class="mt-6 self-start">
                   Ver no mapa
                 </Botao>
               )}
@@ -42,25 +68,38 @@ const temEndereco = Boolean(endereco.logradouro || endereco.cidade);
 
         {
           CONTATO.instagram && (
-            <div>
-              <h3 class="flex items-center gap-2 font-display text-lg font-700 text-texto">
-                <Instagram class="size-5 text-ceu-700" />
+            <div class={cartao}>
+              <span class={`${selo} bg-rosa-100 text-rosa-700`} aria-hidden="true">
+                <Instagram class="size-5" />
+              </span>
+
+              <h3 class="mt-4 font-display text-lg font-700 text-texto">
                 {TEXTOS.contato.noInstagram}
               </h3>
-              <p class="mt-3 text-corpo-lg text-tinta-700">{TEXTOS.contato.instagramTexto}</p>
-              <Botao href={CONTATO.instagramUrl} externo class="mt-5">
+
+              {TEXTOS.contato.instagramTexto && (
+                <p class="mt-2 text-corpo-lg text-tinta-700">{TEXTOS.contato.instagramTexto}</p>
+              )}
+
+              <p class="mt-2 text-corpo-lg text-tinta-700">{CONTATO.instagram}</p>
+
+              <Botao href={CONTATO.instagramUrl} tipo="secundaria" externo class="mt-6 self-start">
                 Seguir no Instagram
               </Botao>
-              <p class="mt-3 text-sm text-texto-suave">{CONTATO.instagram}</p>
             </div>
           )
         }
 
         {
           CONTATO.whatsapp && (
-            <div>
+            <div class={cartao}>
               <h3 class="font-display text-lg font-700 text-texto">Falar com a gente</h3>
-              <Botao href={`https://wa.me/${CONTATO.whatsapp}`} externo class="mt-3">
+              <Botao
+                href={`https://wa.me/${CONTATO.whatsapp}`}
+                tipo="secundaria"
+                externo
+                class="mt-6 self-start"
+              >
                 {CONTATO.telefone || 'WhatsApp'}
               </Botao>
             </div>

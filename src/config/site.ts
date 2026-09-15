@@ -84,12 +84,14 @@ export const TEXTOS = {
   },
   contato: {
     titulo: 'Venha nos visitar',
-    /* Rascunho meu. A frase anterior afirmava que as crianças são recebidas
-       em qualquer domingo — eu não tinha como saber disso. */
-    descricao: 'PREENCHER: quando e como uma família pode visitar pela primeira vez.',
+    /* PREENCHER: uma linha sobre quando e como uma família pode visitar pela
+       primeira vez. Vazio some da página; o texto que estava aqui afirmava
+       coisas sobre a igreja que ninguém confirmou. */
+    descricao: '',
     ondeFica: 'Onde fica',
     noInstagram: 'No Instagram',
-    instagramTexto: 'PREENCHER: o que vocês publicam por lá.',
+    /* PREENCHER: o que vocês publicam por lá. Vazio some da página. */
+    instagramTexto: '',
   },
 };
 
