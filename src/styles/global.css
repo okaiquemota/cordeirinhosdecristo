@@ -103,12 +103,16 @@
   --animate-balanco: balanco 6s var(--ease-suave) infinite;
   --animate-flutua: flutua 9s var(--ease-suave) infinite;
 
+  /* Atenção à unidade: porcentagem em transform é relativa à largura do
+     PRÓPRIO elemento, não à do container. Com -12% a 112% uma nuvem de
+     200px andava 248px e voltava — ou seja, todas viviam encostadas na
+     borda esquerda. O destino tem que ser medido na viewport. */
   @keyframes deriva {
     from {
-      transform: translate3d(-12%, 0, 0);
+      transform: translate3d(-130%, 0, 0);
     }
     to {
-      transform: translate3d(112%, 0, 0);
+      transform: translate3d(calc(100vw + 30%), 0, 0);
     }
   }
   @keyframes balanco {
