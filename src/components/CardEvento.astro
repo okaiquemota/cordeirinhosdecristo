@@ -82,9 +82,15 @@ const emDestaque = variante === 'destaque';
       {resumo}
     </p>
 
+    {/* pointer-events-none não é enfeite: no hover este span ganha
+        translate-x-1, e elemento transformado vira contexto de
+        empilhamento, pintado na mesma etapa dos posicionados e em ordem de
+        documento. Como ele vem depois do <h3>, subia por cima da camada
+        invisível que torna o card clicável e comia o clique justamente
+        onde o convite de clicar está. */}
     <span
       class:list={[
-        'inline-flex items-center gap-1.5 font-display font-600 text-primaria transition-transform duration-300 ease-saida group-hover:translate-x-1',
+        'pointer-events-none inline-flex items-center gap-1.5 font-display font-600 text-primaria transition-transform duration-300 ease-saida group-hover:translate-x-1',
         emDestaque ? 'mt-6 text-lg' : 'mt-4',
       ]}
       aria-hidden="true"
