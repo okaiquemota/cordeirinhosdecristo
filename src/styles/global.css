@@ -39,6 +39,11 @@
   --text-titulo--letter-spacing: -0.015em;
   --text-subtitulo: clamp(1.25rem, 1.05rem + 0.9vw, 1.625rem);
   --text-subtitulo--line-height: 1.25;
+  /* A frase do tema na capa. Fica entre o subtítulo e o título de seção:
+     tem que pesar mais que uma legenda sem competir com a logo.           */
+  --text-slogan: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  --text-slogan--line-height: 1.2;
+  --text-slogan--letter-spacing: -0.01em;
   --text-corpo-lg: 1.125rem;
   --text-corpo-lg--line-height: 1.7;
 

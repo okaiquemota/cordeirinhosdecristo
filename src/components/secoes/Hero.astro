@@ -57,7 +57,7 @@ import logo from '../../assets/marca/logo-colorida.png';
   </div>
 
   {/* plano do meio */}
-  <div class="container-site relative flex flex-col items-center pt-10 pb-16 text-center md:pt-8 md:pb-20">
+  <div class="container-site relative z-10 flex flex-col items-center pt-10 pb-16 text-center md:pt-8 md:pb-20">
     {/* A logo É o título. O alt carrega o nome, então leitor de tela e
         buscador leem "Cordeirinhos de Cristo" como h1. */}
     <h1>
@@ -78,15 +78,15 @@ import logo from '../../assets/marca/logo-colorida.png';
         dizendo de quem é a casa. Emoção primeiro, informação depois. */}
     {
       TEXTOS.capa.tema && (
-        <p class="mt-7 max-w-lg font-display text-subtitulo leading-snug font-700 text-tinta-900">
+        <p class="mt-4 max-w-lg font-display text-slogan font-800 text-tinta-900">
           {TEXTOS.capa.tema}
         </p>
       )
     }
 
-    <p class="mt-4 max-w-md text-base leading-relaxed text-tinta-700 sm:text-lg">{SITE.subtitulo}</p>
+    <p class="mt-3 max-w-md text-base leading-relaxed text-tinta-700 sm:text-lg">{SITE.subtitulo}</p>
 
-    <div class="mt-8 flex flex-wrap justify-center gap-3">
+    <div class="mt-6 flex flex-wrap justify-center gap-3">
       <Botao href="/eventos/" tamanho="lg">
         Ver os eventos
         <Seta class="size-4" />
@@ -103,8 +103,10 @@ import logo from '../../assets/marca/logo-colorida.png';
   </div>
 
   {/* plano da frente: uma só, no alto e cortada pela borda de cima. É o
-      tamanho e o corte que a fazem parecer perto. Havia outra embaixo, mas
-      ela passava por cima do botão do Instagram e o deixava ilegível. */}
+      tamanho e o corte que a fazem parecer perto — mas ela passa POR TRÁS
+      do conteúdo (z-10 acima), porque em telas estreitas a faixa de cima
+      alcança a logo e cobria a primeira letra. Havia outra embaixo, e
+      aquela cobria o botão do Instagram; essa foi removida. */}
   <div class="pointer-events-none absolute inset-x-0 top-0 h-40 overflow-hidden" aria-hidden="true">
     <Nuvem class="absolute -top-20 left-0 w-56 animate-deriva md:-top-24 md:w-72" atraso={-14} />
   </div>
