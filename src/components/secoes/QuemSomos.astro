@@ -15,7 +15,10 @@ import foto from '../../assets/fotos/quem-somos.jpeg';
         </div>
       </div>
 
-      <div class="relative" data-revelar>
+      {/* No celular a foto entra primeiro; no desktop volta para a direita.
+          A ordem do HTML continua texto-e-depois-foto, então o leitor de
+          tela ouve o título antes. */}
+      <div class="relative order-first md:order-none" data-revelar>
         {/* Mesmo lightbox da galeria do evento: clicar amplia, Esc fecha.
             A moldura sai da proporção do próprio arquivo, então trocar a foto
             por uma de outro formato não corta ninguém. */}

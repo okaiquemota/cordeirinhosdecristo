@@ -11,7 +11,7 @@ const temEndereco = Boolean(endereco.logradouro || endereco.cidade);
 
 <section class="secao" aria-labelledby="contato">
   <div class="container-site">
-    <div data-revelar class="rounded-3xl bg-ceu-100 px-5 py-10 sm:px-8 md:px-12 md:py-14">
+    <div data-revelar class="rounded-3xl bg-ceu-300 px-5 py-10 sm:px-8 md:px-12 md:py-14">
       <div class="mx-auto max-w-xl text-center">
         <h2 id="contato" class="text-titulo text-texto">{TEXTOS.contato.titulo}</h2>
         {
@@ -25,7 +25,9 @@ const temEndereco = Boolean(endereco.logradouro || endereco.cidade);
           reconhece o prédio antes de procurar a rua. Centralizados um em
           relação ao outro, porque a foto costuma ser mais alta que o cartão. */}
       <div class="mt-9 grid gap-6 md:mt-11 md:grid-cols-2 md:items-center md:gap-8">
-        <div>
+        {/* No celular a foto sai: o cartão do endereço é o que a pessoa
+            veio buscar, e a foto empurrava ele para baixo da dobra. */}
+        <div class="hidden md:block">
           <Galeria
             variante="unica"
             fotos={[{ src: fotoIgreja, alt: `Fachada da ${SITE.igreja}.` }]}
