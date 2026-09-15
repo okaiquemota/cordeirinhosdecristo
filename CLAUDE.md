@@ -29,3 +29,10 @@ frase chumbada, então dá para reescrever o site inteiro sem abrir um `.astro`.
 O que ainda falta preencher está marcado com `PREENCHER`:
 
     grep -rn PREENCHER src/
+
+## Ritmo de trabalho
+
+**Não verifique por conta própria.** Numa mudança pedida, faça a alteração,
+confira que `npm run build` passa e pare. Nada de screenshot, varredura de
+zoom, teste de comportamento no navegador ou Lighthouse a menos que a pessoa
+peça. Essas verificações são caras e só valem quando ela quiser.
