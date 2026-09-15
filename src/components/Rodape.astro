@@ -64,10 +64,13 @@ const temEndereco = Boolean(endereco.logradouro || endereco.cidade);
               href={CONTATO.instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-flex items-center gap-3 rounded-lg font-600 text-ceu-100 transition hover:text-creme-50"
+              class="inline-flex gap-3 rounded-lg font-600 text-ceu-100 transition hover:text-creme-50"
             >
-              <Instagram class="size-5 text-ceu-200" />
-              {CONTATO.instagram}
+              <Instagram class="mt-0.5 size-5 shrink-0 text-ceu-200" />
+              <span>
+                <span class="block">Instagram</span>
+                <span class="block text-sm font-400 text-ceu-200">{CONTATO.instagram}</span>
+              </span>
             </a>
           )
         }

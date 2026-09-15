@@ -16,6 +16,19 @@
   --font-sans: var(--ff-body, system-ui, sans-serif);
   --font-display: var(--ff-display, ui-rounded, system-ui, sans-serif);
 
+  /* Pesos por número. O Tailwind só traz os apelidos (font-bold, font-medium)
+     e ignora silenciosamente um font-700 — as classes nem chegam a existir no
+     CSS. Declarando as chaves aqui, font-400 … font-800 passam a valer.      */
+  --font-weight-400: 400;
+  --font-weight-500: 500;
+  --font-weight-600: 600;
+  --font-weight-700: 700;
+  --font-weight-800: 800;
+
+  /* Um ponto de corte extra para celulares muito estreitos (abaixo de 360px),
+     onde o cabeçalho não comporta a marca e os dois itens de navegação.      */
+  --breakpoint-xs: 22.5rem;
+
   /* Escala fluida: cresce com a viewport, sem media query e sem travar o
      zoom do usuário (o clamp usa rem nos extremos).                         */
   --text-hero: clamp(2.25rem, 1.45rem + 4vw, 4rem);

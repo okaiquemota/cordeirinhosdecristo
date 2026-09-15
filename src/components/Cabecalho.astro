@@ -1,5 +1,4 @@
 ---
-import Ovelha from './ilustracoes/Ovelha.astro';
 import Instagram from './icones/Instagram.astro';
 import { SITE, CONTATO } from '../config/site';
 
@@ -10,8 +9,10 @@ const caminho = Astro.url.pathname;
 const atual = (alvo: string) => (alvo === '/' ? caminho === '/' : caminho.startsWith(alvo));
 
 const itens = [
-  { rotulo: 'Início', href: '/' },
-  { rotulo: 'Eventos', href: '/eventos/' },
+  /* Abaixo de 360px não cabem a marca e os dois itens; "Início" é o que sai,
+     porque a própria marca já leva para a home. */
+  { rotulo: 'Início', href: '/', classe: 'hidden xs:flex' },
+  { rotulo: 'Eventos', href: '/eventos/', classe: 'flex' },
 ];
 ---
 
@@ -19,30 +20,27 @@ const itens = [
   transition:persist
   class="sticky top-0 z-50 border-b border-creme-300/70 bg-creme-100/85 backdrop-blur-md"
 >
-  {/* flex-wrap em vez de esconder: em telas de 320px a navegação desce para
-      a segunda linha, sem scroll horizontal e sem sumir com nada (WCAG 1.4.10) */}
+  {/* Uma linha só em qualquer largura. A conta em 320px (280px úteis):
+      marca 150 + intervalo 12 + navegação 108 = 270. O ícone do Instagram
+      só entra a partir de 640px — no celular ele aparece logo abaixo, na
+      capa, na seção de contato e no rodapé. */}
   <div
-    class="container-site flex min-h-16 flex-wrap items-center justify-between gap-x-3 gap-y-1 py-2 md:min-h-20"
+    class="container-site flex min-h-16 items-center justify-between gap-x-3 py-2 md:min-h-20"
   >
     <a
       href="/"
       data-marca
-      class="group flex shrink items-center gap-2.5 rounded-lg"
+      class="min-w-0 rounded-lg leading-tight"
       aria-current={atual('/') ? 'page' : undefined}
     >
-      <Ovelha
-        class="w-9 shrink-0 transition-transform duration-300 ease-saida group-hover:-rotate-6 md:w-11"
-      />
-      <span class="min-w-0">
-        <span
-          class="block font-display text-base leading-tight font-700 text-texto sm:text-lg md:text-xl"
-          >{SITE.nome}</span
-        >
-        <span class="hidden text-xs text-texto-suave sm:block">{SITE.igreja}</span>
-      </span>
+      <span
+        class="block font-display text-[0.9375rem] font-700 text-texto transition-colors duration-200 sm:text-lg md:text-xl"
+        >{SITE.nome}</span
+      >
+      <span class="mt-0.5 block text-xs text-texto-suave">{SITE.igreja}</span>
     </a>
 
-    <nav aria-label="Principal" class="flex shrink-0 items-center gap-1 sm:gap-2">
+    <nav aria-label="Principal" class="flex shrink-0 items-center gap-0.5 sm:gap-2">
       {
         itens.map((item) => (
           <a
@@ -50,9 +48,14 @@ const itens = [
             data-nav={item.href}
             data-ativo={atual(item.href) ? '' : undefined}
             aria-current={atual(item.href) ? 'page' : undefined}
-            class="rounded-full px-2.5 py-2 font-display font-600 transition sm:px-4"
+            class:list={['min-h-11 items-center px-0.5', item.classe]}
           >
-            {item.rotulo}
+            {/* o fundo fica no span e não no link: o link guarda os 44px de
+                alvo de toque, o span desenha uma pílula com proporção de
+                pílula — em 14px de texto, 44px de altura viraria um círculo */}
+            <span class="rounded-full px-2.5 py-1.5 font-display text-sm font-600 transition sm:px-4 sm:py-2 sm:text-base">
+              {item.rotulo}
+            </span>
           </a>
         ))
       }
@@ -62,9 +65,9 @@ const itens = [
             href={CONTATO.instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
-            class="rounded-full p-2 text-tinta-700 transition hover:bg-creme-200 hover:text-primaria"
+            class="hidden size-11 shrink-0 items-center justify-center rounded-full text-tinta-700 transition hover:bg-creme-200 hover:text-primaria sm:flex"
           >
-            <Instagram class="size-5 sm:size-6" />
+            <Instagram class="size-6" />
             <span class="sr-only">Instagram do departamento (abre em nova aba)</span>
           </a>
         )
@@ -77,21 +80,25 @@ const itens = [
   /* O estado ativo vive em [data-ativo] e não em classes utilitárias, porque
      o cabeçalho é persistido entre navegações: o script abaixo precisa
      conseguir corrigi-lo trocando um atributo só. */
-  [data-nav] {
+  [data-nav] > span {
     color: var(--color-tinta-700);
   }
 
-  [data-nav]:hover {
+  [data-nav]:hover > span {
     background-color: var(--color-creme-200);
   }
 
-  [data-nav][data-ativo] {
+  [data-nav][data-ativo] > span {
     background-color: var(--color-ceu-100);
     color: var(--color-ceu-800);
   }
 
-  [data-nav][data-ativo]:hover {
+  [data-nav][data-ativo]:hover > span {
     background-color: var(--color-ceu-200);
+  }
+
+  [data-marca]:hover span:first-child {
+    color: var(--color-primaria-forte);
   }
 </style>
 

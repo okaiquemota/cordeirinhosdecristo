@@ -1,7 +1,6 @@
 ---
 import { Image } from 'astro:assets';
 import Nuvem from '../ilustracoes/Nuvem.astro';
-import Ovelha from '../ilustracoes/Ovelha.astro';
 import BordaNuvem from '../ilustracoes/BordaNuvem.astro';
 import Botao from '../Botao.astro';
 import Seta from '../icones/Seta.astro';
@@ -86,7 +85,7 @@ import logo from '../../assets/marca/logo-colorida.png';
         CONTATO.instagramUrl && (
           <Botao href={CONTATO.instagramUrl} tipo="claro" tamanho="lg" externo>
             <Instagram class="size-5" />
-            {CONTATO.instagram}
+            Instagram
           </Botao>
         )
       }
@@ -105,10 +104,4 @@ import logo from '../../assets/marca/logo-colorida.png';
   <div class="pointer-events-none absolute inset-x-0 bottom-0">
     <BordaNuvem class="text-fundo -scale-y-100" />
   </div>
-
-  {/* a ovelha em pé sobre a linha de nuvens, com as patas já no creme */}
-  <Ovelha
-    class="pointer-events-none absolute bottom-1 left-1/2 w-24 -translate-x-1/2 drop-shadow-md sm:w-28 md:w-32"
-    animada
-  />
 </section>
