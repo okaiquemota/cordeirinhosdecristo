@@ -89,9 +89,6 @@ export const TEXTOS = {
        coisas sobre a igreja que ninguém confirmou. */
     descricao: '',
     ondeFica: 'Onde fica',
-    noInstagram: 'No Instagram',
-    /* PREENCHER: o que vocês publicam por lá. Vazio some da página. */
-    instagramTexto: '',
   },
 };
 
