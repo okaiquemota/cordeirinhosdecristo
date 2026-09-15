@@ -10,7 +10,9 @@ import foto from '../../assets/fotos/hero.jpg';
     <div class="grid gap-10 md:grid-cols-2 md:items-center md:gap-14">
       <div data-revelar>
         <h2 id="quem-somos" class="text-titulo text-texto">{QUEM_SOMOS.titulo}</h2>
-        <p class="mt-5 text-corpo-lg text-tinta-700">{QUEM_SOMOS.texto}</p>
+        <div class="mt-5 space-y-4 text-corpo-lg text-tinta-700">
+          {QUEM_SOMOS.paragrafos.map((paragrafo) => <p>{paragrafo}</p>)}
+        </div>
       </div>
 
       <div class="relative" data-revelar>

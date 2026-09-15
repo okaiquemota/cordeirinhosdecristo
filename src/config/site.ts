@@ -30,15 +30,16 @@ export const SITE = {
     'As festividades, os encontros e a rotina das nossas crianças.',
 };
 
-/** Bloco "Quem somos" da home. Parágrafo curto, sem jargão. */
+/** Bloco "Quem somos" da home. Um item da lista = um parágrafo. */
 export const QUEM_SOMOS = {
   titulo: 'Quem somos',
-  texto:
+  paragrafos: [
     'Os Cordeirinhos de Cristo são o departamento infantil da IEADERP ' +
-    'Casa Grande. Recebemos as crianças com histórias bíblicas, música, ' +
-    'brincadeira e muito carinho — cada uma no seu ritmo, cada uma do seu ' +
-    'jeito. Nosso cuidado é que elas cresçam sabendo que são amadas por ' +
-    'Deus e por essa comunidade.',
+      'Casa Grande.',
+    'Aqui, as crianças aprendem sobre Deus por meio da Bíblia, da música, ' +
+      'da brincadeira e da comunhão — em um ambiente de carinho, cuidado e ' +
+      'alegria.',
+  ],
 };
 
 /**
