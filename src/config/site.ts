@@ -107,6 +107,7 @@ export const RODAPE = {
     ],
   },
   contato: { titulo: 'Contato' },
+  credito: 'Desenvolvido por Kaique Mota',
 };
 
 export type Passo = { titulo: string; texto: string };
@@ -209,7 +210,6 @@ export type Contato = {
   /** Só dígitos, com DDI 55 — usado no link do WhatsApp. Vazio esconde. */
   whatsapp: string;
   /** Vazio esconde. */
-  email: string;
   endereco: Endereco;
 };
 
@@ -219,7 +219,6 @@ export const CONTATO: Contato = {
 
   telefone: '',
   whatsapp: '',
-  email: '',
 
   endereco: {
     logradouro: 'Rua Guerino Fonzar, 172',
