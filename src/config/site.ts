@@ -68,7 +68,7 @@ export const TEXTOS = {
   },
   ultimosEventos: {
     titulo: 'Últimos eventos',
-    descricao: 'PREENCHER: uma linha sobre o que são estes registros.',
+    descricao: 'Confira alguns dos momentos que vivemos juntos.',
   },
   contato: {
     titulo: 'Venha nos visitar',
