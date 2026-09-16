@@ -10,6 +10,7 @@ import Seta from '../../components/icones/Seta.astro';
 import { listarEventos, nomeTransicaoCapa } from '../../lib/eventos';
 import { periodo, dataISO } from '../../lib/datas';
 import { urlOg } from '../../lib/og';
+import { SITE, CONTATO } from '../../config/site';
 
 export const getStaticPaths = (async () => {
   const eventos = await listarEventos();
@@ -23,6 +24,38 @@ const { evento } = Astro.props;
 const { titulo, data, dataFim, resumo, capa, galeria, linkDrive } = evento.data;
 const { Content } = await render(evento);
 const ogImagem = await urlOg(capa.src, Astro.site);
+
+/* Dado estruturado de evento: é o que permite ao Google mostrar a data e o
+   local junto do resultado da busca, em vez de só o título e o resumo. */
+const { endereco } = CONTATO;
+const dadosEvento = {
+  '@context': 'https://schema.org',
+  '@type': 'Event',
+  name: titulo,
+  description: resumo,
+  startDate: dataISO(data),
+  ...(dataFim ? { endDate: dataISO(dataFim) } : {}),
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  image: [ogImagem],
+  location: {
+    '@type': 'Place',
+    name: SITE.igreja,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: endereco.logradouro,
+      addressLocality: endereco.cidade,
+      addressRegion: endereco.uf,
+      postalCode: endereco.cep,
+      addressCountry: 'BR',
+    },
+  },
+  organizer: {
+    '@type': 'Organization',
+    name: SITE.nome,
+    url: SITE.url,
+  },
+};
 ---
 
 <PaginaLayout titulo={titulo} descricao={resumo} ogImagem={ogImagem} tipoOg="article">
@@ -39,7 +72,12 @@ const ogImagem = await urlOg(capa.src, Astro.site);
     </div>
 
     <header class="container-site pt-4 pb-8 md:pt-6 md:pb-12">
-      <div class="aspect-[3/2] overflow-hidden rounded-3xl bg-creme-200 shadow-alta md:aspect-[16/7]">
+      {/* A moldura vem do próprio arquivo. Antes era 16/7 no desktop, e uma
+          foto de grupo perdia 15% em cima e 15% embaixo no recorte. */}
+      <div
+        class="overflow-hidden rounded-3xl bg-creme-200 shadow-alta"
+        style={`aspect-ratio: ${capa.src.width} / ${capa.src.height}`}
+      >
         <Image
           src={capa.src}
           alt={capa.alt}
@@ -115,4 +153,6 @@ const ogImagem = await urlOg(capa.src, Astro.site);
       )
     }
   </article>
+
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(dadosEvento)} />
 </PaginaLayout>

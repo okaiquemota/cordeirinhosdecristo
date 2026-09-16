@@ -11,25 +11,33 @@ resumo: >-
 
 capa:
   src: ../../assets/fotos/tudo-se-fez-novo/capa.jpg
-  alt: Crianças reunidas no salão durante a festividade Tudo se fez novo.
+  alt: As crianças e a equipe reunidas no salão durante a festividade Tudo se fez novo.
 
+# Os textos alternativos abaixo são genéricos porque as fotos ainda são de
+# exemplo. Quando as reais entrarem, troque cada um pelo que está na foto.
 galeria:
   - src: ../../assets/fotos/tudo-se-fez-novo/galeria-01.jpg
-    alt: Crianças sentadas em roda ouvindo a história bíblica.
+    alt: Foto 1 da festividade Tudo se fez novo.
   - src: ../../assets/fotos/tudo-se-fez-novo/galeria-02.jpg
-    alt: Menina segurando o cartaz que fez durante a atividade.
+    alt: Foto 2 da festividade Tudo se fez novo.
   - src: ../../assets/fotos/tudo-se-fez-novo/galeria-03.jpg
-    alt: Grupo de crianças cantando com as tias do departamento.
+    alt: Foto 3 da festividade Tudo se fez novo.
   - src: ../../assets/fotos/tudo-se-fez-novo/galeria-04.jpg
-    alt: Mesa com as lembrancinhas preparadas para a festividade.
+    alt: Foto 4 da festividade Tudo se fez novo.
   - src: ../../assets/fotos/tudo-se-fez-novo/galeria-05.jpg
-    alt: Menino sorrindo durante a brincadeira no pátio.
+    alt: Foto 5 da festividade Tudo se fez novo.
   - src: ../../assets/fotos/tudo-se-fez-novo/galeria-06.jpg
-    alt: Foto de todo o grupo no fim do encontro.
+    alt: Foto 6 da festividade Tudo se fez novo.
+  - src: ../../assets/fotos/tudo-se-fez-novo/galeria-07.jpg
+    alt: Foto 7 da festividade Tudo se fez novo.
+  - src: ../../assets/fotos/tudo-se-fez-novo/galeria-08.jpg
+    alt: Foto 8 da festividade Tudo se fez novo.
+  - src: ../../assets/fotos/tudo-se-fez-novo/galeria-09.jpg
+    alt: Foto 9 da festividade Tudo se fez novo.
+  - src: ../../assets/fotos/tudo-se-fez-novo/galeria-10.jpg
+    alt: Foto 10 da festividade Tudo se fez novo.
 
-# Quando a pasta do Drive estiver pronta, descomente a linha abaixo e cole o
-# link — o botão "Ver todas as fotos" aparece sozinho na página do evento.
-# linkDrive: https://drive.google.com/drive/folders/PREENCHER
+linkDrive: https://drive.google.com/drive/folders/12f6ikMeG3DiG0jP0kgbhcHg2ABmG-LJ3?usp=sharing
 
 draft: false
 ---
@@ -39,27 +47,6 @@ draft: false
 >
 > 2 Coríntios 5:17
 
-PREENCHER: este texto é de exemplo, troque pelo relato real do dia.
-
-Foram dois dias. A manhã do primeiro começou com a criançada chegando aos
-poucos e cada uma recebendo o seu crachá. Enquanto o salão enchia, as tias
-foram organizando as rodas por faixa etária e o som da bagunça foi virando
-música.
-
-## A história
-
-A história do dia falou sobre recomeço, sobre como Deus não conserta o
-que estava velho: ele faz novo. As crianças ouviram sentadas no tapete e
-depois montaram, cada uma do seu jeito, um cartaz do que gostariam de ver
-novo na própria vida.
-
-## As brincadeiras
-
-Depois da história veio a parte que todo mundo esperava. Foram três
-estações de brincadeira montadas no pátio, e cada grupo passou por todas.
-Ninguém saiu sem lembrancinha.
-
-## Obrigado
-
-Obrigado a cada tio e tia que preparou, cortou, colou, ensaiou e chegou
-cedo. E obrigado aos pais pela confiança de sempre.
+<!-- PREENCHER, se quiserem: um relato curto do dia entra aqui, embaixo do
+     versículo. Sem ele a página vai direto do versículo para as fotos, que
+     é como está agora. -->
