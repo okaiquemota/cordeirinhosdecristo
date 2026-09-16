@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import logoEscura from '../assets/marca/logo-escura.png';
+import logoBranca from '../assets/marca/logo-branca.png';
 import BordaNuvem from './ilustracoes/BordaNuvem.astro';
 import Local from './icones/Local.astro';
 import Telefone from './icones/Telefone.astro';
@@ -12,17 +12,17 @@ const { endereco } = CONTATO;
 const ano = new Date().getFullYear();
 const temEndereco = Boolean(endereco.logradouro || endereco.cidade);
 
-const tituloColuna = 'font-display text-base font-700 text-texto';
+const tituloColuna = 'font-display text-base font-700 text-creme-50';
 const link =
-  'inline-block text-tinta-900 transition duration-200 ease-saida hover:text-ceu-900 active:scale-95 active:duration-75';
+  'inline-block text-ceu-100 transition duration-200 ease-saida hover:text-creme-50 active:scale-95 active:duration-75';
 /* linha com ícone à esquerda e o conteúdo alinhado pelo topo */
 const linha = 'flex gap-3';
-const icone = 'mt-0.5 size-5 shrink-0 text-ceu-800';
+const icone = 'mt-0.5 size-5 shrink-0 text-ceu-200';
 const rede =
-  'inline-flex size-11 items-center justify-center rounded-xl bg-ceu-800 text-creme-50 transition duration-200 ease-saida hover:bg-ceu-900 active:scale-90 active:duration-75';
+  'inline-flex size-11 items-center justify-center rounded-xl bg-ceu-700 text-creme-100 transition duration-200 ease-saida hover:bg-ceu-600 hover:text-creme-50 active:scale-90 active:duration-75';
 ---
 
-<footer class="mt-4 border-t border-fundo bg-ceu-500 bg-clip-padding text-texto">
+<footer class="mt-4 border-t border-fundo bg-ceu-800 bg-clip-padding text-creme-100">
   {/* a nuvem é desenhada na cor do fundo da página e transborda para baixo,
       então o azul do rodapé parece começar logo abaixo dela */}
   <BordaNuvem class="text-fundo" />
@@ -31,7 +31,7 @@ const rede =
     <div class="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr] md:gap-8">
       <div>
         <Image
-          src={logoEscura}
+          src={logoBranca}
           alt={`${SITE.nome}, ${SITE.igreja}`}
           widths={[240, 360, 480]}
           sizes="11rem"
@@ -41,7 +41,7 @@ const rede =
           class="h-auto w-40 max-w-full sm:w-44"
         />
         {/* a mesma frase do tema que abre a capa; trocar lá troca aqui */}
-        <p class="mt-4 max-w-xs text-sm text-tinta-900">{TEXTOS.capa.tema}</p>
+        <p class="mt-4 max-w-xs text-sm text-ceu-100">{TEXTOS.capa.tema}</p>
 
         <div class="mt-5 flex gap-3">
           {
@@ -94,7 +94,7 @@ const rede =
             temEndereco && (
               <li class={linha}>
                 <Local class={icone} />
-                <address class="text-tinta-900 not-italic">
+                <address class="text-ceu-100 not-italic">
                   {endereco.logradouro && <span class="block">{endereco.logradouro}</span>}
                   {endereco.bairro && <span class="block">{endereco.bairro}</span>}
                   <span class="block">
@@ -128,7 +128,7 @@ const rede =
     </div>
 
     <div
-      class="mt-12 flex flex-wrap items-center justify-between gap-x-6 gap-y-1 border-t border-ceu-700/40 pt-6 text-sm text-tinta-900"
+      class="mt-12 flex flex-wrap items-center justify-between gap-x-6 gap-y-1 border-t border-ceu-600 pt-6 text-sm text-ceu-200"
     >
       <p>© {ano} {SITE.nome} · {SITE.igreja}</p>
       <p>
@@ -137,7 +137,7 @@ const rede =
           href={RODAPE.credito.url}
           target="_blank"
           rel="noopener noreferrer"
-          class="font-600 text-tinta-900 transition duration-200 ease-saida hover:text-ceu-900 active:scale-95 active:duration-75"
+          class="font-600 text-ceu-100 transition duration-200 ease-saida hover:text-creme-50 active:scale-95 active:duration-75"
         >
           {RODAPE.credito.nome}
         </a>
