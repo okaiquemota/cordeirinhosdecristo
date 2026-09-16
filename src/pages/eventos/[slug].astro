@@ -115,28 +115,24 @@ const dadosEvento = {
     {
       galeria.length > 0 && (
         <section class="container-site mt-14 md:mt-20" aria-labelledby="galeria">
-          <div class="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <h2 id="galeria" class="text-subtitulo text-texto">
-                Fotos do dia
-              </h2>
-              <p class="mt-1 text-texto-suave">
-                {galeria.length} {galeria.length === 1 ? 'foto' : 'fotos'} aqui.
-                {linkDrive && ' O álbum completo está no Drive.'}
-              </p>
-            </div>
+          <h2 id="galeria" class="text-titulo text-texto">
+            Fotos do dia
+          </h2>
 
-            {linkDrive && (
-              <Botao href={linkDrive} tipo="rosa" tamanho="lg" externo>
+          <div class="mt-6 md:mt-8">
+            <Galeria fotos={galeria} />
+          </div>
+
+          {/* O botão fecha a seção em vez de disputar atenção com o título:
+              quem clica nele já olhou as fotos daqui. */}
+          {linkDrive && (
+            <div class="mt-8 flex justify-center md:mt-10">
+              <Botao href={linkDrive} tamanho="lg" externo>
                 Ver todas as fotos
                 <Seta class="size-4" />
               </Botao>
-            )}
-          </div>
-
-          <div class="mt-6">
-            <Galeria fotos={galeria} />
-          </div>
+            </div>
+          )}
         </section>
       )
     }
