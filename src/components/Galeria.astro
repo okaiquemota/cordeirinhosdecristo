@@ -100,13 +100,25 @@ const grandes = await Promise.all(
     aria-label="Galeria de fotos"
     class="max-h-none max-w-none border-0 bg-transparent p-0 backdrop:bg-ceu-900/94 backdrop:backdrop-blur-md"
   >
-    <div class="flex h-dvh w-dvw flex-col">
-      <div class="flex items-center justify-between gap-4 px-4 py-3 sm:px-6">
-        <p data-contador class="font-display font-600 text-creme-100" aria-hidden="true" hidden={!varias}></p>
+    <div class="relative flex h-dvh w-dvw flex-col">
+      {/* Flutuando acima do palco, e não empilhada antes dele: no fluxo, ela
+          roubava altura e a foto ficava centralizada no que sobrava, um
+          pouco abaixo do meio da tela. Por isso o contador e o fechar ganham
+          fundo próprio, para continuarem legíveis por cima da foto. */}
+      <div
+        class="absolute inset-x-0 top-0 z-10 flex items-center justify-between gap-4 px-4 py-3 sm:px-6"
+      >
+        <p
+          data-contador
+          class="rounded-full bg-ceu-900/60 px-3 py-1 font-display font-600 text-creme-100"
+          aria-hidden="true"
+          hidden={!varias}
+        >
+        </p>
         <button
           type="button"
           data-fechar
-          class="rounded-full p-2.5 text-creme-100 transition hover:bg-creme-100/15"
+          class="ml-auto rounded-full bg-ceu-900/60 p-2.5 text-creme-100 transition hover:bg-ceu-900/90"
         >
           <svg
             viewBox="0 0 24 24"
@@ -123,7 +135,7 @@ const grandes = await Promise.all(
         </button>
       </div>
 
-      <div data-palco class="relative flex min-h-0 flex-1 touch-none items-center justify-center px-2 pb-2 sm:px-4">
+      <div data-palco class="relative flex min-h-0 flex-1 touch-none items-center justify-center p-2 sm:p-4">
         <img
           data-foto
           alt=""

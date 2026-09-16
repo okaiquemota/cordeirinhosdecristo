@@ -1,7 +1,7 @@
 ---
 import Local from '../icones/Local.astro';
 import Botao from '../Botao.astro';
-import Galeria from '../Galeria.astro';
+import { Image } from 'astro:assets';
 import { CONTATO, SITE, TEXTOS } from '../../config/site';
 import fotoIgreja from '../../assets/fotos/igreja.jpeg';
 
@@ -27,10 +27,22 @@ const temEndereco = Boolean(endereco.logradouro || endereco.cidade);
       <div class="mt-9 grid gap-6 md:mt-11 md:grid-cols-2 md:items-center md:gap-8">
         {/* No celular a foto sai: o cartão do endereço é o que a pessoa
             veio buscar, e a foto empurrava ele para baixo da dobra. */}
-        <div class="hidden md:block">
-          <Galeria
-            variante="unica"
-            fotos={[{ src: fotoIgreja, alt: `Fachada da ${SITE.igreja}.` }]}
+        {/* Aqui a foto não amplia: ela situa quem nunca veio, e quem quer
+            ver o lugar de perto tem o botão do mapa ao lado. Por isso é uma
+            imagem simples, sem o lightbox das outras. */}
+        <div
+          class="hidden overflow-hidden rounded-3xl bg-ceu-700 shadow-cartao md:block"
+          style={`aspect-ratio: ${fotoIgreja.width} / ${fotoIgreja.height}`}
+        >
+          <Image
+            src={fotoIgreja}
+            alt={`Fachada da ${SITE.igreja}.`}
+            widths={[420, 640, 900, 1200]}
+            sizes="(min-width: 768px) 30rem, 92vw"
+            format="webp"
+            loading="lazy"
+            decoding="async"
+            class="size-full object-cover"
           />
         </div>
 

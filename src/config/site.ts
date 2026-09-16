@@ -235,10 +235,13 @@ export const CONTATO: Contato = {
     cep: '14066-310',
     // Busca pelo endereço no Google Maps. Se quiser que caia no pino exato
     // da igreja, abra o local no Maps, use "Compartilhar" e cole o link aqui.
+    /* Link do lugar no Google Maps, não de busca por endereço: abre a
+       ficha da igreja, com foto, avaliações e rota. */
     mapaUrl:
-      'https://www.google.com/maps/search/?api=1&query=' +
-      'R.%20Guerino%20Fonzar%2C%20172%20-%20Jardim%20Alexandre%20Balbo%2C' +
-      '%20Ribeir%C3%A3o%20Preto%20-%20SP%2C%2014066-310',
+      'https://www.google.com/maps/place/Igreja+Assembl%C3%A9ia+de+Deus-+Casa+Grande/' +
+      '@-21.1275822,-47.8241428,811m/data=!3m1!1e3!4m6!3m5!' +
+      '1s0x94b995f2bd79dae7:0x27d664634bd317b3!8m2!3d-21.127669!4d-47.8241554!' +
+      '16s%2Fg%2F11f0_gs9lz',
   },
 };
 
