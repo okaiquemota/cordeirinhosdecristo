@@ -213,6 +213,8 @@ const atual = (alvo: string) => (alvo === '/' ? caminho === '/' : caminho.starts
       })
       .filter((s): s is { href: string; alvo: HTMLElement } => s !== null);
 
+    let ultimoAtivo: string | null = null;
+
     const marcar = () => {
       const cabecalho = document.querySelector('header');
       const linha = (cabecalho?.getBoundingClientRect().height ?? 0) + 24;
@@ -222,6 +224,13 @@ const atual = (alvo: string) => (alvo === '/' ? caminho === '/' : caminho.starts
       for (const { href, alvo } of secoes) {
         if (alvo.getBoundingClientRect().top <= linha) ativo = href;
       }
+
+      /* Só escreve quando o item muda de fato. Escrever a cada quadro, mesmo
+         o mesmo valor, invalida o estilo, e o cabeçalho tem backdrop-blur:
+         no celular a barra era repintada o tempo todo e a página inteira
+         piscava enquanto rolava. */
+      if (ativo === ultimoAtivo) return;
+      ultimoAtivo = ativo;
 
       /* Os dois menus, o do topo e o do painel, repetem os mesmos destinos:
          a marcação vai pelo href, não pelo elemento, senão só um dos dois
@@ -233,6 +242,8 @@ const atual = (alvo: string) => (alvo === '/' ? caminho === '/' : caminho.starts
         else link.removeAttribute('aria-current');
       }
     };
+
+    ultimoAtivo = null; // nova página, a leitura anterior não vale
 
     if (!document.documentElement.dataset.espiaSecoes) {
       document.documentElement.dataset.espiaSecoes = 'sim';
