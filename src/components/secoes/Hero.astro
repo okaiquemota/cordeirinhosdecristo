@@ -3,7 +3,6 @@ import { Image } from 'astro:assets';
 import Nuvem from '../ilustracoes/Nuvem.astro';
 import BordaNuvem from '../ilustracoes/BordaNuvem.astro';
 import Botao from '../Botao.astro';
-import Seta from '../icones/Seta.astro';
 import Instagram from '../icones/Instagram.astro';
 import { SITE, CONTATO, TEXTOS } from '../../config/site';
 import logo from '../../assets/marca/logo-colorida.png';
@@ -86,14 +85,16 @@ import logo from '../../assets/marca/logo-colorida.png';
 
     <p class="mt-3 max-w-md text-base leading-relaxed text-tinta-700 sm:text-lg">{SITE.subtitulo}</p>
 
+    {/* min-w igual nos dois: sem isso cada botão fica do tamanho do próprio
+        texto e a dupla sai torta. O valor cabe no mais largo dos dois e
+        ainda passa folgado numa tela de 320px. */}
     <div class="mt-6 flex flex-wrap justify-center gap-3">
-      <Botao href="/#ultimos-eventos" tamanho="lg">
+      <Botao href="/#ultimos-eventos" tamanho="lg" class="min-w-52">
         Ver os eventos
-        <Seta class="size-4" />
       </Botao>
       {
         CONTATO.instagramUrl && (
-          <Botao href={CONTATO.instagramUrl} tipo="claro" tamanho="lg" externo>
+          <Botao href={CONTATO.instagramUrl} tipo="claro" tamanho="lg" externo class="min-w-52">
             <Instagram class="size-5" />
             Instagram
           </Botao>
