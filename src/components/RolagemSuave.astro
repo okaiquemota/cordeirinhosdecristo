@@ -1,0 +1,47 @@
+---
+/**
+ * Rolagem suave para os links de âncora.
+ *
+ * O CSS já pede scroll-behavior: smooth, mas o roteador de transições do
+ * Astro intercepta o clique antes do navegador e salta direto para o
+ * destino. Aqui o clique é tratado na frente dele.
+ *
+ * Também desconta a altura do cabeçalho grudado no topo, senão o título da
+ * seção para embaixo dele.
+ */
+---
+
+<script>
+  function montar() {
+    if (document.documentElement.dataset.rolagemSuave) return;
+    document.documentElement.dataset.rolagemSuave = 'sim';
+
+    document.addEventListener('click', (evento) => {
+      if (evento.defaultPrevented || evento.button !== 0) return;
+      if (evento.metaKey || evento.ctrlKey || evento.shiftKey || evento.altKey) return;
+
+      const alvo = (evento.target as HTMLElement | null)?.closest('a[href*="#"]');
+      if (!(alvo instanceof HTMLAnchorElement) || alvo.target === '_blank') return;
+
+      const url = new URL(alvo.href, window.location.href);
+      if (url.origin !== window.location.origin) return;
+      if (url.pathname !== window.location.pathname || url.hash.length < 2) return;
+
+      const destino = document.getElementById(url.hash.slice(1));
+      if (!destino) return;
+
+      evento.preventDefault();
+
+      const cabecalho = document.querySelector('header');
+      const folga = (cabecalho?.getBoundingClientRect().height ?? 0) + 16;
+      const topo = destino.getBoundingClientRect().top + window.scrollY - folga;
+      const parado = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      window.scrollTo({ top: Math.max(0, topo), behavior: parado ? 'auto' : 'smooth' });
+      history.pushState(null, '', url.hash);
+    });
+  }
+
+  montar();
+  document.addEventListener('astro:page-load', montar);
+</script>

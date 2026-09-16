@@ -5,7 +5,7 @@ import BordaNuvem from './ilustracoes/BordaNuvem.astro';
 import Local from './icones/Local.astro';
 import Telefone from './icones/Telefone.astro';
 import Instagram from './icones/Instagram.astro';
-import { SITE, CONTATO, RODAPE } from '../config/site';
+import { SITE, CONTATO, RODAPE, TEXTOS } from '../config/site';
 
 const { endereco } = CONTATO;
 const ano = new Date().getFullYear();
@@ -37,7 +37,22 @@ const icone = 'mt-0.5 size-5 shrink-0 text-ceu-200';
           decoding="async"
           class="h-auto w-40 max-w-full sm:w-44"
         />
-        <p class="mt-4 max-w-xs text-sm text-ceu-100">{SITE.subtitulo}</p>
+        {/* a mesma frase do tema que abre a capa; trocar lá troca aqui */}
+        <p class="mt-4 max-w-xs text-sm text-ceu-100">{TEXTOS.capa.tema}</p>
+
+        {
+          CONTATO.instagram && (
+            <a
+              href={CONTATO.instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="mt-5 inline-flex size-11 items-center justify-center rounded-xl bg-ceu-700 text-creme-100 transition duration-200 ease-saida hover:bg-ceu-600 hover:text-creme-50 active:scale-90 active:duration-75"
+            >
+              <Instagram class="size-5" />
+              <span class="sr-only">Instagram do departamento, abre em nova aba</span>
+            </a>
+          )
+        }
       </div>
 
       <nav aria-labelledby="rodape-navegacao">
@@ -93,19 +108,6 @@ const icone = 'mt-0.5 size-5 shrink-0 text-ceu-200';
           }
         </ul>
 
-        {
-          CONTATO.instagram && (
-            <a
-              href={CONTATO.instagramUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="mt-5 inline-flex size-11 items-center justify-center rounded-xl bg-ceu-700 text-creme-100 transition duration-200 ease-saida hover:bg-ceu-600 hover:text-creme-50 active:scale-90 active:duration-75"
-            >
-              <Instagram class="size-5" />
-              <span class="sr-only">Instagram do departamento, abre em nova aba</span>
-            </a>
-          )
-        }
       </div>
     </div>
 
