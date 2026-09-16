@@ -74,33 +74,38 @@ const atual = (alvo: string) => (alvo === '/' ? caminho === '/' : caminho.starts
         class="size-6"
       >
         <path data-barras d="M4 7h16M4 12h16M4 17h16"></path>
-        <path data-xis class="hidden" d="m6 6 12 12M18 6 6 18"></path>
+        <path data-xis d="m6 6 12 12M18 6 6 18"></path>
       </svg>
       <span class="sr-only" data-menu-rotulo>Abrir o menu</span>
     </button>
   </div>
 
-  <div id="menu-navegacao" hidden class="border-t border-creme-300/70 lg:hidden">
-    <nav aria-label="Principal" class="container-site flex flex-col py-2">
-      {
-        NAVEGACAO.itens.map((item) => (
-          <a
-            href={item.href}
-            data-nav={item.href}
-            data-ativo={atual(item.href) ? '' : undefined}
-            aria-current={atual(item.href) ? 'page' : undefined}
-            class="block active:scale-[0.98] active:duration-75"
-          >
-            <span
-              data-pilula
-              class="block rounded-xl px-3 py-3 font-display font-600 transition duration-200 ease-saida"
+  {/* A caixa que corta é a de dentro: overflow-hidden não apara o padding
+      nem a borda do próprio elemento, então com eles aqui fora o painel
+      fechado continuava ocupando uns 17px debaixo do cabeçalho. */}
+  <div id="menu-navegacao" data-painel class="lg:hidden">
+    <div class="overflow-hidden">
+      <nav aria-label="Principal" class="container-site flex flex-col py-2">
+        {
+          NAVEGACAO.itens.map((item) => (
+            <a
+              href={item.href}
+              data-nav={item.href}
+              data-ativo={atual(item.href) ? '' : undefined}
+              aria-current={atual(item.href) ? 'page' : undefined}
+              class="block active:scale-[0.98] active:duration-75"
             >
-              {item.rotulo}
-            </span>
-          </a>
-        ))
-      }
-    </nav>
+              <span
+                data-pilula
+                class="block rounded-xl px-3 py-3 font-display font-600 transition duration-200 ease-saida"
+              >
+                {item.rotulo}
+              </span>
+            </a>
+          ))
+        }
+      </nav>
+    </div>
   </div>
 </header>
 
@@ -126,6 +131,52 @@ const atual = (alvo: string) => (alvo === '/' ? caminho === '/' : caminho.starts
 
   [data-nav][data-ativo]:hover [data-pilula] {
     background-color: var(--color-ceu-200);
+  }
+
+  /* Abrir e fechar o painel: 0fr para 1fr anima a altura sem precisar saber
+     o tamanho do conteúdo, que é o que um max-height chutado erra. A
+     visibility entra junto para o painel fechado não pegar foco nem leitor
+     de tela, e ela troca no fim da transição, não no começo. */
+  [data-painel] {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      grid-template-rows 0.28s var(--ease-saida),
+      opacity 0.2s var(--ease-saida),
+      visibility 0.28s;
+  }
+
+  [data-painel][data-aberto] {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* As duas formas do ícone ocupam o mesmo lugar e giram uma para dentro da
+     outra, em vez de uma sumir e a outra aparecer de estalo. */
+  [data-menu] [data-barras],
+  [data-menu] [data-xis] {
+    transform-origin: center;
+    transition:
+      opacity 0.18s var(--ease-saida),
+      transform 0.24s var(--ease-saida);
+  }
+
+  [data-menu] [data-xis] {
+    opacity: 0;
+    transform: rotate(-90deg);
+  }
+
+  [data-menu][aria-expanded='true'] [data-barras] {
+    opacity: 0;
+    transform: rotate(90deg);
+  }
+
+  [data-menu][aria-expanded='true'] [data-xis] {
+    opacity: 1;
+    transform: rotate(0deg);
   }
 </style>
 
@@ -157,15 +208,13 @@ const atual = (alvo: string) => (alvo === '/' ? caminho === '/' : caminho.starts
     const painel = document.getElementById('menu-navegacao');
     if (!botao || !painel) return;
 
-    const barras = botao.querySelector<SVGPathElement>('[data-barras]');
-    const xis = botao.querySelector<SVGPathElement>('[data-xis]');
     const rotulo = botao.querySelector<HTMLElement>('[data-menu-rotulo]');
 
+    /* Quem desenha os dois estados é o CSS, a partir do aria-expanded do
+       botão e do data-aberto do painel. O script só vira a chave. */
     const mostrar = (aberto: boolean) => {
-      painel.hidden = !aberto;
+      painel.toggleAttribute('data-aberto', aberto);
       botao.setAttribute('aria-expanded', String(aberto));
-      barras?.classList.toggle('hidden', aberto);
-      xis?.classList.toggle('hidden', !aberto);
       if (rotulo) rotulo.textContent = aberto ? 'Fechar o menu' : 'Abrir o menu';
     };
 
@@ -174,7 +223,7 @@ const atual = (alvo: string) => (alvo === '/' ? caminho === '/' : caminho.starts
     if (!botao.dataset.montado) {
       botao.dataset.montado = 'sim';
 
-      botao.addEventListener('click', () => mostrar(painel.hasAttribute('hidden')));
+      botao.addEventListener('click', () => mostrar(!painel.hasAttribute('data-aberto')));
 
       // clicar num item leva para a seção e o menu já cumpriu o papel
       painel.addEventListener('click', (e) => {
@@ -182,14 +231,14 @@ const atual = (alvo: string) => (alvo === '/' ? caminho === '/' : caminho.starts
       });
 
       document.addEventListener('keydown', (e) => {
-        if (e.key !== 'Escape' || painel.hasAttribute('hidden')) return;
+        if (e.key !== 'Escape' || !painel.hasAttribute('data-aberto')) return;
         mostrar(false);
         botao.focus();
       });
 
       // largura de desktop mostra a navegação inteira; o painel não faz falta
       window.addEventListener('resize', () => {
-        if (window.innerWidth >= 1024 && !painel.hasAttribute('hidden')) mostrar(false);
+        if (window.innerWidth >= 1024 && painel.hasAttribute('data-aberto')) mostrar(false);
       });
     }
 

@@ -30,29 +30,43 @@
       grupos.set(grupo, lista);
     }
 
+    /* Sem suporte a IntersectionObserver ninguém seria revelado nunca, então
+       o CSS solta tudo de uma vez e o site funciona sem o efeito. */
+    if (!('IntersectionObserver' in window)) {
+      for (const alvo of grupos.keys()) alvo.setAttribute('data-revelar-pronto', '');
+      return;
+    }
+
     for (const [alvo, itens] of grupos) {
-      // Rede de segurança: se o Motion não carregar, o CSS solta os itens.
       const soltar = () => alvo.setAttribute('data-revelar-pronto', '');
-      const rede = window.setTimeout(soltar, 2500);
 
       const observador = new IntersectionObserver(
         async (entradas) => {
           if (!entradas.some((e) => e.isIntersecting)) return;
           observador.disconnect();
-          window.clearTimeout(rede);
           itens.forEach((i) => (i.dataset.revelado = 'sim'));
+
+          /* A rede de segurança só entra DEPOIS que o bloco aparece, e é
+             contra o Motion não chegar. Antes ela era um prazo geral de 2,5s
+             que soltava todos os blocos da página, inclusive os que ninguém
+             tinha rolado ainda; quando a rolagem enfim chegava neles, o
+             observador disparava e o Motion reanimava a partir da opacidade
+             zero. Era isso que fazia cada seção piscar ao entrar na tela. */
+          const rede = window.setTimeout(soltar, 1200);
 
           try {
             /* Mola criticamente amortecida: assenta sem repique, e parte
                do valor atual se alguém rolar de volta no meio do caminho.
                Duração fixa com easing não seria agarrável assim. */
             const { animate, stagger } = await import('motion');
+            window.clearTimeout(rede);
             animate(
               itens,
               { opacity: [0, 1], y: [16, 0] },
               { type: 'spring', bounce: 0, duration: 0.5, delay: stagger(0.08) },
             );
           } catch {
+            window.clearTimeout(rede);
             soltar();
           }
         },
