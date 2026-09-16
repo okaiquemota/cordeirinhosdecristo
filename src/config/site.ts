@@ -49,8 +49,9 @@ export const QUEM_SOMOS = {
 export const LIDERANCA = {
   titulo: 'Quem cuida das crianças',
   paragrafos: [
-    'PREENCHER: quem lidera o departamento, e há quanto tempo.',
-    'PREENCHER: uma frase sobre a equipe. Quantos são, como se preparam, o que move esse trabalho.',
+    'Aurilene e Ana Lucia lideram o departamento infantil com muito carinho ' +
+      'e dedicação. Junto com a equipe, cuidam para que cada criança seja ' +
+      'acolhida, ensinada e possa crescer conhecendo a Palavra de Deus.',
   ],
 };
 
