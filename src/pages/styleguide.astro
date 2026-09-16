@@ -8,18 +8,18 @@ import Ovelha from '../components/ilustracoes/Ovelha.astro';
 import Nuvem from '../components/ilustracoes/Nuvem.astro';
 import { contraste, nivel } from '../lib/contraste';
 
-const FUNDO = '#fdf6ec';
+const FUNDO = '#ffffff';
 
 const escalas = [
   {
     nome: 'creme',
     papel: 'Fundos quentes. O site inteiro respira em cima disso.',
     tons: [
-      ['50', '#fffdf9'],
-      ['100', '#fdf6ec'],
-      ['200', '#f6eedf'],
-      ['300', '#eadcc5'],
-      ['400', '#dcc9a9'],
+      ['50', '#ffffff'],
+      ['100', '#ffffff'],
+      ['200', '#f5f4f2'],
+      ['300', '#e6e4e0'],
+      ['400', '#d3cfc9'],
     ],
   },
   {
@@ -64,9 +64,9 @@ const escalas = [
 ] as const;
 
 const papeis = [
-  ['fundo', '#fdf6ec', 'creme-100'],
+  ['fundo', '#ffffff', 'creme-100'],
   ['superfície', '#ffffff', 'branco'],
-  ['borda', '#eadcc5', 'creme-300'],
+  ['borda', '#e6e4e0', 'creme-300'],
   ['borda-forte', '#137dae', 'céu-600'],
   ['texto', '#2e2823', 'tinta-900'],
   ['texto-suave', '#6e6255', 'tinta-500'],

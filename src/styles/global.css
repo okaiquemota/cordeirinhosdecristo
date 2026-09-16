@@ -47,12 +47,16 @@
   --text-corpo-lg: 1.125rem;
   --text-corpo-lg--line-height: 1.7;
 
-  /* ── Cor · creme (fundos quentes) ─────────────────────────────────────── */
-  --color-creme-50: #fffdf9;
-  --color-creme-100: #fdf6ec;
-  --color-creme-200: #f6eedf;
-  --color-creme-300: #eadcc5;
-  --color-creme-400: #dcc9a9;
+  /* ── Cor · creme (fundos claros) ──────────────────────────────────────
+     O nome ficou de quando a página era bege. Hoje o fundo é branco e a
+     escala segue por cima dele: 200 é realce de passagem do mouse, 300 é
+     borda, 400 é o cinza mais forte. Os cinzas puxam um fio de quente para
+     não brigarem com o marrom do texto.                                    */
+  --color-creme-50: #ffffff;
+  --color-creme-100: #ffffff;
+  --color-creme-200: #f5f4f2;
+  --color-creme-300: #e6e4e0;
+  --color-creme-400: #d3cfc9;
 
   /* ── Cor · céu (primária) ───────────────────────────────────────────────
      Ancorada no azul da logo: ceu-500 É a cor oficial. Os tons acima e

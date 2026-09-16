@@ -36,3 +36,9 @@ O que ainda falta preencher está marcado com `PREENCHER`:
 confira que `npm run build` passa e pare. Nada de screenshot, varredura de
 zoom, teste de comportamento no navegador ou Lighthouse a menos que a pessoa
 peça. Essas verificações são caras e só valem quando ela quiser.
+
+## Commits
+
+Todo commit leva o Kaique como coautor, além da linha do Claude:
+
+    Co-Authored-By: Kaique Mota <kaiqueham@gmail.com>
