@@ -110,7 +110,11 @@ export const NAVEGACAO = {
 /** O que só existe no rodapé. Os links vêm de NAVEGACAO, junto com o menu. */
 export const RODAPE = {
   contato: { titulo: 'Contato' },
-  credito: 'Desenvolvido por Kaique Mota',
+  credito: {
+    prefixo: 'Desenvolvido por',
+    nome: 'Kaique Mota',
+    url: 'https://instagram.com/kiq.ham',
+  },
 };
 
 export type Passo = { titulo: string; texto: string };

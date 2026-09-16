@@ -196,8 +196,65 @@ const atual = (alvo: string) => (alvo === '/' ? caminho === '/' : caminho.starts
     mostrar(false); // toda navegação começa com o menu fechado
   }
 
+  /* Na home todos os itens apontam para pedaços da mesma página, então
+     comparar o caminho não decide nada: "Início" ficava aceso para sempre e
+     os outros nunca. Quem decide passa a ser a seção que está na tela. */
+  function espiarSecoes() {
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-nav]'));
+    if (links.length === 0) return;
+
+    if (window.location.pathname !== '/') return; // fora da home, manda o caminho
+
+    const secoes = links
+      .map((link) => {
+        const url = new URL(link.href, window.location.href);
+        const alvo = url.hash.length > 1 ? document.getElementById(url.hash.slice(1)) : null;
+        return alvo ? { href: link.dataset.nav ?? '', alvo } : null;
+      })
+      .filter((s): s is { href: string; alvo: HTMLElement } => s !== null);
+
+    const marcar = () => {
+      const cabecalho = document.querySelector('header');
+      const linha = (cabecalho?.getBoundingClientRect().height ?? 0) + 24;
+
+      // a última seção cuja borda de cima já passou da linha do cabeçalho
+      let ativo = '/';
+      for (const { href, alvo } of secoes) {
+        if (alvo.getBoundingClientRect().top <= linha) ativo = href;
+      }
+
+      /* Os dois menus, o do topo e o do painel, repetem os mesmos destinos:
+         a marcação vai pelo href, não pelo elemento, senão só um dos dois
+         acenderia. */
+      for (const link of links) {
+        const eu = link.dataset.nav === ativo;
+        link.toggleAttribute('data-ativo', eu);
+        if (eu) link.setAttribute('aria-current', 'true');
+        else link.removeAttribute('aria-current');
+      }
+    };
+
+    if (!document.documentElement.dataset.espiaSecoes) {
+      document.documentElement.dataset.espiaSecoes = 'sim';
+      let agendado = false;
+      const agendar = () => {
+        if (agendado) return;
+        agendado = true;
+        requestAnimationFrame(() => {
+          agendado = false;
+          if (window.location.pathname === '/') marcar();
+        });
+      };
+      window.addEventListener('scroll', agendar, { passive: true });
+      window.addEventListener('resize', agendar);
+    }
+
+    marcar();
+  }
+
   function iniciar() {
     sincronizarNavegacao();
+    espiarSecoes();
     menu();
   }
 

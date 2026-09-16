@@ -131,7 +131,17 @@ const rede =
       class="mt-12 flex flex-wrap items-center justify-between gap-x-6 gap-y-1 border-t border-ceu-600 pt-6 text-sm text-ceu-200"
     >
       <p>© {ano} {SITE.nome} · {SITE.igreja}</p>
-      <p>{RODAPE.credito}</p>
+      <p>
+        {RODAPE.credito.prefixo}{' '}
+        <a
+          href={RODAPE.credito.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-600 text-ceu-100 underline underline-offset-4 transition duration-200 ease-saida hover:text-creme-50 active:scale-95 active:duration-75"
+        >
+          {RODAPE.credito.nome}
+        </a>
+      </p>
     </div>
   </div>
 </footer>
