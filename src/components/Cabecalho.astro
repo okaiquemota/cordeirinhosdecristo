@@ -25,12 +25,12 @@ const atual = (alvo: string) => (alvo === '/' ? caminho === '/' : caminho.starts
       <Image
         src={logo}
         alt={`${SITE.nome}, ${SITE.igreja}`}
-        widths={[180, 260, 360]}
-        sizes="11rem"
+        widths={[160, 224, 320]}
+        sizes="7rem"
         format="webp"
         loading="eager"
         decoding="async"
-        class="h-auto w-32 sm:w-36 md:w-40"
+        class="h-auto w-24 md:w-28"
       />
     </a>
 
@@ -46,7 +46,10 @@ const atual = (alvo: string) => (alvo === '/' ? caminho === '/' : caminho.starts
             aria-current={atual(item.href) ? 'page' : undefined}
             class="flex min-h-11 items-center px-0.5"
           >
-            <span class="rounded-full px-3 py-2 font-display font-600 transition duration-200 ease-saida active:scale-95 active:duration-75">
+            <span
+              data-pilula
+              class="rounded-full px-3 py-2 font-display font-600 transition duration-200 ease-saida active:scale-95 active:duration-75"
+            >
               {item.rotulo}
             </span>
           </a>
@@ -86,9 +89,14 @@ const atual = (alvo: string) => (alvo === '/' ? caminho === '/' : caminho.starts
             data-nav={item.href}
             data-ativo={atual(item.href) ? '' : undefined}
             aria-current={atual(item.href) ? 'page' : undefined}
-            class="rounded-xl px-3 py-3 font-display font-600 transition duration-200 ease-saida active:scale-[0.98] active:duration-75"
+            class="block active:scale-[0.98] active:duration-75"
           >
-            {item.rotulo}
+            <span
+              data-pilula
+              class="block rounded-xl px-3 py-3 font-display font-600 transition duration-200 ease-saida"
+            >
+              {item.rotulo}
+            </span>
           </a>
         ))
       }
@@ -99,31 +107,25 @@ const atual = (alvo: string) => (alvo === '/' ? caminho === '/' : caminho.starts
 <style>
   /* O estado ativo vive em [data-ativo] e não em classes utilitárias, porque
      o cabeçalho é persistido entre navegações: o script abaixo precisa
-     conseguir corrigi-lo trocando um atributo só. */
-  [data-nav],
-  [data-nav] > span {
+     conseguir corrigi-lo trocando um atributo só.
+
+     Quem pinta é sempre o span de dentro. O <a> é só o alvo de toque; se ele
+     também pintasse, sobrava um bloco quadrado atrás da pílula. */
+  [data-pilula] {
     color: var(--color-tinta-700);
   }
 
-  [data-nav]:hover,
-  [data-nav]:hover > span {
+  [data-nav]:hover [data-pilula] {
     background-color: var(--color-creme-200);
   }
 
-  [data-nav][data-ativo],
-  [data-nav][data-ativo] > span {
+  [data-nav][data-ativo] [data-pilula] {
     background-color: var(--color-ceu-100);
     color: var(--color-ceu-800);
   }
 
-  [data-nav][data-ativo]:hover,
-  [data-nav][data-ativo]:hover > span {
+  [data-nav][data-ativo]:hover [data-pilula] {
     background-color: var(--color-ceu-200);
-  }
-
-  /* o link do menu é a caixa inteira; o do topo pinta o span de dentro */
-  nav[aria-label='Principal'] > a[data-nav]:hover {
-    background-color: var(--color-creme-200);
   }
 </style>
 
