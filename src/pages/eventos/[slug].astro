@@ -72,23 +72,23 @@ const dadosEvento = {
     </div>
 
     <header class="container-site pt-4 pb-8 md:pt-6 md:pb-12">
-      {/* A moldura vem do próprio arquivo. Antes era 16/7 no desktop, e uma
-          foto de grupo perdia 15% em cima e 15% embaixo no recorte. */}
-      <div
-        class="overflow-hidden rounded-3xl bg-creme-200 shadow-alta"
-        style={`aspect-ratio: ${capa.src.width} / ${capa.src.height}`}
-      >
+      {/* A capa não é recortada nem esticada: quem manda é o teto de altura,
+          e a largura segue a proporção do arquivo. Ocupando a largura toda do
+          container, uma capa 8/5 passava de 700px de altura e não cabia na
+          tela; recortar resolveria a altura, mas comeria pedaço de foto de
+          grupo e cortaria o título de um cartaz. */}
+      <div class="flex justify-center">
         <Image
           src={capa.src}
           alt={capa.alt}
           widths={[480, 768, 1080, 1440, 1920]}
-          sizes="(min-width: 76rem) 72rem, 100vw"
+          sizes="(min-width: 64rem) 58rem, 100vw"
           format="webp"
           loading="eager"
           fetchpriority="high"
           decoding="async"
           transition:name={nomeTransicaoCapa(evento)}
-          class="size-full object-cover"
+          class="h-auto max-h-[min(72svh,36rem)] w-auto max-w-full rounded-3xl bg-creme-200 shadow-alta"
         />
       </div>
 

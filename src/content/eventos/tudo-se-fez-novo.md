@@ -36,6 +36,10 @@ galeria:
     alt: Foto 9 da festividade Tudo se fez novo.
   - src: ../../assets/fotos/tudo-se-fez-novo/galeria-10.jpg
     alt: Foto 10 da festividade Tudo se fez novo.
+  - src: ../../assets/fotos/tudo-se-fez-novo/galeria-11.jpg
+    alt: Foto 11 da festividade Tudo se fez novo.
+  - src: ../../assets/fotos/tudo-se-fez-novo/galeria-12.jpg
+    alt: Foto 12 da festividade Tudo se fez novo.
 
 linkDrive: https://drive.google.com/drive/folders/12f6ikMeG3DiG0jP0kgbhcHg2ABmG-LJ3?usp=sharing
 
