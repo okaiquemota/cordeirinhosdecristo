@@ -5,7 +5,8 @@ import BordaNuvem from './ilustracoes/BordaNuvem.astro';
 import Local from './icones/Local.astro';
 import Telefone from './icones/Telefone.astro';
 import Instagram from './icones/Instagram.astro';
-import { SITE, CONTATO, RODAPE, TEXTOS } from '../config/site';
+import WhatsApp from './icones/WhatsApp.astro';
+import { SITE, CONTATO, RODAPE, NAVEGACAO, TEXTOS } from '../config/site';
 
 const { endereco } = CONTATO;
 const ano = new Date().getFullYear();
@@ -17,6 +18,8 @@ const link =
 /* linha com ícone à esquerda e o conteúdo alinhado pelo topo */
 const linha = 'flex gap-3';
 const icone = 'mt-0.5 size-5 shrink-0 text-ceu-200';
+const rede =
+  'inline-flex size-11 items-center justify-center rounded-xl bg-ceu-700 text-creme-100 transition duration-200 ease-saida hover:bg-ceu-600 hover:text-creme-50 active:scale-90 active:duration-75';
 ---
 
 <footer class="mt-4 border-t border-fundo bg-ceu-800 bg-clip-padding text-creme-100">
@@ -40,26 +43,39 @@ const icone = 'mt-0.5 size-5 shrink-0 text-ceu-200';
         {/* a mesma frase do tema que abre a capa; trocar lá troca aqui */}
         <p class="mt-4 max-w-xs text-sm text-ceu-100">{TEXTOS.capa.tema}</p>
 
-        {
-          CONTATO.instagram && (
-            <a
-              href={CONTATO.instagramUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="mt-5 inline-flex size-11 items-center justify-center rounded-xl bg-ceu-700 text-creme-100 transition duration-200 ease-saida hover:bg-ceu-600 hover:text-creme-50 active:scale-90 active:duration-75"
-            >
-              <Instagram class="size-5" />
-              <span class="sr-only">Instagram do departamento, abre em nova aba</span>
-            </a>
-          )
-        }
+        <div class="mt-5 flex gap-3">
+          {
+            CONTATO.instagram && (
+              <a href={CONTATO.instagramUrl} target="_blank" rel="noopener noreferrer" class={rede}>
+                <Instagram class="size-5" />
+                <span class="sr-only">Instagram do departamento, abre em nova aba</span>
+              </a>
+            )
+          }
+
+          {
+            CONTATO.whatsapp && (
+              <a
+                href={`https://wa.me/${CONTATO.whatsapp}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class={rede}
+              >
+                <WhatsApp class="size-5" />
+                <span class="sr-only">
+                  WhatsApp {CONTATO.telefone}, abre em nova aba
+                </span>
+              </a>
+            )
+          }
+        </div>
       </div>
 
       <nav aria-labelledby="rodape-navegacao">
-        <h2 id="rodape-navegacao" class={tituloColuna}>{RODAPE.navegacao.titulo}</h2>
+        <h2 id="rodape-navegacao" class={tituloColuna}>{NAVEGACAO.titulo}</h2>
         <ul class="mt-4 space-y-3">
           {
-            RODAPE.navegacao.itens.map((item) => (
+            NAVEGACAO.itens.map((item) => (
               <li>
                 <a href={item.href} class={link}>
                   {item.rotulo}

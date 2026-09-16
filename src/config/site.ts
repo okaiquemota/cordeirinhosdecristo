@@ -96,16 +96,18 @@ export const TEXTOS = {
  * Colunas de links do rodapé. Os destinos com # são âncoras das seções da
  * home: o site é uma página só mais as páginas de cada evento.
  */
+export const NAVEGACAO = {
+  titulo: 'Navegação',
+  itens: [
+    { rotulo: 'Início', href: '/' },
+    { rotulo: 'Quem somos', href: '/#quem-somos' },
+    { rotulo: 'Eventos', href: '/#ultimos-eventos' },
+    { rotulo: 'Venha nos visitar', href: '/#contato' },
+  ],
+};
+
+/** O que só existe no rodapé. Os links vêm de NAVEGACAO, junto com o menu. */
 export const RODAPE = {
-  navegacao: {
-    titulo: 'Navegação',
-    itens: [
-      { rotulo: 'Início', href: '/' },
-      { rotulo: 'Quem somos', href: '/#quem-somos' },
-      { rotulo: 'Eventos', href: '/#ultimos-eventos' },
-      { rotulo: 'Venha nos visitar', href: '/#contato' },
-    ],
-  },
   contato: { titulo: 'Contato' },
   credito: 'Desenvolvido por Kaique Mota',
 };

@@ -1,76 +1,96 @@
 ---
-import Instagram from './icones/Instagram.astro';
-import { SITE, CONTATO } from '../config/site';
+import { Image } from 'astro:assets';
+import { SITE, NAVEGACAO } from '../config/site';
+import logo from '../assets/marca/logo-escura.png';
 
 const caminho = Astro.url.pathname;
 
-/** Um item é o atual quando a URL começa com o caminho dele — menos a home,
- *  que só é a atual quando a URL é exatamente "/". */
+/** Um item é o atual quando a URL começa com o caminho dele, menos a home,
+ *  que só é a atual quando a URL é exatamente "/". Os itens de âncora nunca
+ *  batem, e é isso mesmo: eles apontam para pedaços da home. */
 const atual = (alvo: string) => (alvo === '/' ? caminho === '/' : caminho.startsWith(alvo));
-
-const itens = [
-  /* Abaixo de 360px não cabem a marca e os dois itens; "Início" é o que sai,
-     porque a própria marca já leva para a home. */
-  { rotulo: 'Início', href: '/', classe: 'hidden xs:flex' },
-  { rotulo: 'Eventos', href: '/#ultimos-eventos', classe: 'flex' },
-];
 ---
 
 <header
   transition:persist
   class="sticky top-0 z-50 border-b border-creme-300/70 bg-creme-100/85 backdrop-blur-md"
 >
-  {/* Uma linha só em qualquer largura. A conta em 320px (280px úteis):
-      marca 150 + intervalo 12 + navegação 108 = 270. O ícone do Instagram
-      só entra a partir de 640px — no celular ele aparece logo abaixo, na
-      capa, na seção de contato e no rodapé. */}
-  <div
-    class="container-site flex min-h-16 items-center justify-between gap-x-3 py-2 md:min-h-20"
-  >
+  <div class="container-site flex min-h-16 items-center justify-between gap-3 py-2 md:min-h-20">
     <a
       href="/"
       data-marca
-      class="min-w-0 origin-left rounded-lg leading-tight transition-transform duration-200 ease-saida active:scale-[0.97] active:duration-75"
+      class="shrink-0 origin-left rounded-lg transition-transform duration-200 ease-saida active:scale-[0.97] active:duration-75"
       aria-current={atual('/') ? 'page' : undefined}
     >
-      <span
-        class="block font-display text-[0.9375rem] font-700 text-texto transition-colors duration-200 sm:text-lg md:text-xl"
-        >{SITE.nome}</span
-      >
-      <span class="mt-0.5 block text-xs text-texto-suave">{SITE.igreja}</span>
+      <Image
+        src={logo}
+        alt={`${SITE.nome}, ${SITE.igreja}`}
+        widths={[180, 260, 360]}
+        sizes="11rem"
+        format="webp"
+        loading="eager"
+        decoding="async"
+        class="h-auto w-32 sm:w-36 md:w-40"
+      />
     </a>
 
-    <nav aria-label="Principal" class="flex shrink-0 items-center gap-0.5 sm:gap-2">
+    {/* Quatro itens não cabem numa linha de celular junto com a marca, então
+        abaixo de lg eles vivem no painel que abre no botão ao lado. */}
+    <nav aria-label="Principal" class="hidden items-center gap-1 lg:flex">
       {
-        itens.map((item) => (
+        NAVEGACAO.itens.map((item) => (
           <a
             href={item.href}
             data-nav={item.href}
             data-ativo={atual(item.href) ? '' : undefined}
             aria-current={atual(item.href) ? 'page' : undefined}
-            class:list={['min-h-11 items-center px-0.5', item.classe]}
+            class="flex min-h-11 items-center px-0.5"
           >
-            {/* o fundo fica no span e não no link: o link guarda os 44px de
-                alvo de toque, o span desenha uma pílula com proporção de
-                pílula — em 14px de texto, 44px de altura viraria um círculo */}
-            <span class="rounded-full px-2.5 py-1.5 font-display text-sm font-600 transition duration-200 ease-saida active:scale-95 active:duration-75 sm:px-4 sm:py-2 sm:text-base">
+            <span class="rounded-full px-3 py-2 font-display font-600 transition duration-200 ease-saida active:scale-95 active:duration-75">
               {item.rotulo}
             </span>
           </a>
         ))
       }
+    </nav>
+
+    <button
+      type="button"
+      data-menu
+      aria-expanded="false"
+      aria-controls="menu-navegacao"
+      class="flex size-11 shrink-0 items-center justify-center rounded-full text-tinta-700 transition duration-200 ease-saida hover:bg-creme-200 hover:text-primaria active:scale-90 active:duration-75 lg:hidden"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        aria-hidden="true"
+        class="size-6"
+      >
+        <path data-barras d="M4 7h16M4 12h16M4 17h16"></path>
+        <path data-xis class="hidden" d="m6 6 12 12M18 6 6 18"></path>
+      </svg>
+      <span class="sr-only" data-menu-rotulo>Abrir o menu</span>
+    </button>
+  </div>
+
+  <div id="menu-navegacao" hidden class="border-t border-creme-300/70 lg:hidden">
+    <nav aria-label="Principal" class="container-site flex flex-col py-2">
       {
-        CONTATO.instagramUrl && (
+        NAVEGACAO.itens.map((item) => (
           <a
-            href={CONTATO.instagramUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="hidden size-11 shrink-0 items-center justify-center rounded-full text-tinta-700 transition duration-200 ease-saida hover:bg-creme-200 hover:text-primaria active:scale-90 active:duration-75 sm:flex"
+            href={item.href}
+            data-nav={item.href}
+            data-ativo={atual(item.href) ? '' : undefined}
+            aria-current={atual(item.href) ? 'page' : undefined}
+            class="rounded-xl px-3 py-3 font-display font-600 transition duration-200 ease-saida active:scale-[0.98] active:duration-75"
           >
-            <Instagram class="size-6" />
-            <span class="sr-only">Instagram do departamento (abre em nova aba)</span>
+            {item.rotulo}
           </a>
-        )
+        ))
       }
     </nav>
   </div>
@@ -80,32 +100,37 @@ const itens = [
   /* O estado ativo vive em [data-ativo] e não em classes utilitárias, porque
      o cabeçalho é persistido entre navegações: o script abaixo precisa
      conseguir corrigi-lo trocando um atributo só. */
+  [data-nav],
   [data-nav] > span {
     color: var(--color-tinta-700);
   }
 
+  [data-nav]:hover,
   [data-nav]:hover > span {
     background-color: var(--color-creme-200);
   }
 
+  [data-nav][data-ativo],
   [data-nav][data-ativo] > span {
     background-color: var(--color-ceu-100);
     color: var(--color-ceu-800);
   }
 
+  [data-nav][data-ativo]:hover,
   [data-nav][data-ativo]:hover > span {
     background-color: var(--color-ceu-200);
   }
 
-  [data-marca]:hover span:first-child {
-    color: var(--color-primaria-forte);
+  /* o link do menu é a caixa inteira; o do topo pinta o span de dentro */
+  nav[aria-label='Principal'] > a[data-nav]:hover {
+    background-color: var(--color-creme-200);
   }
 </style>
 
 <script>
   /* transition:persist mantém este cabeçalho vivo entre as páginas, o que
-     evita ele piscar — mas também congela o item marcado como atual no
-     estado da página anterior. Aqui ele é reajustado a cada navegação. */
+     evita ele piscar, mas também congela o item marcado como atual no estado
+     da página anterior. Aqui ele é reajustado a cada navegação. */
   function sincronizarNavegacao() {
     const caminho = window.location.pathname;
 
@@ -125,5 +150,54 @@ const itens = [
     }
   }
 
-  document.addEventListener('astro:page-load', sincronizarNavegacao);
+  function menu() {
+    const botao = document.querySelector<HTMLButtonElement>('[data-menu]');
+    const painel = document.getElementById('menu-navegacao');
+    if (!botao || !painel) return;
+
+    const barras = botao.querySelector<SVGPathElement>('[data-barras]');
+    const xis = botao.querySelector<SVGPathElement>('[data-xis]');
+    const rotulo = botao.querySelector<HTMLElement>('[data-menu-rotulo]');
+
+    const mostrar = (aberto: boolean) => {
+      painel.hidden = !aberto;
+      botao.setAttribute('aria-expanded', String(aberto));
+      barras?.classList.toggle('hidden', aberto);
+      xis?.classList.toggle('hidden', !aberto);
+      if (rotulo) rotulo.textContent = aberto ? 'Fechar o menu' : 'Abrir o menu';
+    };
+
+    /* montado uma vez só: o cabeçalho é persistido, então sem esta marca os
+       ouvintes se acumulariam a cada navegação */
+    if (!botao.dataset.montado) {
+      botao.dataset.montado = 'sim';
+
+      botao.addEventListener('click', () => mostrar(painel.hasAttribute('hidden')));
+
+      // clicar num item leva para a seção e o menu já cumpriu o papel
+      painel.addEventListener('click', (e) => {
+        if ((e.target as HTMLElement).closest('a')) mostrar(false);
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape' || painel.hasAttribute('hidden')) return;
+        mostrar(false);
+        botao.focus();
+      });
+
+      // largura de desktop mostra a navegação inteira; o painel não faz falta
+      window.addEventListener('resize', () => {
+        if (window.innerWidth >= 1024 && !painel.hasAttribute('hidden')) mostrar(false);
+      });
+    }
+
+    mostrar(false); // toda navegação começa com o menu fechado
+  }
+
+  function iniciar() {
+    sincronizarNavegacao();
+    menu();
+  }
+
+  document.addEventListener('astro:page-load', iniciar);
 </script>
