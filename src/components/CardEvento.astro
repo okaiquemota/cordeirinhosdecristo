@@ -24,7 +24,15 @@ const emDestaque = variante === 'destaque';
 <article
   data-revelar
   class:list={[
-    'group relative overflow-hidden rounded-2xl border border-borda bg-superficie shadow-suave transition duration-300 ease-saida hover:-translate-y-1 hover:shadow-cartao focus-within:-translate-y-1 focus-within:shadow-cartao',
+    /* A transição lista só o que o hover mexe. Com a classe "transition"
+       inteira ela cobria também opacity e transform, que é exatamente o que
+       o Motion escreve a cada quadro ao revelar o card: cada escrita abria
+       uma transição de 300ms perseguindo o valor seguinte, e a revelação
+       saía tremida. Este é o único bloco revelado que tem transição própria,
+       por isso era o único que piscava. */
+    'group relative overflow-hidden rounded-2xl border border-borda bg-superficie shadow-suave ' +
+      'transition-[translate,box-shadow] duration-300 ease-saida ' +
+      'hover:-translate-y-1 hover:shadow-cartao focus-within:-translate-y-1 focus-within:shadow-cartao',
     emDestaque ? 'flex w-full flex-col md:flex-row' : 'flex flex-col',
   ]}
 >
