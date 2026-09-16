@@ -244,12 +244,3 @@ export const CONTATO: Contato = {
       '16s%2Fg%2F11f0_gs9lz',
   },
 };
-
-/** Endereço em uma linha, pulando o que estiver vazio. */
-export const enderecoCompleto = [
-  CONTATO.endereco.logradouro,
-  CONTATO.endereco.bairro,
-  [CONTATO.endereco.cidade, CONTATO.endereco.uf].filter(Boolean).join(' - '),
-]
-  .filter(Boolean)
-  .join(', ');

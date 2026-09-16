@@ -123,8 +123,6 @@
   --animate-deriva-media: deriva 78s linear infinite;
   --animate-deriva-lenta: deriva 96s linear infinite;
   --animate-balanco: balanco 6s var(--ease-suave) infinite;
-  --animate-flutua: flutua 9s var(--ease-suave) infinite;
-
   /* Atenção à unidade: porcentagem em transform é relativa à largura do
      PRÓPRIO elemento, não à do container. Com -12% a 112% uma nuvem de
      200px andava 248px e voltava — ou seja, todas viviam encostadas na
@@ -144,15 +142,6 @@
     }
     50% {
       transform: rotate(2.5deg);
-    }
-  }
-  @keyframes flutua {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-8px);
     }
   }
 }

@@ -2,15 +2,22 @@
 
 ## O que o site usa
 
-| Arquivo | O que é | Tamanho |
-| --- | --- | --- |
-| `logo-colorida.png` | Logo completa, colorida | 1027×492 |
-| `logo-branca.png` | Logo completa, em branco | 1200×584 |
-| `ovelha.png` | Rosto do cordeirinho, sozinho | 560×483 |
+| Arquivo | O que é | Tamanho | Onde aparece |
+| --- | --- | --- | --- |
+| `logo-colorida.png` | Logo completa, colorida | 1027×492 | capa da home |
+| `logo-escura.png` | Logo completa, em tinta escura | 1200×584 | cabeçalho |
+| `logo-branca.png` | Logo completa, em branco | 1200×584 | rodapé |
+| `ovelha.png` | Rosto do cordeirinho, sozinho | 560×483 | "Quem somos" e 404 |
+| `nuvem.png` | Nuvem da marca | 442×383 | nuvens que derivam |
 
-Os três têm fundo transparente e já vêm sem margem sobrando. Quem monta
-as versões finais é o `astro:assets`, que gera WebP nos tamanhos que cada
-lugar do site precisa.
+Todos têm fundo transparente e já vêm sem margem sobrando. Quem monta as
+versões finais é o `astro:assets`, que gera WebP nos tamanhos que cada lugar
+do site precisa.
+
+`logo-escura.png` não veio de vocês: ela é a `logo-branca.png` com o canal
+de transparência tingido em `tinta-900`, porque a branca some no creme do
+cabeçalho. É o mesmo desenho, só a cor muda. Se um dia trocarem a branca,
+esta precisa ser gerada de novo a partir dela.
 
 ## Os originais
 
