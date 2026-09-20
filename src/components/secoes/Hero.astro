@@ -58,7 +58,14 @@ import logo from '../../assets/marca/logo-colorida.png';
   {/* plano do meio */}
   <div class="container-site relative z-10 flex flex-col items-center pt-10 pb-16 text-center md:pt-8 md:pb-20">
     {/* A logo É o título. O alt carrega o nome, então leitor de tela e
-        buscador leem "Cordeirinhos de Cristo" como h1. */}
+        buscador leem "Cordeirinhos de Cristo" como h1.
+
+        Sem drop-shadow aqui de propósito. O filtro segue o canal alfa, e o
+        alfa desta arte é um retângulo quase cheio: o desenho encosta nas
+        quatro bordas do PNG e 82% do quadro é opaco. A sombra saía então com
+        o formato da imagem inteira, e no celular virava um contorno cinza
+        marcando a caixa da <img> em volta da logo. A arte já tem contorno
+        preto grosso, que é o que a separa do céu. */}
     <h1>
       <Image
         src={logo}
@@ -69,7 +76,7 @@ import logo from '../../assets/marca/logo-colorida.png';
         loading="eager"
         fetchpriority="high"
         decoding="async"
-        class="h-auto w-full max-w-[26rem] drop-shadow-[0_6px_18px_rgb(11_70_101/0.25)]"
+        class="h-auto w-full max-w-[26rem]"
       />
     </h1>
 
