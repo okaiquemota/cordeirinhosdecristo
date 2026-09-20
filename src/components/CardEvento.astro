@@ -46,6 +46,7 @@ const emDestaque = variante === 'destaque';
     <Image
       src={capa.src}
       alt={capa.alt}
+      width={emDestaque ? 1280 : 960}
       widths={emDestaque ? [480, 720, 960, 1280] : [320, 480, 640, 960]}
       sizes={
         emDestaque
