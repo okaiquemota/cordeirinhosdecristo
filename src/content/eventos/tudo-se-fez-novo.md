@@ -45,7 +45,7 @@ galeria:
   - src: ../../assets/fotos/tudo-se-fez-novo/galeria-15.jpg
     alt: "Crianças e equipe abraçadas, de cabeça baixa, na oração final."
 
-linkDrive: https://educacionalbaraodemaua-my.sharepoint.com/:f:/g/personal/2312457_baraodemaua_edu_br/IgBpzIOxS7V-RorBXN1HvU5_AX9Jmic5ufl4qYQTE4ZDBJQ?e=ku9JSD
+linkDrive: https://drive.google.com/drive/folders/1fH-4AV_e02GQTFAUtgjnzlk49BsHLqop?usp=sharing
 
 draft: false
 ---
