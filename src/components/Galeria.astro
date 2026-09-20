@@ -18,6 +18,12 @@ const { fotos, variante = 'grade' } = Astro.props;
    no HTML (o script conta com eles) mas escondidos. */
 const varias = fotos.length > 1;
 
+/* Em duas colunas (celular) uma contagem ímpar deixa a última foto sozinha,
+   meia-largura, e a grade termina torta. Promovendo a primeira a largura
+   cheia sobram par, e a galeria ainda ganha uma foto de abertura. Em três
+   colunas, a partir de sm, não há órfã, então o vão volta a ser quadrado. */
+const abreLargo = variante === 'grade' && fotos.length % 2 === 1;
+
 /* Versões grandes para o lightbox, geradas no build. Nunca passamos do
    tamanho do arquivo original — ampliar só engorda o download. */
 const grandes = await Promise.all(
@@ -51,6 +57,7 @@ const grandes = await Promise.all(
         <Image
           src={fotos[0].src}
           alt={fotos[0].alt}
+          width={1200}
           widths={[420, 640, 900, 1200]}
           sizes="(min-width: 768px) 30rem, 92vw"
           format="webp"
@@ -70,17 +77,26 @@ const grandes = await Promise.all(
     {
       variante === 'grade' &&
         fotos.map((foto, i) => (
-        <li data-revelar>
+        <li data-revelar class:list={[abreLargo && i === 0 && 'max-sm:col-span-2']}>
           <button
             type="button"
             data-abrir={i}
-            class="group block aspect-square w-full cursor-zoom-in overflow-hidden rounded-2xl bg-creme-200 transition duration-300 ease-saida hover:-translate-y-0.5 hover:shadow-cartao active:scale-[0.97] active:duration-100"
+            class:list={[
+              'group block w-full cursor-zoom-in overflow-hidden rounded-2xl bg-creme-200 transition duration-300 ease-saida hover:-translate-y-0.5 hover:shadow-cartao active:scale-[0.97] active:duration-100',
+              abreLargo && i === 0 ? 'aspect-[3/2] sm:aspect-square' : 'aspect-square',
+            ]}
           >
+            {/* A width fixa o arquivo que vai no src, que é o que um
+                navegador sem srcset baixa. Sem ela o Astro usa o tamanho
+                nativo, e cada miniatura arrastava um webp de 6000px. */}
             <Image
               src={foto.src}
               alt={foto.alt}
-              widths={[240, 360, 480, 720]}
-              sizes="(min-width: 48rem) 23rem, 46vw"
+              width={abreLargo && i === 0 ? 1080 : 720}
+              widths={abreLargo && i === 0 ? [480, 720, 1080] : [240, 360, 480, 720]}
+              sizes={
+                abreLargo && i === 0 ? '(min-width: 48rem) 23rem, 92vw' : '(min-width: 48rem) 23rem, 46vw'
+              }
               format="webp"
               loading={i < 3 ? 'eager' : 'lazy'}
               decoding="async"

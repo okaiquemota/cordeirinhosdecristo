@@ -11,35 +11,39 @@ resumo: >-
 
 capa:
   src: ../../assets/fotos/tudo-se-fez-novo/capa.jpg
-  alt: As crianças e a equipe reunidas no salão durante a festividade Tudo se fez novo.
+  alt: "As crianças e a equipe reunidas no salão durante a festividade Tudo se fez novo."
 
-# Os textos alternativos abaixo são genéricos porque as fotos ainda são de
-# exemplo. Quando as reais entrarem, troque cada um pelo que está na foto.
 galeria:
   - src: ../../assets/fotos/tudo-se-fez-novo/galeria-01.jpg
-    alt: Foto 1 da festividade Tudo se fez novo.
+    alt: "Crianças e adolescentes de camiseta do departamento cantando no palco, cada um com a pasta de letras na mão, diante dos microfones."
   - src: ../../assets/fotos/tudo-se-fez-novo/galeria-02.jpg
-    alt: Foto 2 da festividade Tudo se fez novo.
+    alt: "Menino de óculos e camiseta da festividade em pé no meio da congregação, acompanhando o culto."
   - src: ../../assets/fotos/tudo-se-fez-novo/galeria-03.jpg
-    alt: Foto 3 da festividade Tudo se fez novo.
+    alt: "Vista do salão cheio: a equipe e as crianças à frente, de camiseta do departamento, e a congregação sentada."
   - src: ../../assets/fotos/tudo-se-fez-novo/galeria-04.jpg
-    alt: Foto 4 da festividade Tudo se fez novo.
+    alt: "Mulher segurando uma menina de vestido verde no colo durante o culto."
   - src: ../../assets/fotos/tudo-se-fez-novo/galeria-05.jpg
-    alt: Foto 5 da festividade Tudo se fez novo.
+    alt: "Adolescente de camiseta do departamento, de costas, registrando a festividade pelo celular."
   - src: ../../assets/fotos/tudo-se-fez-novo/galeria-06.jpg
-    alt: Foto 6 da festividade Tudo se fez novo.
+    alt: "Duas meninas com as mãos levantadas durante o louvor."
   - src: ../../assets/fotos/tudo-se-fez-novo/galeria-07.jpg
-    alt: Foto 7 da festividade Tudo se fez novo.
+    alt: "Mulher cantando ao microfone com uma ovelhinha de pelúcia no braço."
   - src: ../../assets/fotos/tudo-se-fez-novo/galeria-08.jpg
-    alt: Foto 8 da festividade Tudo se fez novo.
+    alt: "Mulher ao microfone diante do painel da festividade, entre os balões roxos e laranja."
   - src: ../../assets/fotos/tudo-se-fez-novo/galeria-09.jpg
-    alt: Foto 9 da festividade Tudo se fez novo.
+    alt: "Jovem da equipe com um bebê no colo, os dois sorrindo."
   - src: ../../assets/fotos/tudo-se-fez-novo/galeria-10.jpg
-    alt: Foto 10 da festividade Tudo se fez novo.
+    alt: "Integrante da equipe falando às crianças no salão decorado com balões."
   - src: ../../assets/fotos/tudo-se-fez-novo/galeria-11.jpg
-    alt: Foto 11 da festividade Tudo se fez novo.
+    alt: "Duas mulheres orando com a mão sobre a cabeça das crianças, diante do painel Tudo se fez novo."
   - src: ../../assets/fotos/tudo-se-fez-novo/galeria-12.jpg
-    alt: Foto 12 da festividade Tudo se fez novo.
+    alt: "Crianças de olhos fechados durante a oração, uma delas com a mão erguida."
+  - src: ../../assets/fotos/tudo-se-fez-novo/galeria-13.jpg
+    alt: "Tecladista da banda tocando durante o louvor."
+  - src: ../../assets/fotos/tudo-se-fez-novo/galeria-14.jpg
+    alt: "A banda reunida no louvor: teclado, guitarra, baixo e bateria."
+  - src: ../../assets/fotos/tudo-se-fez-novo/galeria-15.jpg
+    alt: "Crianças e equipe abraçadas, de cabeça baixa, na oração final."
 
 linkDrive: https://educacionalbaraodemaua-my.sharepoint.com/:f:/g/personal/2312457_baraodemaua_edu_br/IgBpzIOxS7V-RorBXN1HvU5_AX9Jmic5ufl4qYQTE4ZDBJQ?e=ku9JSD
 
