@@ -43,7 +43,8 @@ const eventos = defineCollection({
       /** Fotos da galeria. Pode ficar vazia. */
       galeria: z.array(imagemComAlt(image)).default([]),
 
-      /** Link da pasta do Drive. Sem ele, o botão "Ver todas as fotos" não aparece. */
+      /** Link do álbum completo, em qualquer serviço. Sem ele, o botão
+       *  "Ver todas as fotos" não aparece. */
       linkDrive: z.url().optional(),
 
       /** true esconde o evento do site (mas mantém o arquivo aqui). */

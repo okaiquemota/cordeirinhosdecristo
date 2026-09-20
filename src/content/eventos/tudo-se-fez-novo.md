@@ -41,7 +41,7 @@ galeria:
   - src: ../../assets/fotos/tudo-se-fez-novo/galeria-12.jpg
     alt: Foto 12 da festividade Tudo se fez novo.
 
-linkDrive: https://drive.google.com/drive/folders/12f6ikMeG3DiG0jP0kgbhcHg2ABmG-LJ3?usp=sharing
+linkDrive: https://educacionalbaraodemaua-my.sharepoint.com/:f:/g/personal/2312457_baraodemaua_edu_br/IgBpzIOxS7V-RorBXN1HvU5_AX9Jmic5ufl4qYQTE4ZDBJQ?e=ku9JSD
 
 draft: false
 ---
