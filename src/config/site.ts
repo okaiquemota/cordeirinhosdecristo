@@ -111,10 +111,10 @@ export const NAVEGACAO = {
 export const RODAPE = {
   contato: { titulo: 'Contato' },
   credito: {
-    prefixo: 'Desenvolvido por',
+    prefixo: 'Desenvolvido pela',
     nome: 'MovCode',
-    /** PREENCHER: o site do MovCode. Vazio, o nome fica sem link. */
-    url: '',
+    /** Vazio, o nome fica sem link. */
+    url: 'https://movcode.com.br',
   },
 };
 
