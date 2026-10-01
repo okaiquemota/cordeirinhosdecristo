@@ -111,9 +111,10 @@ export const NAVEGACAO = {
 export const RODAPE = {
   contato: { titulo: 'Contato' },
   credito: {
-    prefixo: 'Desenvolvido por',
-    nome: 'Kaique Mota',
-    url: 'https://instagram.com/kiq.ham',
+    prefixo: 'Desenvolvido pela',
+    nome: 'MovCode',
+    /** Vazio, o nome fica sem link. */
+    url: 'https://movcode.com.br',
   },
 };
 
