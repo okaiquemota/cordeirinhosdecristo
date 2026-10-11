@@ -67,6 +67,17 @@ export const VERSICULO = {
 };
 
 /**
+ * A faixa de frases que corre entre os eventos e o "Venha nos visitar".
+ * É decorativa e o leitor de tela pula, então pode repetir o que já está
+ * na página. Lista vazia, a faixa some.
+ */
+export const FAIXA: string[] = [
+  'Tudo se fez novo',
+  'Vivendo o novo que Deus fez',
+  'Cordeirinhos de Cristo',
+];
+
+/**
  * Títulos e chamadas das seções da home.
  *
  * Está tudo aqui para você reescrever o site inteiro sem abrir componente
@@ -76,8 +87,9 @@ export const VERSICULO = {
 export const TEXTOS = {
   capa: {
     /* A frase do tema do ano, logo abaixo da logo. Deixe '' e a linha some
-       da página — é o lugar de trocar quando a festividade mudar. */
-    tema: 'Vivendo o novo que Deus fez.',
+       da página — é o lugar de trocar quando a festividade mudar.
+       O trecho entre asteriscos ganha marca-texto (src/lib/destaque.ts). */
+    tema: 'Vivendo o *novo* que Deus fez.',
   },
   ultimosEventos: {
     titulo: 'Últimos eventos',

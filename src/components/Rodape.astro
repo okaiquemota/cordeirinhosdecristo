@@ -7,6 +7,7 @@ import Telefone from './icones/Telefone.astro';
 import Instagram from './icones/Instagram.astro';
 import WhatsApp from './icones/WhatsApp.astro';
 import { SITE, CONTATO, RODAPE, NAVEGACAO, TEXTOS } from '../config/site';
+import { semMarcacao } from '../lib/destaque';
 
 const { endereco } = CONTATO;
 const ano = new Date().getFullYear();
@@ -42,7 +43,7 @@ const rede =
           class="h-auto w-40 max-w-full sm:w-44"
         />
         {/* a mesma frase do tema que abre a capa; trocar lá troca aqui */}
-        <p class="mt-4 max-w-xs text-sm text-ceu-100">{TEXTOS.capa.tema}</p>
+        <p class="mt-4 max-w-xs text-sm text-ceu-100">{semMarcacao(TEXTOS.capa.tema)}</p>
 
         <div class="mt-5 flex gap-3">
           {

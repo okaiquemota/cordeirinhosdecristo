@@ -54,17 +54,23 @@ const grandes = await Promise.all(
         class="group block w-full cursor-zoom-in overflow-hidden rounded-3xl bg-ceu-100 shadow-cartao transition duration-300 ease-saida hover:shadow-alta active:scale-[0.99] active:duration-100"
         style={`aspect-ratio: ${fotos[0].src.width} / ${fotos[0].src.height}`}
       >
-        <Image
-          src={fotos[0].src}
-          alt={fotos[0].alt}
-          width={1200}
-          widths={[420, 640, 900, 1200]}
-          sizes="(min-width: 768px) 30rem, 92vw"
-          format="webp"
-          loading="lazy"
-          decoding="async"
-          class="size-full object-cover transition-transform duration-500 ease-saida group-hover:scale-[1.03]"
-        />
+        {/* A entrada (de 112% para 100%) vai neste invólucro, nunca na
+            imagem: a imagem tem transição própria de transform para o
+            hover, e transição de CSS perseguindo o GSAP quadro a quadro é
+            exatamente o que fazia o card piscar. */}
+        <span data-foto-entrada class="block size-full">
+          <Image
+            src={fotos[0].src}
+            alt={fotos[0].alt}
+            width={1200}
+            widths={[420, 640, 900, 1200]}
+            sizes="(min-width: 768px) 30rem, 92vw"
+            format="webp"
+            loading="lazy"
+            decoding="async"
+            class="size-full object-cover transition-transform duration-500 ease-saida group-hover:scale-[1.03]"
+          />
+        </span>
         <span class="sr-only">Abrir a foto em tamanho grande</span>
       </button>
     )
@@ -113,6 +119,7 @@ const grandes = await Promise.all(
 
   <dialog
     data-lightbox
+    data-lenis-prevent
     aria-label="Galeria de fotos"
     class="max-h-none max-w-none border-0 bg-transparent p-0 backdrop:bg-ceu-900/94 backdrop:backdrop-blur-md"
   >

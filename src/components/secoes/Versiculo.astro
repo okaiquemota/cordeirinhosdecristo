@@ -25,8 +25,11 @@ import { VERSICULO } from '../../config/site';
         data-revelar
         class="mx-auto max-w-3xl rounded-3xl bg-creme-50 px-7 py-10 text-center shadow-alta md:px-14 md:py-12"
       >
-        <p id="versiculo" class="font-display text-subtitulo leading-relaxed font-700 text-texto">
-          “{VERSICULO.texto}”
+        {/* Mesmo esquema do tema da capa: o texto inteiro para o leitor de
+            tela, a versão dividida em palavras só para os olhos. */}
+        <p id="versiculo" data-titulo class="font-display text-subtitulo leading-relaxed font-700 text-texto">
+          <span class="sr-only">“{VERSICULO.texto}”</span>
+          <span aria-hidden="true" data-dividir>“{VERSICULO.texto}”</span>
         </p>
         <footer class="mt-5 font-display font-600 text-primaria">{VERSICULO.referencia}</footer>
       </blockquote>
