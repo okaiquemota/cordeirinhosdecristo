@@ -1,0 +1,356 @@
+---
+/**
+ * Movimento do site inteiro, no padrão da MovCode: GSAP + ScrollTrigger +
+ * Lenis, com os mesmos valores de entrada do movcode.com.br.
+ *
+ * O que cada marca faz:
+ *   data-titulo        o título entra palavra por palavra, saindo do desfoque
+ *   data-revelar       o bloco sobe e aparece quando entra na tela
+ *   data-revelar-grupo os data-revelar de dentro entram em cascata
+ *   data-foto-entrada  a foto assenta de 112% para 100% dentro da moldura
+ *                      (não é data-foto: esse nome é do lightbox, que pega
+ *                      o primeiro [data-foto] da galeria)
+ *   data-hero          a capa: entrada ao abrir e parallax ao rolar
+ *   data-faixa         a faixa de frases que acelera com a rolagem
+ *
+ * Tudo isso só acrescenta. O CSS esconde os elementos antes do script
+ * chegar, mas uma rede de segurança em CSS os solta sozinha em 3s se o
+ * script não assumir; e se o script quebrar no meio, ele mesmo devolve
+ * tudo ao estado parado. Com movimento reduzido, nada disto roda.
+ *
+ * Inclua uma vez no layout.
+ */
+---
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { SplitText } from 'gsap/SplitText';
+  import Lenis from 'lenis';
+
+  gsap.registerPlugin(ScrollTrigger, SplitText);
+
+  /* No celular a barra de endereço some e volta enquanto se rola, e cada
+     vez isso muda a altura da janela. Sem esta linha o ScrollTrigger
+     recalcula tudo a cada vez, e é daí que vem o tranco no meio da rolagem. */
+  ScrollTrigger.config({ ignoreMobileResize: true });
+
+  const html = document.documentElement;
+  const reduzido = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Os mesmos valores do site da MovCode: a peça sobe um pouco enquanto
+     sai do desfoque e aparece. Sem máscara, então nada fica cortado. */
+  const ENTRADA = { yPercent: 35, opacity: 0, filter: 'blur(12px)' };
+  const CHEGADA = {
+    yPercent: 0,
+    opacity: 1,
+    filter: 'blur(0px)',
+    ease: 'power3.out',
+    clearProps: 'filter',
+  };
+
+  /* Marca-texto: a faixa se pinta da esquerda para a direita. A altura
+     tem que bater com a do CSS (.marca-texto), senão ela pula no fim. */
+  const MARCA_VAZIA = { backgroundSize: '0% 62%' };
+  const MARCA_CHEIA = { backgroundSize: '100% 62%', duration: 0.8, ease: 'power2.inOut' };
+
+  let lenis: Lenis | null = null;
+  let tique: ((tempo: number) => void) | null = null;
+  let contexto: gsap.Context | null = null;
+  let divisoes: SplitText[] = [];
+  let vigiaDialogo: MutationObserver | null = null;
+
+  /* Os ouvintes de clique vivem no document, que sobrevive às navegações.
+     A marca de "já montado" fica aqui no módulo e não num atributo do
+     <html>: o roteador do Astro troca os atributos do <html> a cada
+     página, e a marca sumiria junto, empilhando um ouvinte por visita. */
+  let ancorasLigadas = false;
+
+  // ---------- Rolagem ----------
+
+  function ligarRolagem() {
+    lenis = new Lenis({
+      lerp: 0.1,
+      /* Dentro do lightbox a roda é dele: ctrl+roda dá zoom na foto. */
+      prevent: (no) => no.closest('dialog') !== null,
+    });
+
+    lenis.on('scroll', ScrollTrigger.update);
+    tique = (tempo) => lenis?.raf(tempo * 1000);
+    gsap.ticker.add(tique);
+    gsap.ticker.lagSmoothing(0);
+
+    /* O lightbox trava a página com overflow: hidden no body, mas isso
+       não segura uma rolagem feita por script, que é como o Lenis rola.
+       Então, com qualquer diálogo aberto, ele para. */
+    vigiaDialogo = new MutationObserver(() => {
+      if (document.querySelector('dialog[open]')) lenis?.stop();
+      else lenis?.start();
+    });
+    vigiaDialogo.observe(document.body, {
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['open'],
+    });
+  }
+
+  function ligarAncoras() {
+    if (ancorasLigadas) return;
+    ancorasLigadas = true;
+
+    /* O roteador do Astro intercepta o clique e salta direto para a
+       âncora. Aqui o clique é tratado na frente dele, com o desconto da
+       altura do cabeçalho grudado no topo. */
+    document.addEventListener('click', (evento) => {
+      if (evento.defaultPrevented || evento.button !== 0) return;
+      if (evento.metaKey || evento.ctrlKey || evento.shiftKey || evento.altKey) return;
+
+      const link = (evento.target as HTMLElement | null)?.closest('a[href*="#"]');
+      if (!(link instanceof HTMLAnchorElement) || link.target === '_blank') return;
+
+      const url = new URL(link.href, window.location.href);
+      if (url.origin !== window.location.origin) return;
+      if (url.pathname !== window.location.pathname || url.hash.length < 2) return;
+
+      const destino = document.getElementById(url.hash.slice(1));
+      if (!destino) return;
+
+      evento.preventDefault();
+
+      const folga = (document.querySelector('header')?.getBoundingClientRect().height ?? 0) + 16;
+
+      if (lenis) {
+        lenis.scrollTo(destino, { offset: -folga, duration: 1.2 });
+      } else {
+        const topo = destino.getBoundingClientRect().top + window.scrollY - folga;
+        window.scrollTo({ top: Math.max(0, topo), behavior: reduzido() ? 'auto' : 'smooth' });
+      }
+
+      history.pushState(null, '', url.hash);
+    });
+  }
+
+  // ---------- Peças ----------
+
+  /** Divide em palavras. Num título o leitor de tela ouve o rótulo que o
+   *  SplitText põe no elemento; fora de título (o tema da capa é um <p>,
+   *  e <p> não aceita rótulo) a marcação já traz o texto em sr-only e
+   *  marca com data-dividir o que é só visual. */
+  function dividir(el: HTMLElement) {
+    const alvo = el.querySelector<HTMLElement>('[data-dividir]') ?? el;
+    const titulo = /^H[1-6]$/.test(el.tagName) && alvo === el;
+    const divisao = SplitText.create(alvo, {
+      type: 'words',
+      wordsClass: 'palavra',
+      aria: titulo ? 'auto' : 'none',
+    });
+    divisoes.push(divisao);
+    return divisao;
+  }
+
+  function entrarTitulo(el: HTMLElement, tl: gsap.core.Timeline, em: number, ritmo: number) {
+    const { words } = dividir(el);
+    gsap.set(el, { opacity: 1 });
+    tl.fromTo(words, ENTRADA, { ...CHEGADA, duration: 1.3, stagger: ritmo }, em);
+
+    const marcas = el.querySelectorAll('.marca-texto');
+    if (marcas.length) tl.fromTo(marcas, MARCA_VAZIA, MARCA_CHEIA, em + 0.45);
+  }
+
+  function hero() {
+    const capa = document.querySelector<HTMLElement>('[data-hero]');
+    if (!capa) return;
+
+    const tl = gsap.timeline({ delay: 0.1 });
+
+    /* A logo é a maior coisa da primeira tela, e é por ela que o Google
+       mede a velocidade de abertura. Esconder a logo atrasaria essa conta,
+       então ela já nasce visível e só assenta, de 94% para 100%. */
+    const logo = capa.querySelector('[data-hero-logo]');
+    if (logo) tl.from(logo, { scale: 0.94, duration: 1.4, ease: 'expo.out' }, 0);
+
+    const tema = capa.querySelector<HTMLElement>('[data-titulo]');
+    if (tema) entrarTitulo(tema, tl, 0.15, 0.08);
+
+    const pecas = capa.querySelectorAll('[data-entrada]');
+    if (pecas.length) {
+      tl.fromTo(
+        pecas,
+        { y: 24, autoAlpha: 0 },
+        { y: 0, autoAlpha: 1, duration: 0.9, ease: 'power3.out', stagger: 0.1, clearProps: 'transform' },
+        0.5,
+      );
+    }
+
+    /* Ao rolar para fora, o conteúdo recua e apaga, e cada plano de nuvens
+       anda num ritmo: as do fundo ficam para trás, a da frente passa mais
+       rápido. É a diferença de velocidade que dá a profundidade. */
+    /* Uma cópia por gatilho: o GSAP guarda a animação no próprio objeto de
+       configuração, e um objeto compartilhado amarraria os três juntos. */
+    const rolagem = () => ({ trigger: capa, start: 'top top', end: 'bottom top', scrub: true });
+
+    const conteudo = capa.querySelector('[data-hero-conteudo]');
+    if (conteudo) {
+      gsap.to(conteudo, { yPercent: -10, scale: 0.96, opacity: 0.25, ease: 'none', scrollTrigger: rolagem() });
+    }
+
+    capa.querySelectorAll<HTMLElement>('[data-plano]').forEach((plano) => {
+      gsap.to(plano, {
+        yPercent: Number(plano.dataset.plano) || 0,
+        ease: 'none',
+        scrollTrigger: rolagem(),
+      });
+    });
+  }
+
+  function titulos() {
+    gsap.utils.toArray<HTMLElement>('[data-titulo]').forEach((titulo) => {
+      if (titulo.closest('[data-hero]')) return; // a capa cuida do dela
+      const tl = gsap.timeline({ scrollTrigger: { trigger: titulo, start: 'top 85%' } });
+      entrarTitulo(titulo, tl, 0, 0.06);
+    });
+  }
+
+  function blocos() {
+    /* Um grupo é o container com data-revelar-grupo; o que estiver solto
+       vira grupo de um só. A cascata acontece dentro de cada bloco, não
+       numa fila gigante pela página. */
+    const grupos = new Map<Element, HTMLElement[]>();
+    for (const item of document.querySelectorAll<HTMLElement>('[data-revelar]')) {
+      const grupo = item.closest('[data-revelar-grupo]') ?? item;
+      grupos.set(grupo, [...(grupos.get(grupo) ?? []), item]);
+    }
+
+    /* Só transform sai no fim. A opacidade fica no estilo inline em 1,
+       senão a regra do CSS que esconde antes do script voltaria a valer. */
+    const chegar = { y: 0, autoAlpha: 1, duration: 0.9, ease: 'power3.out', clearProps: 'transform' };
+
+    for (const [gatilho, itens] of grupos) {
+      /* Uma grade grande (as 15 fotos do evento) não entra de uma vez só:
+         a cascata inteira dispararia quando o topo da grade aparecesse, e
+         as últimas linhas animariam fora da tela. Aqui cada linha entra
+         quando chega a vez dela. */
+      if (itens.length > 6) {
+        gsap.set(itens, { y: 32, autoAlpha: 0 });
+        ScrollTrigger.batch(itens, {
+          start: 'top 90%',
+          onEnter: (lote) => gsap.to(lote, { ...chegar, stagger: 0.08, overwrite: true }),
+        });
+        continue;
+      }
+
+      gsap.fromTo(
+        itens,
+        { y: 32, autoAlpha: 0 },
+        { ...chegar, stagger: 0.1, scrollTrigger: { trigger: gatilho, start: 'top 85%' } },
+      );
+    }
+  }
+
+  function fotos() {
+    gsap.utils.toArray<HTMLElement>('[data-foto-entrada]').forEach((foto) => {
+      gsap.fromTo(
+        foto,
+        { scale: 1.12 },
+        {
+          scale: 1,
+          duration: 1.4,
+          ease: 'power3.out',
+          clearProps: 'transform',
+          scrollTrigger: { trigger: foto, start: 'top 85%' },
+        },
+      );
+    });
+  }
+
+  function faixa() {
+    const caixa = document.querySelector<HTMLElement>('[data-faixa]');
+    const linhas = gsap.utils.toArray<HTMLElement>('[data-faixa-linha]');
+    if (!caixa || linhas.length === 0) return;
+
+    /* Cada linha tem o conteúdo duas vezes; andar metade da própria
+       largura volta exatamente ao começo, e o laço fica sem emenda. */
+    const laco = { duration: 36, ease: 'none', repeat: -1, paused: true };
+    const letreiros = linhas.map((linha, i) =>
+      i % 2
+        ? gsap.fromTo(linha, { xPercent: -50 }, { xPercent: 0, ...laco })
+        : gsap.fromTo(linha, { xPercent: 0 }, { xPercent: -50, ...laco }),
+    );
+
+    const inclinar = gsap.quickTo(linhas, 'skewX', { duration: 0.4, ease: 'power3' });
+
+    ScrollTrigger.create({
+      trigger: caixa,
+      start: 'top bottom',
+      end: 'bottom top',
+      /* Fora da tela a faixa para: no celular, um laço infinito que
+         ninguém está vendo só gasta bateria. */
+      onToggle: ({ isActive }) => letreiros.forEach((t) => (isActive ? t.play() : t.pause())),
+      /* Quanto mais rápido se rola, mais ela acelera e inclina, e depois
+         volta ao passo normal sozinha. */
+      onUpdate: (self) => {
+        const velocidade = gsap.utils.clamp(-10, 10, self.getVelocity() / 200);
+        inclinar(-velocidade);
+        letreiros.forEach((t) =>
+          gsap.fromTo(t, { timeScale: 1 + Math.abs(velocidade) }, { timeScale: 1, duration: 1.2, overwrite: true }),
+        );
+        gsap.delayedCall(0.15, () => inclinar(0));
+      },
+    });
+  }
+
+  // ---------- Ciclo de vida ----------
+
+  function desmontar(reverter: boolean) {
+    contexto?.kill(reverter);
+    contexto = null;
+    if (reverter) divisoes.forEach((d) => d.revert());
+    divisoes = [];
+    vigiaDialogo?.disconnect();
+    vigiaDialogo = null;
+    if (tique) gsap.ticker.remove(tique);
+    tique = null;
+    lenis?.destroy();
+    lenis = null;
+  }
+
+  function montar() {
+    ligarAncoras();
+    html.classList.remove('movimento', 'sem-movimento');
+
+    if (reduzido()) {
+      html.classList.add('sem-movimento');
+      return;
+    }
+
+    try {
+      /* Esta classe desliga a rede de segurança do CSS: daqui em diante
+         quem mostra os elementos é o script. */
+      html.classList.add('movimento');
+      ligarRolagem();
+      contexto = gsap.context(() => {
+        hero();
+        titulos();
+        blocos();
+        fotos();
+        faixa();
+      });
+
+      /* A fonte de títulos chega depois do primeiro desenho e muda a altura
+         das linhas; as posições de gatilho têm que ser medidas de novo. */
+      document.fonts?.ready.then(() => ScrollTrigger.refresh());
+    } catch (erro) {
+      console.error('Movimento desligado:', erro);
+      desmontar(true);
+      html.classList.remove('movimento');
+      html.classList.add('sem-movimento');
+    }
+  }
+
+  document.addEventListener('astro:page-load', montar);
+
+  /* Antes da troca de página: os gatilhos e a rolagem da página que sai
+     morrem sem reverter, porque o retrato dela para a transição já foi
+     tirado e desfazer as animações agora só daria trabalho à toa. */
+  document.addEventListener('astro:before-swap', () => desmontar(false));
+</script>

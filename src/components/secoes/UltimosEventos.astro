@@ -9,8 +9,10 @@ const eventos = await eventosRecentes(3);
 <section class="secao" aria-labelledby="ultimos-eventos">
   <div class="container-site">
     <div>
-      <h2 id="ultimos-eventos" class="text-titulo text-texto">{TEXTOS.ultimosEventos.titulo}</h2>
-      <p class="mt-2 text-corpo-lg text-tinta-700">{TEXTOS.ultimosEventos.descricao}</p>
+      <h2 id="ultimos-eventos" data-titulo class="text-titulo text-texto">
+        {TEXTOS.ultimosEventos.titulo}
+      </h2>
+      <p data-revelar class="mt-2 text-corpo-lg text-tinta-700">{TEXTOS.ultimosEventos.descricao}</p>
     </div>
 
     {

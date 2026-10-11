@@ -15,11 +15,11 @@ const aparece = LIDERANCA.paragrafos.length > 0;
             título primeiro. No desktop a foto pula para a esquerda, e a
             seção fica espelhada em relação ao "Quem somos" logo acima. */}
         <div class="grid gap-10 md:grid-cols-2 md:items-center md:gap-14">
-          <div data-revelar>
-            <h2 id="lideranca" class="text-titulo text-texto">
+          <div>
+            <h2 id="lideranca" data-titulo class="text-titulo text-texto">
               {LIDERANCA.titulo}
             </h2>
-            <div class="mt-5 space-y-4 text-corpo-lg text-tinta-700">
+            <div data-revelar class="mt-5 space-y-4 text-corpo-lg text-tinta-700">
               {LIDERANCA.paragrafos.map((paragrafo) => (
                 <p>{paragrafo}</p>
               ))}

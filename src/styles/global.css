@@ -44,6 +44,11 @@
   --text-slogan: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
   --text-slogan--line-height: 1.2;
   --text-slogan--letter-spacing: -0.01em;
+
+  /* A faixa de frases: tipo enorme e apertado, como no movcode.com.br. */
+  --text-faixa: clamp(2.75rem, 1.2rem + 6.6vw, 7.5rem);
+  --text-faixa--line-height: 1.05;
+  --text-faixa--letter-spacing: -0.03em;
   --text-corpo-lg: 1.125rem;
   --text-corpo-lg--line-height: 1.7;
 
@@ -230,27 +235,75 @@
 }
 
 /* =========================================================================
-   REVEAL ON SCROLL
-   O estado escondido só existe quando há JS e movimento liberado. Sem JS,
-   com JS quebrado ou com movimento reduzido, o conteúdo já nasce visível.
+   MOVIMENTO (src/components/Movimento.astro)
+   O estado escondido só existe com JS e movimento liberado: sem JS, com
+   movimento reduzido ou com o script quebrado (sem-movimento), o conteúdo
+   já nasce visível.
+
+   Só a opacidade é escondida aqui, nunca o transform. O GSAP limpa o
+   transform no fim; se o CSS também deslocasse, o bloco pularia de volta
+   para o deslocamento do CSS no instante em que a animação terminasse.
    ========================================================================= */
 
 @media (prefers-reduced-motion: no-preference) {
-  html.js [data-revelar] {
+  html.js:not(.sem-movimento) :is([data-revelar], [data-titulo], [data-entrada]) {
     opacity: 0;
-    transform: translateY(14px);
+    /* Rede de segurança: se em 3s o script não assumiu (não carregou, ou
+       nem rodou), isto solta tudo sozinho. */
+    animation: movimento-rede 0s 3s forwards;
   }
 
-  /* rede de segurança: se o Motion não carregar, o script solta tudo.
-     A marca pode cair no container do grupo ou no próprio item solto. */
-  html.js [data-revelar-pronto] [data-revelar],
-  html.js [data-revelar][data-revelar-pronto] {
-    opacity: 1;
-    transform: none;
-    transition:
-      opacity 0.5s var(--ease-saida),
-      transform 0.5s var(--ease-saida);
+  /* O script assumiu: a rede sai, e quem mostra é ele. */
+  html.movimento :is([data-revelar], [data-titulo], [data-entrada]) {
+    animation: none;
   }
+}
+
+@keyframes movimento-rede {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Lenis: a rolagem é dele, quadro a quadro. O scroll-behavior: smooth da
+   base faria o navegador suavizar cada passo de novo, e a página andaria
+   atrasada atrás do dedo. */
+html.lenis {
+  scroll-behavior: auto !important;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* Marca-texto: a faixa de cor por trás da palavra, nos mesmos 62% de
+   altura do site da MovCode. O clone faz a faixa se repetir certinha
+   quando a palavra quebra de linha. O script anima o background-size
+   de 0% a 100%; sem script ela já nasce cheia. */
+.marca-texto {
+  font-style: normal;
+  background: linear-gradient(var(--color-rosa-200), var(--color-rosa-200)) 0 88% / 100% 62% no-repeat;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  padding-inline: 0.06em;
+}
+
+/* A faixa de frases. Cada linha tem o conteúdo duas vezes, lado a lado:
+   o script anda metade da largura e volta ao começo sem emenda. */
+.faixa-linha {
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  will-change: transform;
 }
 
 /* =========================================================================

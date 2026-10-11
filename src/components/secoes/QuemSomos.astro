@@ -8,9 +8,9 @@ import foto from '../../assets/fotos/quem-somos.jpeg';
 <section class="secao" aria-labelledby="quem-somos">
   <div class="container-site">
     <div class="grid gap-10 md:grid-cols-2 md:items-center md:gap-14">
-      <div data-revelar>
-        <h2 id="quem-somos" class="text-titulo text-texto">{QUEM_SOMOS.titulo}</h2>
-        <div class="mt-5 space-y-4 text-corpo-lg text-tinta-700">
+      <div>
+        <h2 id="quem-somos" data-titulo class="text-titulo text-texto">{QUEM_SOMOS.titulo}</h2>
+        <div data-revelar class="mt-5 space-y-4 text-corpo-lg text-tinta-700">
           {QUEM_SOMOS.paragrafos.map((paragrafo) => <p>{paragrafo}</p>)}
         </div>
       </div>

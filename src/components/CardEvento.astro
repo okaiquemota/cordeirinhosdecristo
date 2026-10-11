@@ -43,23 +43,26 @@ const emDestaque = variante === 'destaque';
       emDestaque ? 'aspect-[3/2] md:aspect-auto md:w-[45%] md:shrink-0' : 'aspect-[3/2]',
     ]}
   >
-    <Image
-      src={capa.src}
-      alt={capa.alt}
-      width={emDestaque ? 1280 : 960}
-      widths={emDestaque ? [480, 720, 960, 1280] : [320, 480, 640, 960]}
-      sizes={
-        emDestaque
-          ? '(min-width: 1024px) 32rem, 92vw'
-          : '(min-width: 1024px) 22rem, (min-width: 640px) 45vw, 92vw'
-      }
-      format="webp"
-      loading={prioridade ? 'eager' : 'lazy'}
-      fetchpriority={prioridade ? 'high' : 'auto'}
-      decoding="async"
-      transition:name={nomeTransicaoCapa(evento)}
-      class="size-full object-cover transition-transform duration-500 ease-saida group-hover:scale-[1.03]"
-    />
+    {/* invólucro da entrada: a imagem tem transição própria no hover */}
+    <div data-foto-entrada class="size-full">
+      <Image
+        src={capa.src}
+        alt={capa.alt}
+        width={emDestaque ? 1280 : 960}
+        widths={emDestaque ? [480, 720, 960, 1280] : [320, 480, 640, 960]}
+        sizes={
+          emDestaque
+            ? '(min-width: 1024px) 32rem, 92vw'
+            : '(min-width: 1024px) 22rem, (min-width: 640px) 45vw, 92vw'
+        }
+        format="webp"
+        loading={prioridade ? 'eager' : 'lazy'}
+        fetchpriority={prioridade ? 'high' : 'auto'}
+        decoding="async"
+        transition:name={nomeTransicaoCapa(evento)}
+        class="size-full object-cover transition-transform duration-500 ease-saida group-hover:scale-[1.03]"
+      />
+    </div>
   </div>
 
   <div class:list={['flex flex-1 flex-col', emDestaque ? 'p-6 md:p-9' : 'p-5']}>

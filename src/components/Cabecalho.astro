@@ -249,7 +249,16 @@ const atual = (alvo: string) => (alvo === '/' ? caminho === '/' : caminho.starts
   /* Na home todos os itens apontam para pedaços da mesma página, então
      comparar o caminho não decide nada: "Início" ficava aceso para sempre e
      os outros nunca. Quem decide passa a ser a seção que está na tela. */
+  /* O ouvinte de rolagem é um só durante a vida da aba e chama a marcação
+     da página que está na tela. A marca de "já ligado" morava num atributo
+     do <html>, mas o roteador do Astro troca os atributos do <html> a cada
+     navegação: a marca sumia e cada visita à home empilhava mais um
+     ouvinte, os antigos medindo seções de páginas que já tinham saído. */
+  let marcarAtual: (() => void) | null = null;
+  let espiaLigada = false;
+
   function espiarSecoes() {
+    marcarAtual = null; // fora da home não há seção para marcar
     const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-nav]'));
     if (links.length === 0) return;
 
@@ -293,17 +302,17 @@ const atual = (alvo: string) => (alvo === '/' ? caminho === '/' : caminho.starts
       }
     };
 
-    ultimoAtivo = null; // nova página, a leitura anterior não vale
+    marcarAtual = marcar;
 
-    if (!document.documentElement.dataset.espiaSecoes) {
-      document.documentElement.dataset.espiaSecoes = 'sim';
+    if (!espiaLigada) {
+      espiaLigada = true;
       let agendado = false;
       const agendar = () => {
         if (agendado) return;
         agendado = true;
         requestAnimationFrame(() => {
           agendado = false;
-          if (window.location.pathname === '/') marcar();
+          marcarAtual?.();
         });
       };
       window.addEventListener('scroll', agendar, { passive: true });

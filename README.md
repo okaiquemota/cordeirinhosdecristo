@@ -110,19 +110,36 @@ por que os `.svg` entregues não são usados direto.
 
 ## Animações e gestos
 
+O movimento segue o padrão da MovCode, com a mesma stack do movcode.com.br:
+**GSAP + ScrollTrigger + Lenis**, e os mesmos valores de entrada. Tudo mora
+em `src/components/Movimento.astro`, ligado por atributos na marcação:
+
+| Marca | O que faz |
+| --- | --- |
+| `data-titulo` | o título entra palavra por palavra, subindo e saindo do desfoque |
+| `data-revelar` | o bloco sobe e aparece ao entrar na tela |
+| `data-revelar-grupo` | os `data-revelar` de dentro entram em cascata |
+| `data-foto-entrada` | a foto assenta de 112% para 100% dentro da moldura |
+| `data-hero` | a capa: entrada ao abrir, parallax das nuvens ao rolar |
+| `data-faixa` | a faixa de frases, que acelera e inclina com a rolagem |
+| `*palavra*` no `site.ts` | marca-texto que se pinta da esquerda para a direita |
+
 | O quê | Como |
 | --- | --- |
+| Rolagem suave (roda do mouse e âncoras) | Lenis; no toque a rolagem é a nativa |
 | Nuvens em deriva, ovelha balançando | CSS puro, tokens em `global.css` |
-| Reveal com cascata | Motion, por grupo, em qualquer `[data-revelar]` |
 | Lightbox: abrir, navegar, arrastar, pinça | `<dialog>` nativo + molas do Motion |
 | Menu do celular | altura de `0fr` a `1fr`, CSS puro |
-| Rolagem suave até as âncoras | `RolagemSuave.astro` |
 | Item de menu que acende sozinho | espião de seções, em `Cabecalho.astro` |
 | Troca de página com morph da capa | View Transitions (`<ClientRouter />`) |
 
-O Motion não entra no carregamento inicial de página nenhuma: ele é baixado
-sob demanda, quando o primeiro bloco é revelado ou quando alguém abre uma
-foto.
+Tudo isso só acrescenta. O CSS esconde os elementos antes do script chegar,
+mas uma rede de segurança solta tudo sozinha em 3s se o script não assumir,
+e se o script quebrar no meio ele mesmo devolve a página ao estado parado.
+A logo da capa nunca é escondida: ela é o maior elemento da primeira tela e
+é por ela que se mede a velocidade de abertura.
+
+O Motion continua só no lightbox e é baixado quando alguém abre uma foto.
 
 O lightbox usa `<dialog>`: o Esc, o travamento de foco e a devolução do foco
 para a miniatura clicada são do navegador, não código nosso.
@@ -150,9 +167,12 @@ Com a foto ampliada, um dedo passeia por ela em vez de trocar de foto.
 Estão documentadas no código, mas vale saber de antemão:
 
 - **A classe `transition` do Tailwind cobre dezoito propriedades**, entre
-  elas `opacity` e `transform`. Num elemento que o Motion anima, cada quadro
-  escrito abre uma transição perseguindo o valor seguinte, e a animação sai
-  tremida. Liste as propriedades: `transition-[translate,box-shadow]`.
+  elas `opacity`, `transform` e `filter`. Num elemento que o GSAP anima,
+  cada quadro escrito abre uma transição perseguindo o valor seguinte, e a
+  animação sai tremida. Liste as propriedades
+  (`transition-[translate,box-shadow]`) ou anime um invólucro: é por isso
+  que as fotos com zoom no hover entram por um `data-foto-entrada` em volta
+  delas, e não pela própria imagem.
 - **Escrever atributo a cada quadro de rolagem invalida o estilo.** Com um
   cabeçalho de `backdrop-blur` em cima, isso repinta a barra toda e a página
   pisca no celular. Leia a cada quadro, escreva só quando mudar.
@@ -167,16 +187,22 @@ Estão documentadas no código, mas vale saber de antemão:
   transição vira fade curto.
 - Ilustrações são `aria-hidden`: elas não carregam informação.
 - Sem rolagem horizontal a partir de 320px (WCAG 1.4.10).
-- Sem JavaScript o conteúdo aparece inteiro: o reveal só esconde elemento
-  quando detecta que o JS está vivo, e sem `IntersectionObserver` ele solta
-  tudo de uma vez.
+- Sem JavaScript o conteúdo aparece inteiro: o movimento só esconde
+  elemento quando detecta que o JS está vivo, e uma rede em CSS solta tudo
+  em 3s se o script não assumir.
+- Os títulos divididos em palavras continuam inteiros para o leitor de
+  tela: num título, o rótulo vai no próprio elemento; num parágrafo (o tema
+  da capa, o versículo), o texto inteiro vai em `sr-only` e a versão
+  dividida fica `aria-hidden`.
 - O cabeçalho é persistido entre navegações para não piscar, e por isso um
   script reajusta a cada troca de página qual item está marcado como atual,
   inclusive o `aria-current`.
 
 ## Desempenho medido
 
-Lighthouse contra `npm run preview`, três execuções por página:
+Lighthouse contra `npm run preview`, três execuções por página. **Medição
+anterior ao GSAP:** o script de movimento acrescenta 53 KB (gzip) à home e
+ao evento, e estes números precisam ser refeitos.
 
 | | Home | Evento |
 | --- | --- | --- |

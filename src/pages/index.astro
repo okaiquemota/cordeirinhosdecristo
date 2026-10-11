@@ -9,6 +9,7 @@ import ComoFunciona from '../components/secoes/ComoFunciona.astro';
 import ParaOsPais from '../components/secoes/ParaOsPais.astro';
 import UltimosEventos from '../components/secoes/UltimosEventos.astro';
 import Contato from '../components/secoes/Contato.astro';
+import Faixa from '../components/secoes/Faixa.astro';
 import { SITE } from '../config/site';
 import { urlOg } from '../lib/og';
 import foto from '../assets/fotos/quem-somos.jpeg';
@@ -26,5 +27,6 @@ const ogImagem = await urlOg(foto, Astro.site);
   <Versiculo />
   <ParaOsPais />
   <UltimosEventos />
+  <Faixa />
   <Contato />
 </PaginaLayout>

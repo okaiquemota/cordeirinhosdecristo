@@ -5,7 +5,10 @@ import BordaNuvem from '../ilustracoes/BordaNuvem.astro';
 import Botao from '../Botao.astro';
 import Instagram from '../icones/Instagram.astro';
 import { SITE, CONTATO, TEXTOS } from '../../config/site';
+import { partesComDestaque, semMarcacao } from '../../lib/destaque';
 import logo from '../../assets/marca/logo-colorida.png';
+
+const tema = TEXTOS.capa.tema;
 ---
 
 {/* Céu com profundidade de verdade, em três planos:
@@ -16,6 +19,7 @@ import logo from '../../assets/marca/logo-colorida.png';
     A diferença de tamanho, brilho e velocidade entre os planos é o que faz
     o céu parecer fundo e não papel de parede. */}
 <section
+  data-hero
   class="relative isolate flex min-h-[min(80svh,40rem)] flex-col justify-center overflow-hidden border-b border-fundo bg-clip-padding bg-linear-to-b from-ceu-500 via-ceu-300 to-ceu-200"
 >
   {/* claridade quente vindo do alto, como sol fora do quadro */}
@@ -26,8 +30,8 @@ import logo from '../../assets/marca/logo-colorida.png';
   >
   </div>
 
-  {/* plano de fundo */}
-  <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+  {/* plano de fundo: ao rolar, anda menos que a página e fica para trás */}
+  <div data-plano="12" class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
     <Nuvem
       class="absolute top-[16%] left-0 w-20 animate-deriva-lenta md:w-28"
       opacidade={0.4}
@@ -56,7 +60,10 @@ import logo from '../../assets/marca/logo-colorida.png';
   </div>
 
   {/* plano do meio */}
-  <div class="container-site relative z-10 flex flex-col items-center pt-10 pb-16 text-center md:pt-8 md:pb-20">
+  <div
+    data-hero-conteudo
+    class="container-site relative z-10 flex flex-col items-center pt-10 pb-16 text-center md:pt-8 md:pb-20"
+  >
     {/* A logo É o título. O alt carrega o nome, então leitor de tela e
         buscador leem "Cordeirinhos de Cristo" como h1.
 
@@ -77,26 +84,38 @@ import logo from '../../assets/marca/logo-colorida.png';
         loading="eager"
         fetchpriority="high"
         decoding="async"
+        data-hero-logo
         class="h-auto w-full max-w-[26rem]"
       />
     </h1>
 
-    {/* a frase do tema é a linha grande; o subtítulo vem embaixo, menor,
-        dizendo de quem é a casa. Emoção primeiro, informação depois. */}
+    {/* A frase do tema é a linha grande; o subtítulo vem embaixo, menor,
+        dizendo de quem é a casa. Emoção primeiro, informação depois.
+
+        As palavras entram uma a uma. Um <p> não aceita rótulo para leitor
+        de tela, então a frase inteira vai em sr-only e a versão dividida,
+        que é só visual, fica escondida dele (data-dividir). */}
     {
-      TEXTOS.capa.tema && (
-        <p class="mt-4 max-w-lg font-display text-slogan font-800 text-tinta-900">
-          {TEXTOS.capa.tema}
+      tema && (
+        <p data-titulo class="mt-4 max-w-lg font-display text-slogan font-800 text-tinta-900">
+          <span class="sr-only">{semMarcacao(tema)}</span>
+          <span aria-hidden="true" data-dividir>
+            {partesComDestaque(tema).map((parte) =>
+              parte.destaque ? <em class="marca-texto">{parte.texto}</em> : parte.texto,
+            )}
+          </span>
         </p>
       )
     }
 
-    <p class="mt-3 max-w-md text-base leading-relaxed text-tinta-700 sm:text-lg">{SITE.subtitulo}</p>
+    <p data-entrada class="mt-3 max-w-md text-base leading-relaxed text-tinta-700 sm:text-lg">
+      {SITE.subtitulo}
+    </p>
 
     {/* min-w igual nos dois: sem isso cada botão fica do tamanho do próprio
         texto e a dupla sai torta. O valor cabe no mais largo dos dois e
         ainda passa folgado numa tela de 320px. */}
-    <div class="mt-6 flex flex-wrap justify-center gap-3">
+    <div data-entrada class="mt-6 flex flex-wrap justify-center gap-3">
       <Botao href="/#ultimos-eventos" tamanho="lg" class="min-w-52">
         Ver os eventos
       </Botao>
@@ -116,7 +135,11 @@ import logo from '../../assets/marca/logo-colorida.png';
       do conteúdo (z-10 acima), porque em telas estreitas a faixa de cima
       alcança a logo e cobria a primeira letra. Havia outra embaixo, e
       aquela cobria o botão do Instagram; essa foi removida. */}
-  <div class="pointer-events-none absolute inset-x-0 top-0 h-40 overflow-hidden" aria-hidden="true">
+  <div
+    data-plano="-40"
+    class="pointer-events-none absolute inset-x-0 top-0 h-40 overflow-hidden"
+    aria-hidden="true"
+  >
     <Nuvem class="absolute -top-20 left-0 w-56 animate-deriva md:-top-24 md:w-72" atraso={-14} />
   </div>
 
