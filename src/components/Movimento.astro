@@ -7,6 +7,7 @@
  *   data-titulo        o título entra palavra por palavra, saindo do desfoque
  *   data-revelar       o bloco sobe e aparece quando entra na tela
  *   data-revelar-grupo os data-revelar de dentro entram em cascata
+ *   data-rabisco       o traço sob o título se desenha da esquerda para a direita
  *   data-foto-entrada  a foto assenta de 112% para 100% dentro da moldura
  *                      (não é data-foto: esse nome é do lightbox, que pega
  *                      o primeiro [data-foto] da galeria)
@@ -51,8 +52,8 @@
 
   /* Marca-texto: a faixa se pinta da esquerda para a direita. A altura
      tem que bater com a do CSS (.marca-texto), senão ela pula no fim. */
-  const MARCA_VAZIA = { backgroundSize: '0% 62%' };
-  const MARCA_CHEIA = { backgroundSize: '100% 62%', duration: 0.8, ease: 'power2.inOut' };
+  const MARCA_VAZIA = { backgroundSize: '0% 38%' };
+  const MARCA_CHEIA = { backgroundSize: '100% 38%', duration: 0.8, ease: 'power2.inOut' };
 
   let lenis: Lenis | null = null;
   let tique: ((tempo: number) => void) | null = null;
@@ -247,6 +248,28 @@
     }
   }
 
+  function rabiscos() {
+    gsap.utils.toArray<SVGSVGElement>('[data-rabisco]').forEach((svg) => {
+      const traco = svg.querySelector('path');
+      if (!traco) return;
+      /* O traço inteiro vira um tracejado de um traço só, empurrado para
+         fora; trazer o deslocamento a zero é desenhar da esquerda para a
+         direita. O atraso deixa as palavras do título saírem primeiro. */
+      const comprimento = traco.getTotalLength();
+      gsap.fromTo(
+        traco,
+        { strokeDasharray: comprimento, strokeDashoffset: comprimento },
+        {
+          strokeDashoffset: 0,
+          duration: 0.9,
+          delay: 0.35,
+          ease: 'power2.inOut',
+          scrollTrigger: { trigger: svg, start: 'top 88%' },
+        },
+      );
+    });
+  }
+
   function fotos() {
     gsap.utils.toArray<HTMLElement>('[data-foto-entrada]').forEach((foto) => {
       gsap.fromTo(
@@ -331,6 +354,7 @@
       contexto = gsap.context(() => {
         hero();
         titulos();
+        rabiscos();
         blocos();
         fotos();
         faixa();

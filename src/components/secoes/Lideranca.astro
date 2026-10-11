@@ -1,5 +1,6 @@
 ---
 import Galeria from '../Galeria.astro';
+import Rabisco from '../ilustracoes/Rabisco.astro';
 import { LIDERANCA } from '../../config/site';
 import foto from '../../assets/fotos/lideranca.jpeg';
 
@@ -19,14 +20,20 @@ const aparece = LIDERANCA.paragrafos.length > 0;
             <h2 id="lideranca" data-titulo class="text-titulo text-texto">
               {LIDERANCA.titulo}
             </h2>
-            <div data-revelar class="mt-5 space-y-4 text-corpo-lg text-tinta-700">
+            <Rabisco class="mt-3 text-rosa-300" />
+            <div data-revelar class="mt-6 space-y-4 text-corpo-lg text-tinta-700">
               {LIDERANCA.paragrafos.map((paragrafo) => (
                 <p>{paragrafo}</p>
               ))}
             </div>
           </div>
 
-          <div data-revelar class="order-first">
+          <div data-revelar class="relative isolate order-first">
+            {/* o papel, espelhado em relação ao do Quem somos */}
+            <div
+              class="absolute inset-0 -z-10 -translate-x-3 translate-y-3 rotate-3 rounded-3xl bg-rosa-200 md:-translate-x-5 md:translate-y-5"
+              aria-hidden="true"
+            ></div>
             <Galeria
               variante="unica"
               fotos={[

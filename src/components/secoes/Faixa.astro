@@ -3,28 +3,41 @@ import { FAIXA } from '../../config/site';
 
 /* Duas voltas da lista em cada metade: numa tela larga uma volta só não
    cobre a largura, e o laço mostraria o vazio antes de recomeçar. */
-const metade = [...FAIXA, ...FAIXA];
+const voltas = [...FAIXA, ...FAIXA];
+
+/* Duas linhas, como a faixa da MovCode: a de cima cheia, em azul, andando
+   para a esquerda; a de baixo vazada, só o contorno em rosa, andando para
+   a direita e com as frases em outra ordem, para não alinharem. */
+const linhas = [
+  { frases: voltas, classe: 'text-ceu-700', ponto: 'bg-rosa-300' },
+  { frases: [...voltas].reverse(), classe: 'faixa-contorno', ponto: 'bg-ceu-300' },
+];
 ---
 
-{/* A faixa de frases, no padrão da MovCode: tipo enorme correndo de lado,
-    que acelera e inclina com a velocidade da rolagem (Movimento.astro).
-    Sem script ou com movimento reduzido, ela fica parada e legível.
-    É decorativa: repete frases da página, então o leitor de tela pula. */}
+{/* A faixa de frases: tipo enorme correndo de lado, que acelera e inclina
+    com a velocidade da rolagem (Movimento.astro). Sem script ou com
+    movimento reduzido, ela fica parada e legível. É decorativa: repete
+    frases da página, então o leitor de tela pula. */}
 {
   FAIXA.length > 0 && (
-    <section data-faixa aria-hidden="true" class="overflow-hidden py-4 select-none md:py-6">
-      <div data-faixa-linha class="faixa-linha font-display text-faixa font-800">
-        {[0, 1].map(() => (
-          <div class="flex shrink-0 items-center">
-            {metade.map((frase, i) => (
-              <span class="flex items-center">
-                <span class:list={[i % 2 ? 'text-rosa-400' : 'text-ceu-700']}>{frase}</span>
-                <span class="mx-[0.45em] size-[0.2em] shrink-0 rounded-full bg-rosa-300" />
-              </span>
-            ))}
-          </div>
-        ))}
-      </div>
+    <section data-faixa aria-hidden="true" class="overflow-hidden py-6 select-none md:py-10">
+      {linhas.map((linha, l) => (
+        <div
+          data-faixa-linha
+          class:list={['faixa-linha font-display text-faixa font-800', linha.classe, l > 0 && 'mt-[0.06em]']}
+        >
+          {[0, 1].map(() => (
+            <div class="flex shrink-0 items-center">
+              {linha.frases.map((frase) => (
+                <span class="flex items-center">
+                  <span>{frase}</span>
+                  <span class:list={['mx-[0.45em] size-[0.2em] shrink-0 rounded-full', linha.ponto]} />
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      ))}
     </section>
   )
 }

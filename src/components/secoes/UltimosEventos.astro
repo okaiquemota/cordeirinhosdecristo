@@ -1,5 +1,6 @@
 ---
 import CardEvento from '../CardEvento.astro';
+import Rabisco from '../ilustracoes/Rabisco.astro';
 import { eventosRecentes } from '../../lib/eventos';
 import { TEXTOS } from '../../config/site';
 
@@ -12,7 +13,8 @@ const eventos = await eventosRecentes(3);
       <h2 id="ultimos-eventos" data-titulo class="text-titulo text-texto">
         {TEXTOS.ultimosEventos.titulo}
       </h2>
-      <p data-revelar class="mt-2 text-corpo-lg text-tinta-700">{TEXTOS.ultimosEventos.descricao}</p>
+      <Rabisco class="mt-3 text-rosa-300" />
+      <p data-revelar class="mt-5 text-corpo-lg text-tinta-700">{TEXTOS.ultimosEventos.descricao}</p>
     </div>
 
     {
