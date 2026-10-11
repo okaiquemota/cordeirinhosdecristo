@@ -89,7 +89,7 @@ export const TEXTOS = {
     /* A frase do tema do ano, logo abaixo da logo. Deixe '' e a linha some
        da página — é o lugar de trocar quando a festividade mudar.
        O trecho entre asteriscos ganha marca-texto (src/lib/destaque.ts). */
-    tema: 'Vivendo o *novo* que Deus fez.',
+    tema: 'Vivendo o novo que Deus fez.',
   },
   ultimosEventos: {
     titulo: 'Últimos eventos',
