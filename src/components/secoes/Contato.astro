@@ -1,6 +1,7 @@
 ---
 import Local from '../icones/Local.astro';
 import Botao from '../Botao.astro';
+import Rabisco from '../ilustracoes/Rabisco.astro';
 import { Image } from 'astro:assets';
 import { CONTATO, SITE, TEXTOS } from '../../config/site';
 import fotoIgreja from '../../assets/fotos/igreja.jpeg';
@@ -14,6 +15,7 @@ const temEndereco = Boolean(endereco.logradouro || endereco.cidade);
     <div data-revelar class="rounded-3xl bg-ceu-800 px-5 py-10 sm:px-8 md:px-12 md:py-14">
       <div class="mx-auto max-w-xl text-center">
         <h2 id="contato" data-titulo class="text-titulo text-creme-50">{TEXTOS.contato.titulo}</h2>
+        <Rabisco class="mx-auto mt-3 text-rosa-200" />
         {
           TEXTOS.contato.descricao && (
             <p class="mt-3 text-corpo-lg text-ceu-100">{TEXTOS.contato.descricao}</p>

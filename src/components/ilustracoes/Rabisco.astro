@@ -1,0 +1,32 @@
+---
+/**
+ * O rabisco sob os títulos de seção: um traço ondulado, como feito a
+ * caneta. Leva a personalidade da marca para as partes brancas da página,
+ * que antes eram só texto e foto. O Movimento.astro desenha o traço da
+ * esquerda para a direita quando ele entra na tela; sem script ele já
+ * nasce desenhado.
+ *
+ * A cor vem de currentColor: passe uma classe text-* (rosa sobre o branco,
+ * rosa claro sobre o azul escuro).
+ */
+interface Props {
+  class?: string;
+}
+const { class: classe = 'text-rosa-300' } = Astro.props;
+---
+
+<svg
+  data-rabisco
+  viewBox="0 0 120 14"
+  fill="none"
+  aria-hidden="true"
+  focusable="false"
+  class:list={['block h-auto w-24 md:w-28', classe]}
+>
+  <path
+    d="M3 9c10-6 19-6 29-1s19 6 29 0 19-6 29-1 15 5 27-1"
+    stroke="currentColor"
+    stroke-width="3.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"></path>
+</svg>

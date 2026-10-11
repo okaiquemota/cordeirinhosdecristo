@@ -34,9 +34,11 @@
   --text-hero: clamp(2.25rem, 1.45rem + 4vw, 4rem);
   --text-hero--line-height: 1.05;
   --text-hero--letter-spacing: -0.02em;
-  --text-titulo: clamp(1.75rem, 1.25rem + 2.2vw, 2.75rem);
-  --text-titulo--line-height: 1.15;
-  --text-titulo--letter-spacing: -0.015em;
+  /* Títulos de seção, na escala da MovCode: 32px no celular, 56px no
+     desktop. Abaixo disso o título quase empatava com o corpo de 18px. */
+  --text-titulo: clamp(2rem, 1.25rem + 3.2vw, 3.5rem);
+  --text-titulo--line-height: 1.08;
+  --text-titulo--letter-spacing: -0.02em;
   --text-subtitulo: clamp(1.25rem, 1.05rem + 0.9vw, 1.625rem);
   --text-subtitulo--line-height: 1.25;
   /* A frase do tema na capa. Fica entre o subtítulo e o título de seção:
@@ -46,7 +48,7 @@
   --text-slogan--letter-spacing: -0.01em;
 
   /* A faixa de frases: tipo enorme e apertado, como no movcode.com.br. */
-  --text-faixa: clamp(2.75rem, 1.2rem + 6.6vw, 7.5rem);
+  --text-faixa: clamp(2.25rem, 1rem + 4.6vw, 5.25rem);
   --text-faixa--line-height: 1.05;
   --text-faixa--letter-spacing: -0.03em;
   --text-corpo-lg: 1.125rem;
@@ -228,9 +230,28 @@
   }
 
   /* Elementos puramente decorativos param de vez. */
-  [data-decorativo] {
+  [data-decorativo]:not([data-nuvem]) {
     animation: none !important;
     transform: none !important;
+  }
+
+  /* As nuvens também param, mas congeladas no meio da deriva. Com
+     animation: none elas voltavam todas para o ponto de partida e se
+     empilhavam na borda esquerda do céu. Pausada, cada uma fica no quadro
+     que o atraso negativo dela aponta: espalhadas, como estariam andando.
+     A duração precisa ser a original, senão o atraso cai fora do ciclo. */
+  [data-nuvem] {
+    animation-iteration-count: infinite !important;
+    animation-play-state: paused !important;
+  }
+  [data-nuvem].animate-deriva {
+    animation-duration: 62s !important;
+  }
+  [data-nuvem].animate-deriva-media {
+    animation-duration: 78s !important;
+  }
+  [data-nuvem].animate-deriva-lenta {
+    animation-duration: 96s !important;
   }
 }
 
@@ -285,13 +306,15 @@ html.lenis body {
   overscroll-behavior: contain;
 }
 
-/* Marca-texto: a faixa de cor por trás da palavra, nos mesmos 62% de
-   altura do site da MovCode. O clone faz a faixa se repetir certinha
-   quando a palavra quebra de linha. O script anima o background-size
-   de 0% a 100%; sem script ela já nasce cheia. */
+/* Marca-texto: um traço de marcador na metade de baixo da palavra. Com
+   62% de altura, como no site da MovCode, a faixa cobria a palavra quase
+   inteira e sobre o céu azul virava uma caixa rosa. O clone faz o traço
+   se repetir certinho quando a palavra quebra de linha. O script anima o
+   background-size de 0% a 100% (a altura lá tem que bater com esta);
+   sem script o traço já nasce cheio. */
 .marca-texto {
   font-style: normal;
-  background: linear-gradient(var(--color-rosa-200), var(--color-rosa-200)) 0 88% / 100% 62% no-repeat;
+  background: linear-gradient(var(--color-rosa-300), var(--color-rosa-300)) 0 92% / 100% 38% no-repeat;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
   padding-inline: 0.06em;
@@ -304,6 +327,20 @@ html.lenis body {
   width: max-content;
   white-space: nowrap;
   will-change: transform;
+}
+
+/* A segunda linha vem vazada, só o contorno, como a faixa da MovCode.
+
+   A Baloo é fonte variável e as letras dela são montadas com contornos
+   sobrepostos; com o miolo transparente, o traço desenhava também essas
+   emendas por dentro do "r", do "d", do "h". Aqui o traço é pintado antes
+   do preenchimento, e o preenchimento, na cor do fundo, cobre a metade de
+   dentro do traço e as emendas junto. Por isso o traço tem o dobro da
+   espessura que aparece. */
+.faixa-contorno {
+  color: var(--color-fundo);
+  -webkit-text-stroke: clamp(3px, 0.06em, 6px) var(--color-rosa-400);
+  paint-order: stroke fill;
 }
 
 /* =========================================================================
@@ -336,10 +373,10 @@ html.lenis body {
 
 /** Ritmo vertical entre seções da home. */
 @utility secao {
-  padding-block: 3rem;
+  padding-block: 3.5rem;
 
   @media (width >= 48rem) {
-    padding-block: 4.5rem;
+    padding-block: 6rem;
   }
 }
 
@@ -419,11 +456,47 @@ html.lenis body {
     margin-block-start: 0.5em;
   }
 
+  /* Citação vira cartão, como o versículo da home: fundo de céu claro,
+     letra de título, texto centralizado e uma aspa grande em rosa montada
+     no meio da borda de cima. A última linha, quando há mais de uma, é a
+     referência (o "2 Coríntios 5:17") e sai menor, na cor dos links. */
   & blockquote {
-    border-inline-start: 3px solid var(--color-rosa-300);
-    padding-inline-start: 1.25rem;
-    font-style: italic;
-    color: var(--color-tinta-600);
+    position: relative;
+    margin-block: 3em 0;
+    padding: 2.5rem 1.75rem 1.75rem;
+    border-radius: var(--radius-3xl);
+    background-color: var(--color-ceu-100);
+    font-family: var(--font-display);
+    font-size: var(--text-subtitulo);
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--color-texto);
+    text-align: center;
+    text-wrap: balance;
+
+    @media (width >= 48rem) {
+      padding: 3rem 3rem 2.25rem;
+    }
+
+    /* A tinta da aspa fica no alto da caixa da letra; com o topo em -0.2em
+       ela cai metade fora, metade dentro do cartão. */
+    &::before {
+      content: '“';
+      position: absolute;
+      top: -0.2em;
+      left: 50%;
+      translate: -50% 0;
+      font-size: 5.5rem;
+      line-height: 1;
+      font-weight: 800;
+      color: var(--color-rosa-300);
+    }
+
+    & p + p:last-child {
+      margin-block-start: 0.85rem;
+      font-size: 1rem;
+      color: var(--color-primaria);
+    }
   }
 
   & img {

@@ -83,6 +83,20 @@ cima dele: 50 e 100 são branco, 200 é o realce de passagem do mouse, 300 é
 borda, 400 é o cinza mais forte. O nome ficou para não mexer em dezenas de
 classes sem mudar um pixel.
 
+Os traços que levam a marca para as partes brancas da página:
+
+- **Rabisco** (`ilustracoes/Rabisco.astro`): o traço ondulado sob cada
+  título de seção. Rosa sobre o branco, rosa claro sobre o azul escuro.
+- **Papel atrás da foto**: um bloco colorido girado 3° por trás das fotos
+  de "Quem somos" (azul) e "Liderança" (rosa), como foto colada em
+  cartolina.
+- **Marca-texto**: `*palavra*` num texto do `site.ts` vira um traço de
+  marcador rosa na metade de baixo da palavra.
+- **Faixa**: duas linhas de frases, uma cheia e uma vazada. A vazada pinta
+  o contorno antes do preenchimento (`paint-order`), porque a Baloo monta
+  as letras com contornos sobrepostos e um miolo transparente mostraria as
+  emendas por dentro delas.
+
 ## Fontes
 
 Baloo 2 (títulos) e Inter (corpo) estão versionadas em `src/assets/fontes/`,
@@ -118,6 +132,7 @@ em `src/components/Movimento.astro`, ligado por atributos na marcação:
 | --- | --- |
 | `data-titulo` | o título entra palavra por palavra, subindo e saindo do desfoque |
 | `data-revelar` | o bloco sobe e aparece ao entrar na tela |
+| `data-rabisco` | o traço sob o título se desenha da esquerda para a direita |
 | `data-revelar-grupo` | os `data-revelar` de dentro entram em cascata |
 | `data-foto-entrada` | a foto assenta de 112% para 100% dentro da moldura |
 | `data-hero` | a capa: entrada ao abrir, parallax das nuvens ao rolar |
@@ -184,7 +199,9 @@ Estão documentadas no código, mas vale saber de antemão:
 
 - Todo texto passa em WCAG AA sobre o fundo branco, medido e não estimado.
 - Movimento respeita `prefers-reduced-motion`: animação decorativa desliga,
-  transição vira fade curto.
+  transição vira fade curto. As nuvens ficam congeladas no meio da deriva,
+  espalhadas pelo céu; antes elas voltavam todas para o ponto de partida e
+  se empilhavam na borda esquerda.
 - Ilustrações são `aria-hidden`: elas não carregam informação.
 - Sem rolagem horizontal a partir de 320px (WCAG 1.4.10).
 - Sem JavaScript o conteúdo aparece inteiro: o movimento só esconde
