@@ -2,7 +2,7 @@
 titulo: Deus tem um propósito para mim
 
 # Evento de um dia só. Em evento de mais de um dia, acrescente dataFim.
-data: 2026-10-26
+data: 2026-10-24
 
 resumo: >-
   Um dia de muita alegria, diversão e união, celebrando o Dia das Crianças
@@ -10,7 +10,7 @@ resumo: >-
 
 capa:
   src: ../../assets/fotos/deus-tem-um-proposito-para-mim/capa.jpg
-  alt: "Arte do evento Deus tem um propósito para mim, com a logo dos Cordeirinhos de Cristo sobre um céu azul com nuvens."
+  alt: "Arte do evento Deus tem um propósito para mim, Dia das Crianças: o título em branco e amarelo sobre um céu roxo e rosa de amanhecer, com estrelas e confete."
 
 # As fotos entram aqui quando forem para src/assets/fotos/deus-tem-um-proposito-para-mim/.
 # Sem fotos, a página mostra só o botão do álbum completo.
